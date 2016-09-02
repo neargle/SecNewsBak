@@ -1,0 +1,297 @@
+/**
+ * yue.css
+ *
+ * yue.css is designed for readable content.
+ *
+ * Copyright (c) 2013 - 2014 by Hsiaoming Yang.
+ */
+
+html {
+  font: 400 18px/1.62 "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", sans-serif;
+  color: #444443;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
+.windows html {
+  font-size: 16px;
+  font-family: "Georgia", "SimSun", sans-serif;
+}
+
+html ::-moz-selection {
+  background-color: rgba(0,0,0,0.2);
+}
+
+html ::selection {
+  background-color: rgba(0,0,0,0.2);
+}
+
+html h1,
+html h2,
+html h3,
+html h4,
+html h5,
+html h6 {
+  font-family: "Georgia", "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", "SimSun", sans-serif;
+  color: #222223;
+}
+
+html h1 {
+  font-size: 1.8em;
+  margin: 0.67em 0;
+}
+
+html > h1 {
+  margin-top: 0;
+  font-size: 2em;
+}
+
+html h2 {
+  font-size: 1.5em;
+  margin: 0.83em 0;
+}
+
+html h3 {
+  font-size: 1.17em;
+  margin: 1em 0;
+}
+
+html h4,
+html h5,
+html h6 {
+  font-size: 1em;
+  margin: 1.6em 0 1em 0;
+}
+
+html h6 {
+  font-weight: 500;
+}
+
+html p {
+  margin-top: 0;
+  margin-bottom: 1.46em;
+}
+
+html a {
+  color: #111;
+  word-wrap: break-word;
+  -moz-text-decoration-color: rgba(0, 0, 0, 0.4);
+  text-decoration-color: rgba(0, 0, 0, 0.4);
+}
+
+html a:hover {
+  color: #555;
+  -moz-text-decoration-color: rgba(0, 0, 0, 0.6);
+  text-decoration-color: rgba(0, 0, 0, 0.6);
+}
+
+html h1 a,
+html h2 a,
+html h3 a {
+  text-decoration: none;
+}
+
+html strong,
+html b {
+  font-weight: 700;
+  color: #222223;
+}
+
+html em,
+html i {
+  font-style: italic;
+  color: #222223;
+}
+
+html img {
+  max-width: 100%;
+  height: auto;
+  margin: 0.2em 0;
+}
+
+html a img {
+  /* Remove border on IE */
+  border: none;
+}
+
+html figure {
+  position: relative;
+  clear: both;
+  outline: 0;
+  margin: 10px 0 30px;
+  padding: 0;
+  min-height: 100px;
+}
+
+html figure img {
+  display: block;
+  max-width: 100%;
+  margin: auto auto 4px;
+  box-sizing: border-box;
+}
+
+html figure figcaption {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  left: 0;
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #666665;
+}
+
+html figure figcaption a {
+  text-decoration: none;
+  color: #666665;
+}
+
+html hr {
+  display: block;
+  width: 14%;
+  margin: 40px auto 34px;
+  border: 0 none;
+  border-top: 3px solid #dededc;
+}
+
+html blockquote {
+  margin: 0 0 1.64em 0;
+  border-left: 3px solid #dadada;
+  padding-left: 12px;
+  color: #666664;
+}
+
+html blockquote a {
+  color: #666664;
+}
+
+html ul,
+html ol {
+  margin: 0 0 24px 6px;
+  padding-left: 16px;
+}
+
+html ul {
+  list-style-type: square;
+}
+
+html ol {
+  list-style-type: decimal;
+}
+
+html li {
+  margin-bottom: 0.2em;
+}
+
+html li ul,
+html li ol {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 14px;
+}
+
+html li ul {
+  list-style-type: disc;
+}
+
+html li ul ul {
+  list-style-type: circle;
+}
+
+html li p {
+  margin: 0.4em 0 0.6em;
+}
+
+html .unstyled {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+html code,
+html tt {
+  color: #808080;
+  font-size: 0.96em;
+  background-color: #f9f9f7;
+  padding: 1px 2px;
+  border: 1px solid #dadada;
+  border-radius: 3px;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  word-wrap: break-word;
+}
+
+html pre {
+  margin: 1.64em 0;
+  padding: 7px;
+  border: none;
+  border-left: 3px solid #dadada;
+  padding-left: 10px;
+  overflow: auto;
+  line-height: 1.5;
+  font-size: 0.96em;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  color: #4c4c4c;
+  background-color: #f9f9f7;
+}
+
+html pre code,
+html pre tt {
+  color: #4c4c4c;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+html table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 1.5em;
+  font-size: 0.96em;
+  box-sizing: border-box;
+}
+
+html th,
+html td {
+  text-align: left;
+  padding: 4px 8px 4px 10px;
+  border: 1px solid #dadada;
+}
+
+html td {
+  vertical-align: top;
+}
+
+html tr:nth-child(even) {
+  background-color: #efefee;
+}
+
+html iframe {
+  display: block;
+  max-width: 100%;
+  margin-bottom: 30px;
+}
+
+html figure iframe {
+  margin: auto;
+}
+
+html table pre {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+@media (min-width: 1100px) {
+  html blockquote {
+    margin-left: -24px;
+    padding-left: 20px;
+    border-width: 4px;
+  }
+
+  html blockquote blockquote {
+    margin-left: 0;
+  }
+}
