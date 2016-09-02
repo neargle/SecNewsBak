@@ -14,7 +14,10 @@ html_template = '''
 <head>
     <title>{title}</title>
     <meta charset="utf-8">
-</head>
+
+
+<link rel="stylesheet" type="text/css" href="../css/style.css">
+            </head>
 <body>
 <h1>{title}</h1>
 {content}
