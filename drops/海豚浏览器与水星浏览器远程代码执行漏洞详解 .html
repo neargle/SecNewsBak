@@ -37,7 +37,7 @@
  主题文件实际是一个zip文件，对其重命名后查看内容如下：
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453765153.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453765153.png" onerror="return imgError(this)">
 </p>
 <p>
  由于海豚浏览器并未对解压的文件进行验证，且安卓系统zip库的默认行为是允许解压文件到所在目录之外，因此通过中间人攻击，修改HTTP请求返回主题文件zip包中的内容，可以实现在海豚浏览器拥有权限的目录写文件。
@@ -64,7 +64,7 @@ zf.close()
  修改后的主题文件如下
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453760420.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453760420.png" onerror="return imgError(this)">
 </p>
 <p>
  接下来，编写一段mitmproxy的inline script inject_evilso.py，将下载返回的主题文件替换成我们修改后的主题文件。
@@ -108,7 +108,7 @@ def request(context, flow):
  此时查看海豚浏览器私有目录，压缩包中放置的恶意文件已经写入成功。
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453753818.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453753818.png" onerror="return imgError(this)">
 </p>
 <h2>
  3. 漏洞利用——patch so实现代码执行
@@ -154,7 +154,7 @@ jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
  然后按照前面的方法将编译的so文件添加到主题文件压缩包中，
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453718780.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453718780.png" onerror="return imgError(this)">
 </p>
 <p>
  手机上重新下载主题文件并应用，这将触发mitmdump脚本替换下载返回的主题文件为添加恶意so的主题文件。此时我们结束海豚浏览器，并重新打开，使其有机会加载我们改写的so。logcat将有如下输出，
@@ -166,7 +166,7 @@ D/dalvikvm(25522): Added shared lib /data/data/mobi.mgeek.TunnyBrowser/files/lib
  而海豚浏览器也并未崩溃，可以正常浏览网页。用nc连接，patch的恶意代码已经生效
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453824809.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453824809.png" onerror="return imgError(this)">
 </p>
 <h1>
  0x02 水星浏览器远程代码执行漏洞
@@ -182,7 +182,7 @@ D/dalvikvm(25522): Added shared lib /data/data/mobi.mgeek.TunnyBrowser/files/lib
  在com.ilegendsoft.mercury.ui.widget.webview.g类中有如下代码
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453841250.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453841250.png" onerror="return imgError(this)">
 </p>
 <p>
  intent对象在传入startActivity方法前并没有按如下方式进行过滤
@@ -268,7 +268,7 @@ intent.setSelector(null);
  该WebServer注册了一些特定的URI路径，实现了下载dodownload、删除dodelete、上传doupload等命令。
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453864972.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453864972.png" onerror="return imgError(this)">
 </p>
 <h2>
  3. 攻击私有组件WFMActivity2
@@ -292,13 +292,13 @@ intent.setSelector(null);
  然后用水星浏览器访问该恶意网页，出现如下界面
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453872807.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453872807.png" onerror="return imgError(this)">
 </p>
 <p>
  此时PC端已经能够访问webserver，并具有对手机中sdcard文件上传、下载和删除功能。
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453960989.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453960989.png" onerror="return imgError(this)">
 </p>
 <h2>
  4. 目录穿越漏洞
@@ -310,17 +310,17 @@ intent.setSelector(null);
  根据HTTPDownHandler中的处理代码，
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453927396.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453927396.png" onerror="return imgError(this)">
 </p>
 <p>
  需要正确设置HTTP请求中的Referer才能进入成功的下载处理分支。
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101453980590.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101453980590.png" onerror="return imgError(this)">
 </p>
 <p>
  对程序配置文件私有目录打包下载
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101454087696.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101454087696.png" onerror="return imgError(this)">
  使用doupload命令类似，可以实现上传文件到程序私有目录。
 </p>
 <h4>
@@ -374,7 +374,7 @@ if __name__ == '__main__':
  攻击效果
 </p>
 <p>
- <img  alt="image" src="http://static.wooyun.org//drops/20150831/2015083101454019518.png" onerror="return imgError(this)">
+ <img  alt="image" src="../image/drops/20150831/2015083101454019518.png" onerror="return imgError(this)">
 </p>
 <h1>
  0x03 参考

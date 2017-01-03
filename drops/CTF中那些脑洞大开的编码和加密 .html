@@ -266,7 +266,7 @@
  第二部分是：ASCII打印字符，也就是CTF中常用到的转换;
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103300271498.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103300271498.jpg" onerror="return imgError(this)">
 </p>
 <p>
  第三部分是：扩展ASCII打印字符(第一第三部分详见
@@ -285,7 +285,7 @@
  </code>
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103144427062.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103144427062.png" onerror="return imgError(this)">
 </p>
 <p>
  ASCII编码对应十进制：
@@ -305,7 +305,7 @@
  编码原理：Base64编码要求把3个8位字节转化为4个6位的字节，之后在6位的前面补两个0，形成8位一个字节的形式，6位2进制能表示的最大数是2的6次方是64，这也是为什么是64个字符(A-Z,a-z，0-9，+，/这64个编码字符，=号不属于编码字符，而是填充字符)的原因，这样就需要一张映射表，如下：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103144549108.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103144549108.png" onerror="return imgError(this)">
 </p>
 <p>
  举个例子(base64)：
@@ -337,7 +337,7 @@
  利用Python base64模块，我们分别可以这样加密解密base64 32 16：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103144756515.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103144756515.png" onerror="return imgError(this)">
 </p>
 <h3>
  3.shellcode编码
@@ -354,7 +354,7 @@
 <pre><code>\x54\x68\x65\x7f\x71\x75\x69\x63\x6b\x7f\x62\x72\x6f\x77\x6e\x7f\x66\x6f\x78\x7f\x6a\x75\x6d\x70\x73\x7f\x6f\x76\x65\x72\x7f\x74\x68\x65\x7f\x6c\x61\x7a\x79\x7f\x64\x6f\x67
 </code></pre>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103144956877.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103144956877.png" onerror="return imgError(this)">
 </p>
 <h3>
  4.Quoted-printable 编码
@@ -367,7 +367,7 @@
  。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103175736124.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103175736124.png" onerror="return imgError(this)">
 </p>
 <p>
  源文本：
@@ -394,7 +394,7 @@
  XXencode将输入文本以每三个字节为单位进行编码。如果最后剩下的资料少于三个字节，不够的部份用零补齐。这三个字节共有24个Bit，以6bit为单位分为4个组，每个组以十进制来表示所出现的数值只会落在0到63之间。以所对应值的位置字符代替。它所选择的可打印字符是：+-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz，一共64个字符。跟base64打印字符相比，就是UUencode多一个“-” 字符，少一个”/” 字符。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103145225932.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103145225932.png" onerror="return imgError(this)">
 </p>
 <p>
  源文本：
@@ -525,7 +525,7 @@
  10.HTML实体编码
 </h3>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103145360942.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103145360942.png" onerror="return imgError(this)">
 </p>
 <p>
  完整编码手册
@@ -550,7 +550,7 @@
  V  W  X  Y  Z
 </code></pre>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103172497487.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103172497487.jpg" onerror="return imgError(this)">
 </p>
 <h3>
  12.莫尔斯电码
@@ -650,7 +650,7 @@ M  --    Z  --..  =  -...-
  </code>
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103145541200.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103145541200.png" onerror="return imgError(this)">
 </p>
 <p>
  编码解码
@@ -730,13 +730,13 @@ M  --    Z  --..  =  -...-
  填入5行7列表(事先约定填充的行列数)
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103145728301.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103145728301.png" onerror="return imgError(this)">
 </p>
 <p>
  加密的回路线(事先约定填充的行列数)
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103145873152.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103145873152.png" onerror="return imgError(this)">
 </p>
 <p>
  密文：
@@ -759,7 +759,7 @@ M  --    Z  --..  =  -...-
  填入5行7列表(事先约定填充的行列数，如果明文不能填充完表格可以约定使用某个字母进行填充)
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103145728301.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103145728301.png" onerror="return imgError(this)">
 </p>
 <p>
  密钥：
@@ -771,7 +771,7 @@ M  --    Z  --..  =  -...-
  按how are u在字母表中的出现的先后顺序进行编号，我们就有a为1,e为2，h为3，o为4，r为5，u为6，w为7，所以先写出a列，其次e列，以此类推写出的结果便是密文：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103150019394.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103150019394.png" onerror="return imgError(this)">
 </p>
 <p>
  密文：
@@ -865,7 +865,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  </code>
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103150172849.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103150172849.png" onerror="return imgError(this)">
 </p>
 <p>
  你也可以使用Python的pycipher模块来加解密，如果提示没有这个模块可以通过
@@ -884,7 +884,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  参考表(这里是向后移位加密，向前移位解密)：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103175865018.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103175865018.jpg" onerror="return imgError(this)">
 </p>
 <p>
  加密解密
@@ -989,7 +989,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  解密：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103150561202.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103150561202.png" onerror="return imgError(this)">
 </p>
 <p>
  (ps:score值越小越准确)
@@ -1037,13 +1037,13 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  </code>
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103150745351.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103150745351.png" onerror="return imgError(this)">
 </p>
 <p>
  明文对应矩阵：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103150779826.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103150779826.png" onerror="return imgError(this)">
 </p>
 <p>
  加密密钥：
@@ -1055,13 +1055,13 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  加密矩阵：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103150840633.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103150840633.png" onerror="return imgError(this)">
 </p>
 <p>
  计算过程：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103150853189.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103150853189.png" onerror="return imgError(this)">
 </p>
 <p>
  密文：
@@ -1084,13 +1084,13 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  计算加密矩阵的逆矩阵：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103151016624.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103151016624.png" onerror="return imgError(this)">
 </p>
 <p>
  解密计算：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103151170410.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103151170410.png" onerror="return imgError(this)">
 </p>
 <p>
  明文：
@@ -1158,7 +1158,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  明文字母和对应密文：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103284368471.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103284368471.jpg" onerror="return imgError(this)">
 </p>
 <p>
  明文：
@@ -1170,7 +1170,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  密文：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103151480465.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103151480465.png" onerror="return imgError(this)">
 </p>
 <p>
  在线加密
@@ -1190,7 +1190,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  明文字母和对应密文：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103151584111.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103151584111.png" onerror="return imgError(this)">
 </p>
 <p>
  <strong>
@@ -1201,19 +1201,19 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  明文字母和对应密文：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103151538620.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103151538620.jpg" onerror="return imgError(this)">
 </p>
 <p>
  明文字母和对应密文：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103151669279.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103151669279.jpg" onerror="return imgError(this)">
 </p>
 <p>
  明文字母和对应密文：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103151949781.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103151949781.png" onerror="return imgError(this)">
 </p>
 <h3>
  7.波利比奥斯方阵密码
@@ -1233,7 +1233,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  常见的排布方式：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103152160997.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103152160997.png" onerror="return imgError(this)">
 </p>
 <p>
  加密实例：
@@ -1262,7 +1262,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  夏多密码是作者麦克斯韦·格兰特在中篇小说《死亡之链》塑造夏多这一英雄人物中所自创的密码，如下图所示：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103152184484.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103152184484.png" onerror="return imgError(this)">
 </p>
 <blockquote>
  <p>
@@ -1279,7 +1279,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  密文：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103152312820.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103152312820.jpg" onerror="return imgError(this)">
 </p>
 <h3>
  9.普莱菲尔密码
@@ -1319,7 +1319,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  2.用上一步得到的字母自上而下来填补5乘5方表的纵列（也可横排），之后的空白按照相同的顺序用字母表中剩余的字母依次填补完整，得到如下的方格:
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103152478059.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103152478059.png" onerror="return imgError(this)">
 </p>
 <blockquote>
  <p>
@@ -1472,7 +1472,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  密表：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103251647158.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103251647158.png" onerror="return imgError(this)">
 </p>
 <p>
  明文：
@@ -1542,7 +1542,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  解密：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103153159335.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103153159335.png" onerror="return imgError(this)">
 </p>
 <p>
  (ps:结合左边的值，密钥以及解出明文可以确定kien 5或者klen 10为准确的结果)
@@ -1566,7 +1566,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  (kasiski)来破译，因为自动密钥密码的密钥不重复循环使用，破译自动密钥密码最好的方法的就是从密文不断尝试和猜测其中明文或密钥的一部分。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103153234937.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103153234937.png" onerror="return imgError(this)">
 </p>
 <pre><code>&gt;&gt;&gt;from pycipher import Gronsfeld
 &gt;&gt;&gt;Gronsfeld([2,20,11,45,20,43,4]).encipher('THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG')
@@ -1656,7 +1656,7 @@ ZYXWVUTSRQPONMLKJIHGFEDCBA
  解密
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103153212434.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103153212434.png" onerror="return imgError(this)">
 </p>
 <p>
  (ps:从klen 13可以看出使用的关键词为'FORTIFICATION')
@@ -1848,7 +1848,7 @@ Y,Z | Z N O P Q R S T U V W X Y B C D E F G H I J K L M A
  常见代换规则表：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103153475267.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103153475267.png" onerror="return imgError(this)">
 </p>
 <p>
  明文:
@@ -1892,28 +1892,28 @@ Y,Z | Z N O P Q R S T U V W X Y B C D E F G H I J K L M A
  常见的字母对应关系：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103153585880.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103153585880.png" onerror="return imgError(this)">
 </p>
 <p>
  下面我们以E(x) = (5x + 8) mod 26函数为例子
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103153669163.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103153669163.png" onerror="return imgError(this)">
 </p>
 <p>
  至于解密我们知道
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103154316468.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103154316468.png" onerror="return imgError(this)">
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103154414181.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103154414181.png" onerror="return imgError(this)">
 </p>
 <p>
  即可得出解密结果
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103154542315.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103154542315.png" onerror="return imgError(this)">
 </p>
 <p>
  以E(x) = (5x + 8) mod 26加密，通过计算可得D(x)=21(x - 8) mod 26，这样便可以得到明文。
@@ -1922,7 +1922,7 @@ Y,Z | Z N O P Q R S T U V W X Y B C D E F G H I J K L M A
  可参考的Python脚本
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103154750760.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103154750760.png" onerror="return imgError(this)">
 </p>
 <p>
  加解密
@@ -2015,7 +2015,7 @@ X | b  u  t  i/j l
  </code>
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103154823575.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103154823575.png" onerror="return imgError(this)">
 </p>
 <p>
  密文：
@@ -2182,7 +2182,7 @@ X | j 9 u t i 8
  解密：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103180643941.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103180643941.png" onerror="return imgError(this)">
 </p>
 <p>
  得到加密矩阵:
@@ -2276,7 +2276,7 @@ N  O  O  N  W  G  B  X  X  L  G  H  H  W  S  K  W
  示例矩阵：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103155413939.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103155413939.png" onerror="return imgError(this)">
 </p>
 <p>
  明文：
@@ -2630,7 +2630,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  示例密阵:
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103155574778.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103155574778.jpg" onerror="return imgError(this)">
 </p>
 <pre><code>明文:T  H  E  Q  U  I  C  K  B  R  O  W  N  F  O 
 密文:84 27 82 41 51 66 31 36 15 71 67 73 52 34 67
@@ -2645,7 +2645,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  比尔密码(Beale ciphers)有三份密码，当然这里说的是已被破解第二份，是一种类似书密码的替换密码。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103155650516.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103155650516.png" onerror="return imgError(this)">
 </p>
 <p>
  以第二密码为例，每一个数字代表美国《独立宣言》的文本中的第几个词的首字母，如1代表第1个词的首字母“w”，2代表第2个词首字母“i”。解密后的文字如下：
@@ -2688,7 +2688,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103203693531.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103203693531.jpg" onerror="return imgError(this)">
 </p>
 <p>
  在线模拟
@@ -2736,7 +2736,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  ppencode-Perl把Perl代码转换成只有英文字母的字符串。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103160015412.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103160015412.png" onerror="return imgError(this)">
 </p>
 <p>
  ppencode
@@ -2751,7 +2751,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  rrencode可以把ruby代码全部转换成符号。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103160293706.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103160293706.jpg" onerror="return imgError(this)">
 </p>
 <p>
  rrencode
@@ -2770,7 +2770,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  ，aaencode可以将JS代码转换成常用的网络表情，也就是我们说的颜文字js加密。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103160390391.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103160390391.png" onerror="return imgError(this)">
 </p>
 <p>
  aaencode
@@ -2790,7 +2790,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  实现jjdecoder的源码进行分析。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103173692977.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103173692977.png" onerror="return imgError(this)">
 </p>
 <h3>
  8.JSfuck
@@ -2803,7 +2803,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  来编写 JavaScript 程序。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103160863321.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103160863321.png" onerror="return imgError(this)">
 </p>
 <p>
  JSfuck
@@ -2831,7 +2831,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  </a>
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103160970856.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103160970856.png" onerror="return imgError(this)">
 </p>
 <p>
  jother编码
@@ -2843,7 +2843,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  jother直接在浏览器(IE可以)的控制台里输入密文即可执行解密：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103161159933.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103161159933.png" onerror="return imgError(this)">
 </p>
 <h3>
  10.brainfuck
@@ -2962,7 +2962,7 @@ Ip  #e  Dk  Ck    Zr  Dr  Mx  Ar
  </li>
 </ul>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160711/2016071103161191942.gif" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160711/2016071103161191942.gif" onerror="return imgError(this)">
 </p>
 
 </body>

@@ -74,7 +74,7 @@ Android 司机版APP
  为了收集更多的关于Uber的子域名信息，我们使用了子域名枚举爆破。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070802214471104.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070802214471104.png" onerror="return imgError(this)">
 </p>
 <p>
  使用sublist3r进行子域名枚举
@@ -94,7 +94,7 @@ Android 司机版APP
  这个工具。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707080497090270.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/2016062707080497090270.png" onerror="return imgError(this)">
 </p>
 <p>
  jd-gui收集到的API细节
@@ -116,7 +116,7 @@ Android 司机版APP
  曾在付款页面有此功能，在添加了新的促销码后，我们把请求抓包，并发现应用程序并没有任何针对暴力破解的保护，从而帮助我们找到了许多不同的促销码。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707080664409356.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/2016062707080664409356.png" onerror="return imgError(this)">
 </p>
 <p>
  促销码页面-没有促销码
@@ -132,7 +132,7 @@ Android 司机版APP
  – 促销码已过期
 </code></pre>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707080876421445.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/2016062707080876421445.png" onerror="return imgError(this)">
 </p>
 <p>
  爆破攻击
@@ -144,7 +144,7 @@ Android 司机版APP
  最初这个问题不被认为是有效的，是因为促销码都应该是公开发布，是可以给予任何人的。这漏洞一直不被认可，直到我们找到他们（Uber安全团队）自己也未知的$100 ERH（紧急驾驶）促销码。这ERH代码和之前发现的代码都不同，即使已经使用了促销码仍然可以被重复使用。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707081042716527.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/2016062707081042716527.png" onerror="return imgError(this)">
 </p>
 <p>
  使用ERH代码的漏洞页面
@@ -182,7 +182,7 @@ Android 司机版APP
  正如你可以从下图中看到，在Uber乘客版APP里面有一个“帮助”功能，使用户可以直接发送问题来获得支持。说实话，我们很多人几乎从来不使用“帮助”，甚至不知道它的存在，但作为渗透测试人员我们不能说不知道有这个帮助功能。（后来我们发现，司机版APP中具有相同的功能）。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707081273349623.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/2016062707081273349623.png" onerror="return imgError(this)">
 </p>
 <p>
  帮助功能
@@ -195,7 +195,7 @@ Android 司机版APP
  尽快与您联系”。看到这条消息，我们觉得也许可以枚举爆破一些用户的邮箱地址。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707081439635723.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/2016062707081439635723.png" onerror="return imgError(this)">
 </p>
 <p>
  请求发送uuid代替token参数内容
@@ -204,7 +204,7 @@ Android 司机版APP
  通过查看请求包发现有两个地方，在X-uber-uuid头和uuid参数，有uuid的信息。如果我们修改为另一个有效的UUID，可能会使我们得到其他用户的邮箱地址。我们尝试同时改变两个参数，但不幸的是，服务器还是返回我们原有的邮箱地址。虽然还有一个token参数，我们的第一个方法是fuzz一下这个参数，但最终我们通过将其更改为其他用户的UUID成功利用，这时有一些神奇的事情发生：Web服务器返回了新用户的邮箱地址。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707081643462823.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/2016062707081643462823.png" onerror="return imgError(this)">
 </p>
 <p>
  服务器返回uuid关联的邮件地址
@@ -241,7 +241,7 @@ Android 司机版APP
  当开始挖掘漏洞，我们总是要试图去找到所有的APP/ Web的功能，尤其是那些不容易被发现或使用的功能。考虑到这一点，我们决定用我们的手机、电脑叫Uber，说干就干。在我们的行程中，我们抓下所有请求包，这些抓到的请求包中的一个，引起了我们的注意。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707081819172923.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/2016062707081819172923.png" onerror="return imgError(this)">
 </p>
 <p>
  邀请他人均分票价的请求包
@@ -256,13 +256,13 @@ Android 司机版APP
  你可以看到APP泄漏的信息如下图中所示：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070819867121022.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070819867121022.png" onerror="return imgError(this)">
 </p>
 <p>
  邀请用户导致泄露信息的响应包[1/2]
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070821518061126.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070821518061126.png" onerror="return imgError(this)">
 </p>
 <p>
  邀请用户导致泄露信息的响应包[2/2]
@@ -309,7 +309,7 @@ Android 司机版APP
  在开始测试司机版APP之后，我们才意识到，只能在激活流程之后才可以进入司机版APP。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070824131261224.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070824131261224.png" onerror="return imgError(this)">
 </p>
 <p>
  “司机账号未激活”的响应包
@@ -322,7 +322,7 @@ Android 司机版APP
  的变量，它的值是false。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070826171171322.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070826171171322.png" onerror="return imgError(this)">
 </p>
 <p>
  修改了“allowNotActivated”参数值的请求包
@@ -331,7 +331,7 @@ Android 司机版APP
  通过控制登录请求并改变allowNotActivated参数的值为true，就有可能获得有效的token。所以至少，这意味着甚至在该帐户未被激活的情况下，服务器也能创建一个有效的token。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070828264321419.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070828264321419.png" onerror="return imgError(this)">
 </p>
 <p>
  生成新token
@@ -340,7 +340,7 @@ Android 司机版APP
  如响应包中所示，isActivated是被设置为false。修改为true我们就可以进入司机版APP啦。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070829496421518.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070829496421518.png" onerror="return imgError(this)">
 </p>
 <p>
  司机版APP界面
@@ -374,7 +374,7 @@ Android 司机版APP
  利用之前的一个漏洞，我们能够测试被称为运单（waybill）的新的功能。通过修改APP发送的请求包，我们发现了一个未授权访问漏洞：在只知道司机的uuid的情况下，可以看到他的最后一趟发车细节。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070831748171616.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070831748171616.png" onerror="return imgError(this)">
 </p>
 <p>
  其他司机的运单的请求包
@@ -386,7 +386,7 @@ Android 司机版APP
  从这种请求的响应包，我们能够得到司机的名字，车牌，最后一趟行程乘客的UUID，最后一趟行程乘客姓名，乘客的数量，乘车的起点和终点。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070833538711716.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070833538711716.png" onerror="return imgError(this)">
 </p>
 <p>
  司机运单的响应包细节
@@ -410,7 +410,7 @@ Android 司机版APP
  这个功能不能在现在被公开，但只要我们一获得Uber授权，我们就会马上公开它。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070835728361815.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070835728361815.png" onerror="return imgError(this)">
 </p>
 <p>
  行程的完整路径
@@ -435,7 +435,7 @@ Android 司机版APP
  还记得漏洞3吗？我们发现，我们可以通过UUID修改token，并以此来冒充其他用户。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070836920121912.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070836920121912.png" onerror="return imgError(this)">
 </p>
 <p>
  关联了uuid的行程的请求包（token）
@@ -450,7 +450,7 @@ Android 司机版APP
  这是当你访问行程页面时保持UUID和token值相同的情况下的响应包。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070838184822011.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20160627/20160627070838184822011.png" onerror="return imgError(this)">
 </p>
 <p>
  关联UUID的行程列表

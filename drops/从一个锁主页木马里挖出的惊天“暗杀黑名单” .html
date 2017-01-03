@@ -51,7 +51,7 @@
  黑dll文件MD5为：becd5c682061be77ec3b64b236facac9
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/201511050654362964413.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/201511050654362964413.png" onerror="return imgError(this)">
 </p>
 <p>
  图1.被利用的白文件属性
@@ -84,7 +84,7 @@
  1）黑吃黑，删除以下注册表键值，使用命令行删除指定文件，要清除的文件列表里包含了大量的锁主页相关木马及软件。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/201511050654388358223.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/201511050654388358223.png" onerror="return imgError(this)">
 </p>
 <p>
  图2. 要清除的部分文件列表和注册表键值
@@ -93,13 +93,13 @@
  2）从指定的多个博客地址获取配置信息，并将配置信息保存到注册表中，通过配置信息控制，该木马支持的功能有更新木马、锁主页、盗取各种本地保存的密码、毁灭计算机、替换导航网站的推广ID、DDOS攻击等。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/201511050654417663233.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/201511050654417663233.png" onerror="return imgError(this)">
 </p>
 <p>
  图3. 从多个博客地址获取控制指令
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/201511050654439518643.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/201511050654439518643.png" onerror="return imgError(this)">
 </p>
 <p>
  图4. 博客内容之一
@@ -112,7 +112,7 @@
  ：定时清空知名导航网站的cookie，并不断判断浏览器地址栏是否为相应的导航网站，如果是，则修改其后面的推广id。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/201511050654444188053.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/201511050654444188053.png" onerror="return imgError(this)">
 </p>
 <p>
  图5. 抢网址盗号网站的推广
@@ -125,7 +125,7 @@
  ：不断遍历系统中的进程，一旦发现explorer创建以下列表中的浏览器进程，则立即将其结束，并以命令行添加网址的方式重新创建该浏览器进程，以偷天换日的方式实现主页锁定。如果用户机器性能好，则难以发现；如果性能较差，则可辨别到浏览器的瞬间开启和关闭行为。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/201511050654468983161.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/201511050654468983161.png" onerror="return imgError(this)">
 </p>
 <p>
  图6. 结束浏览器进程，并重新加命令行打开实现锁主页
@@ -138,37 +138,37 @@
  ：从注册表Destroy键值下读取配置信息，并解密得到“黑名单”。查找QQ窗口，获取当前登录的QQ号码是否在“黑名单”中，如果是，则串改MBR，直接废掉系统，木马当前配置的暗杀“黑名单”列表如图所示。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/201511050654476701471.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/201511050654476701471.png" onerror="return imgError(this)">
 </p>
 <p>
  图7. 配置“毁灭黑名单”的注册表路径
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/20151105065448228538.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/20151105065448228538.png" onerror="return imgError(this)">
 </p>
 <p>
  图8. 加密的“黑名单”
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/20151105065505842189.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/20151105065505842189.png" onerror="return imgError(this)">
 </p>
 <p>
  图9. 解密后的“黑名单”
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/201511050655078145010.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/201511050655078145010.png" onerror="return imgError(this)">
 </p>
 <p>
  图10. 获取当前登录的QQ号码
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/2015110506550849066111.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/2015110506550849066111.png" onerror="return imgError(this)">
 </p>
 <p>
  图11. 判断当前登录的QQ号码是否在黑名单中
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151105/2015110506551543298121.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151105/2015110506551543298121.png" onerror="return imgError(this)">
 </p>
 <p>
  图12. “毁灭”系统

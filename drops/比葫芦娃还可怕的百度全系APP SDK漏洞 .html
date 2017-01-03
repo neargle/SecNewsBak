@@ -70,7 +70,7 @@
  这个列表是2015年10月14号统计的百度系APP的最新版，理论上所有小于等于检测版本的这些百度系的APP都有被远程攻击的危险。根据易观智库的统计排行：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151029/20151029043040289941106.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151029/20151029043040289941106.png" onerror="return imgError(this)">
 </p>
 <p>
  可以看到手机百度、百度手机助手、百度地图等百度系APP有着上亿的下载安装量和加起来超过三亿的活跃用户。
@@ -139,25 +139,25 @@
  安装百度系app后，通过adb shell连接手机，随后使用netstat会发现手机打开了40310/6259端口，并且任何IP都可以进行连接。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151029/2015102904304261051257.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151029/2015102904304261051257.png" onerror="return imgError(this)">
 </p>
 <p>
  原来这个端口是由java层的nano http实现的，并且这个http服务，百度给起名叫immortal service（不朽/不死的服务）。为什么叫不朽的呢？因为这个服务会在后台一直运行，并且如果你手机中装了多个有wormhole漏洞的app，这些app会时刻检查40310/6259端口，如果那个监听40310/6259端口的app被卸载了，另一个app会立马启动服务重新监听40310/6259端口。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151029/201510290430451891339.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151029/201510290430451891339.jpg" onerror="return imgError(this)">
 </p>
 <p>
  我们继续分析，整个immortal service服务其实是一个http服务，但是在接受数据的函数里有一些验证,比如 http 头部remote-addr字段是否是”127.0.0.1”，但是会一点web技巧的人就知道，只要伪造一下头部信息就可把remote-addr字段变成”127.0.0.1”。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151029/2015102904304876775426.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151029/2015102904304876775426.png" onerror="return imgError(this)">
 </p>
 <p>
  成功的和http server进行通讯后，就可以通过url给APP下达指令了。拿百度地图为例，以下是百度地图APP中存在的远程控制的指令的反汇编代码：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151029/2015102904305049417522.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151029/2015102904305049417522.png" onerror="return imgError(this)">
 </p>
 <ol>
  <li>
@@ -218,7 +218,7 @@
  当我们看到这些远程指令的时候吓了一跳。你说你一个百度地图好好的导航行不行？为什么要去给别人添加联系人呢？添加联系人也就算了，为什么要去别的服务器下载应用并且安装呢？更夸张的是，安装还不是弹出对话框让用户选择是否安装，而是直接申请root权限进行静默安装。下图是代码段：
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151029/2015102904305258896620.png" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151029/2015102904305258896620.png" onerror="return imgError(this)">
 </p>
 <p>
  可以看到下载完app后会有三个判断:
@@ -283,7 +283,7 @@ Discovered open port 40310/tcp on 10.142.3.176  "packagename":"com.baidu.searchb
  除此之外，我们发现华为，三星，联想，金立等公司的某些机型在中国出厂的时候都会预装百度系app，突然间感到整个人都不好了。。。
 </p>
 <p>
- <img  alt="" src="http://static.wooyun.org//drops/20151029/201510290430543679973.jpg" onerror="return imgError(this)">
+ <img  alt="" src="../image/drops/20151029/201510290430543679973.jpg" onerror="return imgError(this)">
 </p>
 <h1>
  0x05 总结

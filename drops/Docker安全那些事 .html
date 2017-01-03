@@ -12,7 +12,7 @@
 <h1>Docker安全那些事</h1>
 
 <p>
- <img  alt="docker" src="http://static.wooyun.org//drops/20160704/2016070406003850049110.png" onerror="return imgError(this)">
+ <img  alt="docker" src="../image/drops/20160704/2016070406003850049110.png" onerror="return imgError(this)">
 </p>
 <h1>
  0x00 前言
@@ -163,7 +163,7 @@
  容器的环境是基于容器镜像，一旦容器镜像存在风险那么容器的安全性也要大打折扣了。我们在看容器镜像又是根据Dockerfile一层层叠加的，如下图：
 </p>
 <p>
- <img  alt="docker_image" src="http://static.wooyun.org//drops/20160704/201607040600395699926.png" onerror="return imgError(this)">
+ <img  alt="docker_image" src="../image/drops/20160704/201607040600395699926.png" onerror="return imgError(this)">
 </p>
 <p>
  底层Base镜像引用“atiger77:1.0”，第二层镜像在此之上添加run.sh脚本到容器目录中，第三层镜像是指在容器运行时执行run.sh脚本。Docker镜像有自己的缓存机制，构建时会逐层往上进行检查，底层镜像如果没有产生变动，则跳过构建使用镜像Cache来节省构建时间，如果检测到变动则开始进行构建动作。
@@ -186,7 +186,7 @@
  还是根据刚才的镜像分层来说，底层Base镜像中如果使用的软件存在高危漏洞，那么所有使用Base镜像所构建出的镜像都会存在问题。我们来举个栗子：
 </p>
 <p>
- <img  alt="docker_file" src="http://static.wooyun.org//drops/20160704/20160704060041468623.jpg" onerror="return imgError(this)">
+ <img  alt="docker_file" src="../image/drops/20160704/20160704060041468623.jpg" onerror="return imgError(this)">
 </p>
 <p>
  上图中Base镜像只安装基础依赖组件,其中软件包abc有高危漏洞。根据Base镜像打出需要的镜像，左边的镜像是添加了代码目录到容器中，右边则构建了一个编译gcc的基础镜像。那么当Base镜像中的abc软件存在高危漏洞，那么所有相关依赖的镜像就都存在了风险。当出现这种情况时，需要先修复Base镜像中的问题软件，完成后一次对依赖的镜像重新进行构建动作。
@@ -206,22 +206,22 @@
  分别使用官方镜像进行测试，版本为centos5.11/6.6/7.2
 </p>
 <p>
- <img  alt="docker_images_all" src="http://static.wooyun.org//drops/20160704/20160704060043784424.jpg" onerror="return imgError(this)">
+ <img  alt="docker_images_all" src="../image/drops/20160704/20160704060043784424.jpg" onerror="return imgError(this)">
 </p>
 <p>
  测试过程:
 </p>
 <p>
  Version:5.11
- <img  alt="images_centos_5" src="http://static.wooyun.org//drops/20160704/20160704060045634965.jpg" onerror="return imgError(this)">
+ <img  alt="images_centos_5" src="../image/drops/20160704/20160704060045634965.jpg" onerror="return imgError(this)">
 </p>
 <p>
  Version:6.6
- <img  alt="images_centos_6" src="http://static.wooyun.org//drops/20160704/20160704060047691826.jpg" onerror="return imgError(this)">
+ <img  alt="images_centos_6" src="../image/drops/20160704/20160704060047691826.jpg" onerror="return imgError(this)">
 </p>
 <p>
  Version:7.2
- <img  alt="images_centos_7" src="http://static.wooyun.org//drops/20160704/20160704060049878767.jpg" onerror="return imgError(this)">
+ <img  alt="images_centos_7" src="../image/drops/20160704/20160704060049878767.jpg" onerror="return imgError(this)">
 </p>
 <p>
  测试结果：
@@ -296,7 +296,7 @@ EXPOSE 11211
  让我们看一下大致的Compose文件长什么样：
 </p>
 <p>
- <img  alt="jenkins_compose" src="http://static.wooyun.org//drops/20160704/20160704060050135728.jpg" onerror="return imgError(this)">
+ <img  alt="jenkins_compose" src="../image/drops/20160704/20160704060050135728.jpg" onerror="return imgError(this)">
 </p>
 <p>
  compose运行在jenkins中设置完毕,主就可以把任务分配给从,并且由从进行测试构建编译打包成容器等动作。为了让jenkins-slave能在编译完成后在宿主机中打镜像而不是在容器内部，在compose中从挂卷将宿主机的/var/run/docker.sock挂到了容中,并且赋予了"privileged"权限，这个写法其实并没有什么问题，为了让从能构建镜像所以赋予root权限,恰恰是这样一旦jenkins被攻破那么就会对宿主机的安全造成了威胁，这里拿测试环境给大家演示一下。
@@ -316,7 +316,7 @@ EXPOSE 11211
    确定节电中已经添加slave
   </p>
   <p>
-   <img  alt="jenkins_hack_01" src="http://static.wooyun.org//drops/20160704/20160704060052160429.jpg" onerror="return imgError(this)">
+   <img  alt="jenkins_hack_01" src="../image/drops/20160704/20160704060052160429.jpg" onerror="return imgError(this)">
   </p>
  </li>
  <li>
@@ -324,7 +324,7 @@ EXPOSE 11211
    添加任务并分配给slave
   </p>
   <p>
-   <img  alt="jenkins_hack_02" src="http://static.wooyun.org//drops/20160704/201607040600543747710.jpg" onerror="return imgError(this)">
+   <img  alt="jenkins_hack_02" src="../image/drops/20160704/201607040600543747710.jpg" onerror="return imgError(this)">
   </p>
  </li>
  <li>
@@ -332,7 +332,7 @@ EXPOSE 11211
    查看Slave宿主机中存在的容器列表
   </p>
   <p>
-   <img  alt="jenkins_hack_03" src="http://static.wooyun.org//drops/20160704/201607040600566168511.jpg" onerror="return imgError(this)">
+   <img  alt="jenkins_hack_03" src="../image/drops/20160704/201607040600566168511.jpg" onerror="return imgError(this)">
   </p>
   <p>
    注：默认用户是jenkins,执行时需要加上sudo否则提示权限不足。这里可以看到拥有了privileged权限的slave容器获得了宿主机的权限。
@@ -343,7 +343,7 @@ EXPOSE 11211
    在"Execute shell"中下载带有ssh服务的DockerImage
   </p>
   <p>
-   <img  alt="docker_hack_01.jpg" src="http://static.wooyun.org//drops/20160704/201607040600583391312.jpg" onerror="return imgError(this)">
+   <img  alt="docker_hack_01.jpg" src="../image/drops/20160704/201607040600583391312.jpg" onerror="return imgError(this)">
   </p>
  </li>
  <li>
@@ -351,7 +351,7 @@ EXPOSE 11211
    对宿主机所在机器进行端口扫描，可以发现2016端口状态为open
   </p>
   <p>
-   <img  alt="docker_hack_02.jpg" src="http://static.wooyun.org//drops/20160704/201607040601009470813.jpg" onerror="return imgError(this)">
+   <img  alt="docker_hack_02.jpg" src="../image/drops/20160704/201607040601009470813.jpg" onerror="return imgError(this)">
   </p>
   <p>
    注释：本人是测试环境就写了内网IP。
@@ -362,7 +362,7 @@ EXPOSE 11211
    登录宿主机2016端口添加公钥
   </p>
   <p>
-   <img  alt="docker_hack_03.jpg" src="http://static.wooyun.org//drops/20160704/201607040601021552014.jpg" onerror="return imgError(this)">
+   <img  alt="docker_hack_03.jpg" src="../image/drops/20160704/201607040601021552014.jpg" onerror="return imgError(this)">
   </p>
  </li>
  <li>
@@ -370,7 +370,7 @@ EXPOSE 11211
    登录宿主机的22端口，获取宿主机权限
   </p>
   <p>
-   <img  alt="docker_hack_04.jpg" src="http://static.wooyun.org//drops/20160704/201607040601035762915.jpg" onerror="return imgError(this)">
+   <img  alt="docker_hack_04.jpg" src="../image/drops/20160704/201607040601035762915.jpg" onerror="return imgError(this)">
   </p>
  </li>
 </ol>
