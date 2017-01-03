@@ -29,13 +29,13 @@
 
 <!--more-->
 
-<p><img src="http://static.wooyun.org//drops/20160618/2016061803091789295apk1.jpg" alt="pic1" /></p>
+<p><img src="../image/drops/20160618/2016061803091789295apk1.jpg" alt="pic1" /></p>
 
 <p><strong>（2）</strong>/proc/pid/stat、/proc/pid/task/pid/stat</p>
 
 <p>调试状态下/proc/pid/stat、/proc/pid/task/pid/stat文件中第二个字段是t（T）：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160618/2016061803091836696apk2.jpg" alt="pic2" /></p>
+<p><img src="../image/drops/20160618/2016061803091836696apk2.jpg" alt="pic2" /></p>
 
 <p><strong>（3）</strong>/proc/pid/wchan、/proc/pid/task/pid/wchan</p>
 
@@ -372,7 +372,7 @@ anti3();
 
 <p>传统检测TracerPid的方法是直接在子进程中循环检测，一旦发现则主动杀死进程。本实例将循环检测TracerPid和进程间通信结合，一旦反调试子进程被挂起或被杀死，父进程也会马上终止，原理大致如下图：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160618/2016061803092064301apk3.jpg" alt="pic3" /></p>
+<p><img src="../image/drops/20160618/2016061803092064301apk3.jpg" alt="pic3" /></p>
 
 <p>父进程的守护线程在从pipe中read到statue值之前，默认statue值为-1，收到子进程往pipe中写的statue值之后，重置statue值，如果未被调试，statue值为0，反之则为被调试状态。该做法的优势在于，一旦反调试进程被终止或被挂起，守护线程也能马上发现。</p>
 
@@ -425,7 +425,7 @@ bool dvmDbgIsDebuggerConnected()
 
 <p>众所周知，IDA采用递归下降算法来反汇编指令，而该算法最大的缺点在于它无法处理间接代码路径，无法识别动态算出来的跳转。而arm架构下由于存在arm和thumb指令集，就涉及到指令集切换，IDA在某些情况下无法智能识别arm和thumb指令，比如下图所示代码：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160618/2016061803092254384apk4.jpg" alt="pic4" /></p>
+<p><img src="../image/drops/20160618/2016061803092254384apk4.jpg" alt="pic4" /></p>
 
 <p>bx r3指令会切换指令集，而参数r3是动态计算出来的，IDA无法失败r3的值，而默认将bx r3后面的指令当成跳转地址，将后面地址的指令识别成了arm指令，而实际上其仍为thumb指令。</p>
 

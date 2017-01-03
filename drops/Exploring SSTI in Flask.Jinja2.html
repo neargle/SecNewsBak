@@ -46,15 +46,15 @@ def page_not_found(e):
 
 <p>在测试这项功能的时候，我们看到了预期的效果。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031504410093112119.png" alt="" /></p>
+<p><img src="../image/drops/20160315/2016031504410093112119.png" alt="" /></p>
 
 <p>看到这种情况大多数人马上会想到XSS，他们的想法是正确的。在URL的尾部加上<code>&lt;script&gt;alert(42)&lt;/script&gt;</code>就触发了一个XSS漏洞。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031504410323537217.png" alt="" /></p>
+<p><img src="../image/drops/20160315/2016031504410323537217.png" alt="" /></p>
 
 <p>目标代码很容易被XSS，但是在James的文章中，他指出XSS很有可是SSTI的一个迹象。现在这种情况就是一个很好的例子。如果我们更加深入一点，在URL的末尾添加上<code>{{ 7+7 }}</code>，我们可以看到模板引擎计算了数学表达式，应用程序在响应的时候将其解析成<code>14</code>。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031504410445565317.png" alt="" /></p>
+<p><img src="../image/drops/20160315/2016031504410445565317.png" alt="" /></p>
 
 <p>我们现在已经在目标应用程序中发现了SSTI漏洞。</p>
 
@@ -111,7 +111,7 @@ def page_not_found(e):
 
 <p>我们第二个有趣的发现来自于内省<code>config</code>对象。<code>config</code>对象是一个Flask模板全局变量，代表“当前配置对象（<code>flask.config</code>）”。它是一个类似于字典的对象，其中包含了应用程序所有的配置值。在大多数情况下，会包含数据库连接字符串，第三方服务凭据，<code>SECRET_KEY</code>之类的敏感信息。注入payload<code>{{ config.items() }}</code>就可以轻松查看这些配置了。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603150441061541547.png" alt="" /></p>
+<p><img src="../image/drops/20160315/201603150441061541547.png" alt="" /></p>
 
 <p>不要认为在环境变量中存储这些配置选项就可以抵御这种信息泄露。一旦相关的配置值被框架解析后，<code>config</code>对象就会把它们全部包含进去。</p>
 
@@ -203,11 +203,11 @@ def import_string(import_name, silent=False):
 
 <p>对于新加载的模块，<code>from_object</code>方法会将那些变量名全是大写的属性添加到<code>config</code>对象中。其中有趣的地方就是，添加到<code>config</code>对象的属性会保持原有的类型，这意味着通过<code>config</code>对象，我们可以从模板内容中调用添加的函数。为了证明这一点，我们使用SSTI漏洞注入<code>{{ config.items() }}</code>，可以看到当前的整个配置选项。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603150441084936655.png" alt="" /></p>
+<p><img src="../image/drops/20160315/201603150441084936655.png" alt="" /></p>
 
 <p>再注入<code>{{ config.from_object('os') }}</code>，这下就会在<code>config</code>对象中添加那些在<code>os</code>库中变量名全是大写的属性。再次注入<code>{{ config.items() }}</code>，就可以发现新的配置选项。同样也需要注意这些配置选项的类型。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603150441109388965.png" alt="" /></p>
+<p><img src="../image/drops/20160315/201603150441109388965.png" alt="" /></p>
 
 <p>现在通过SSTI漏洞，我们可以调用添加到<code>config</code>对象中的任何可调用对象。下一步就是寻找可导入模块的相关功能，再加以利用逃逸出模板沙盒。</p>
 
@@ -351,7 +351,7 @@ if __name__ == '__main__':
 
 <p>对于最初的那篇文章，<a href="https://twitter.com/_qll_">Nicolas G</a>发表了如下推文。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603150441125275375.png" alt="" /></p>
+<p><img src="../image/drops/20160315/201603150441125275375.png" alt="" /></p>
 
 <p>如果你稍微使用一下这个payload，你很快就会发现它是行不通的。其中有好几个原因，我稍后会解释一下。然而关键问题就在于，这个payload使用了几个非常重要的内省组件，而在之前的研究中我们将其忽略了：<code>__mro__</code>和<code>__subclasses__</code>属性。</p>
 
@@ -380,17 +380,17 @@ if __name__ == '__main__':
 
 <p>我们要做的第一件事就是，选择一个新式对象，用它来访问<code>object</code>类。我们简单地使用<code>''</code>，一个空字符串，对象类型为<code>str</code>。然后我们就可以使用<code>__mro__</code>属性来访问对象的父类。将<code>{{ ''.__class__.__mro__ }}</code>作为payload注入到SSTI漏洞点当中。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603150441145971885.png" alt="" /></p>
+<p><img src="../image/drops/20160315/201603150441145971885.png" alt="" /></p>
 
 <p>可以看到返回了我们之前讨论过的元组。因为我们要回退到object类，我们就使用索引2来选择object类。现在我们到达了object类，我们使用<code>__subclasses__</code>属性来dump应用程序中使用的所有类。将<code>{{ ''.__class__.__mro__[2].__subclasses__() }}</code>注入到SSTI漏洞点当中。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603150441163771195.png" alt="" /></p>
+<p><img src="../image/drops/20160315/201603150441163771195.png" alt="" /></p>
 
 <p>正如你所见，这里输出了很多东西。在我使用的目标程序中，有572个可用的类。这些会让事情变得棘手，而且也是之前推特当中payload不能运行的原因。要记住，并不是每个应用程序的Python环境都是一样的。我们的目标就是寻找有用的方法来访问相关的文件或操作系统。在所有的应用程序当中，不可能都使用类似于用<code>subprocess.Popen</code>这样不常见的类，换一种情况就有可能无法利用了，就像之前那个推特中的payload一样，就我发现的而言，在原生态的Flask中这种payload是无法利用的。幸运的是，可用利用原生态Flask的特性来让我们实现类似的行为。</p>
 
 <p>如果你梳理了一下之前payload的输出，你就会发现<code>&lt;type 'file'&gt;</code>这个类。这是一个对文件系统访问的关键点。尽管<code>open</code>是创建<code>file</code>对象后的内建函数，但是<code>file</code>类也能够实例化文件对象，而且如果我们实例化了一个文件对象，那么我们就可用使用类似于<code>read</code>的方法来读取相关内容。为了证明这一点，找到<code>file</code>类的索引，在我的环境中<code>&lt;type 'file'&gt;</code>类的索引是40，我们就注入<code>{{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }}</code>。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031504411746847105.png" alt="" /></p>
+<p><img src="../image/drops/20160315/2016031504411746847105.png" alt="" /></p>
 
 <p>所以现在我们就证明了，通过Flask/Jinja2中的SSTI进行任意文件读取是有可能的，但是我们还没有完全搞定。在这里我的目标是远程代码/命令执行。</p>
 
@@ -430,17 +430,17 @@ if __name__ == '__main__':
 
 <p>让我来更深入地研究一下。虽然执行代码已经足够了，但是我们为了执行每个代码块必须经过多个步骤，这些过程是很乏味的。让我们充分地利用<code>from_pyfile</code>方法来达到我们预期的目的，并且向config对象中添加一些有用的东西。将<code>{{ ''.__class__.__mro__[2].__subclasses__()[40]('/tmp/owned.cfg', 'w').write('from subprocess import check_output\n\nRUNCMD = check_output\n') }}</code>注入到SSTI漏洞点。这就会在远程服务器上写一个文件，当其被编译的时候，就可以从<code>subprocess</code>模块中导入<code>check_output</code>方法，并将其设置成一个名为<code>RUNCMD</code>变量。如果你回忆一下之前的文章，你就会知道因为<code>RUNCMD</code>为一个大写的变量名，就可以被添加到Flask<code>config</code>对象中。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/20160315044119948191110.png" alt="" /></p>
+<p><img src="../image/drops/20160315/20160315044119948191110.png" alt="" /></p>
 
 <p>注入<code>{{ config.from_pyfile('/tmp/owned.cfg') }}</code>来将新的项目添加到config对象中。注意以下两幅图一前一后的差异。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031504412192273125.png" alt="" /></p>
+<p><img src="../image/drops/20160315/2016031504412192273125.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031504412390849135.png" alt="" /></p>
+<p><img src="../image/drops/20160315/2016031504412390849135.png" alt="" /></p>
 
 <p>现在我们就可以调用新的配置选项来执行远程命令了。可以将<code>{{ config['RUNCMD']('/usr/bin/id',shell=True) }}</code>注入到SSTI漏洞点来进行证明。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031504412569672144.png" alt="" /></p>
+<p><img src="../image/drops/20160315/2016031504412569672144.png" alt="" /></p>
 
 <p>远程代码成功执行。</p>
 

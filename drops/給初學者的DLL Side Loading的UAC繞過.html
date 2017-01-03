@@ -72,11 +72,11 @@
 
 <p>那麼UAC視窗究竟是什麼？</p>
 
-<p><img src="http://static.wooyun.org//drops/20151201/201512011617096174519.png" alt="p1" /></p>
+<p><img src="../image/drops/20151201/201512011617096174519.png" alt="p1" /></p>
 
 <p>如果在Windows7把UAC權限設置為第三種模式（提醒但沒有安全桌面）那麼在彈出UAC視窗的同時可以透過⼯作管理員選擇到該視窗然後觀看它的處理序資訊：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151201/201512011617126153821.png" alt="p2" /></p>
+<p><img src="../image/drops/20151201/201512011617126153821.png" alt="p2" /></p>
 
 <p>你將會發現其實UAC視窗產⽣者並非當前進程而是由system32底下⼀個稱為<code>consent.exe</code>（意味著授權）的進程創建的視窗，透過⼯具如PCHunter可以查看到當前<code>consent.exe</code>的⽗進程為<code>svchost.exe</code>並且創建UAC進程的<code>svchost.exe</code>為系統層級。到這邊大致可以推敲一下今天如果我們進程做了一個敏感命令，那麼大致上會是：</p>
 
@@ -108,33 +108,33 @@
 
 <p>⾄於UAC檢測就埋在IFileOperation COM內部的實作，有趣的是explorer.exe本身為IFileOperation COM的⽩名單進程，至於這點怎麼發現的呢？</p>
 
-<p><img src="http://static.wooyun.org//drops/20151201/201512011617155244631.png" alt="p3" /></p>
+<p><img src="../image/drops/20151201/201512011617155244631.png" alt="p3" /></p>
 
 <p>今天當使⽤者想放置⼀個檔案入 C:\Windows\ 系統資料夾內依舊會發現UAC提醒這個行為會需要系統權限，但是用工作管理員查看會得知：這個UAC提醒視窗居然是explorer.exe本⾝彈出的視窗！意味著explorer.exe本身調用IFileOperation COM來移動檔案入系統權限的資料夾是不受管制的，⽽彈跳提醒視窗是explorer.exe本身提醒的！因此我們可以得知只要想辦法將⾃己的dll注入explorer.exe進程，那麼就可以擁有任意寫入的系統權限了，關鍵代碼撰寫如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151201/201512011617171083341.png" alt="p4" /></p>
+<p><img src="../image/drops/20151201/201512011617171083341.png" alt="p4" /></p>
 
 <p>透過建⽴進程名單快照並且遍歷進程找到Explorer.exe再做 OpenProcess 取得跨進程寫入讀取權限的握柄(Handle)，接著我們需要做的就是把我們的dll（我撰寫此專案時命名為Client.dll）注入進explorer.exe，另外 本次繞過UAC⼿法上是透過系統內置的SQL本地端解析⼯工具 — cliconfg.exe 含有DLL Side Loading來做穿透（相對應的ntwdblib.dll可穩定的Side Loading Win7~Win10）等待DLL注入explorer.exe後，dll須在explorer.exe進程內將⾃己dll複製⼀份到C:\Windows\system32內的ntwdblib.dll（原本應該會呼叫system下的ntwdblib.dll），完成後,此時我們再呼叫⼀次cliconfg.exe,這時候本來應該載入system下的ntwdblib.dll但因我們在同層目錄下放同名的ntwdblib.dll（⾃行撰寫的dll）會被Loadlibrary優先載⼊，我們的dll便可擁有System32下的權限了。</p>
 
 <p>關鍵代碼如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151201/201512011617194419051.png" alt="p5" /></p>
+<p><img src="../image/drops/20151201/201512011617194419051.png" alt="p5" /></p>
 
 <p>再來就是處理的是DLL內先確認是否被載入在explorer.exe進程內，若是則開始做SideLoading的前置作業，若是成功被cliconfg.exe載⼊則提示過了UAC！</p>
 
-<p><img src="http://static.wooyun.org//drops/20151201/201512011617216036461.png" alt="p6" /></p>
+<p><img src="../image/drops/20151201/201512011617216036461.png" alt="p6" /></p>
 
 <p>注入完成後先檢測當前進程路徑如果是explorer.exe代表我們需要做複製dll到可被DLLSide Loading的位置（本文額外包成了DllHijacking函數）如果檢測到當前進程已經存活在cliconfg.exe內，代表已經成功取得系統權限，就跳出成功的提醒視窗。</p>
 
 <p>至於DllHijacking函數內部的實現如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151201/201512011617247719771.png" alt="p7" /></p>
+<p><img src="../image/drops/20151201/201512011617247719771.png" alt="p7" /></p>
 
 <p>最後編譯後分別有一個exe執⾏檔與⼀個Client.dll文件，執⾏結果如下：</p>
 
 <p>執行ClientUAC.exe後，彈出了取得UAC權限的視窗提醒，透過⼯作管理員查看該視窗的進程為cliconfg.exe程序，並且執⾏過程沒有任何UAC認證請求彈窗。</p>
 
-<p><img src="http://static.wooyun.org//drops/20151201/201512011617266790181.png" alt="p8" /></p>      </p>
+<p><img src="../image/drops/20151201/201512011617266790181.png" alt="p8" /></p>      </p>
     
 			</body>
 		</html>

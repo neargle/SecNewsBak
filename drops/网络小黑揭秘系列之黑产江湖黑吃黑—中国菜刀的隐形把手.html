@@ -41,17 +41,17 @@
 
 <p>通过对收集到的大量样本进行分析，发现这些带有后门的中国菜刀都基本上通过修改原版的某些特征来绕过“安全狗”等Web安全防护软件，同时修改PE的导入表引入一个动态链接的后门模块。为了通过迷惑用户而不被发现，将后门的名字伪装成数据库的临时文件，也就是“db.tmp”，因为“中国菜刀”的默认数据库文件名为“db.mdb”。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605110188564125.jpg" alt="p1" /></p>
+<p><img src="../image/drops/20160226/2016022605110188564125.jpg" alt="p1" /></p>
 
 <p>caidao.exe文件MD5: baad97c73aee0207e608c46d0941d28b</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605110357427210.jpg" alt="p2" /></p>
+<p><img src="../image/drops/20160226/2016022605110357427210.jpg" alt="p2" /></p>
 
 <p>对“db.tmp”进行汇总分析，发现PE文件时间戳是伪造的，也就无法通过这个属性进行分类。根据文件大小大致能分成两个版本：一个32K大小的早期版本，另外一个36K大小的改进版本。两个版本的实际功能都差不多，使用VB6编写，通过对这些文件进行二进制比较确认相同版本的文件大小相同而后门地址不一样，应该是有使用模版生成器来进行生成。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260511053748539.jpg" alt="p3" /></p>
+<p><img src="../image/drops/20160226/201602260511053748539.jpg" alt="p3" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260511072204649.jpg" alt="p4" /></p>
+<p><img src="../image/drops/20160226/201602260511072204649.jpg" alt="p4" /></p>
 
 <p>对“db.tmp”进行反汇编分析，发现带后门的菜刀会针对抓包软件进行行为隐藏，当发现系统中有以下进程的时候不执行后门行为动作，使其逃过可能的监视。</p>
 
@@ -59,13 +59,13 @@
   <p>|WSockExpert_cn.exe|WSockExpert.exe|CHKenCap.exe|SmartSniff.exe|hookME.exe|NetworkTrafficView.exe|smsniff.exe|tcpmon.exe|HttpAnalyzerStdV6.exe|Csnas.exe|Wireshark.exe|</p>
 </blockquote>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260511099796059.jpg" alt="p5" /></p>
+<p><img src="../image/drops/20160226/201602260511099796059.jpg" alt="p5" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260511105979269.jpg" alt="p6" /></p>
+<p><img src="../image/drops/20160226/201602260511105979269.jpg" alt="p6" /></p>
 
 <p>通过循环读取mdb数据库中的SiteUrl的值并进行判断，排除“<code>http://www.maicaidao.com/</code>”（目的是为了排除中国菜刀默认生成的示例信息）后继续读取SitePass、nCodePage、Config字段值，最后和程序中所配置的后门地址“<code>http://cd.myth321.com/index.asp||||||||</code>”进行拼接，发送数据完成Webshell信息的上传。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260511128803678.jpg" alt="p7" /></p>
+<p><img src="../image/drops/20160226/201602260511128803678.jpg" alt="p7" /></p>
 
 <h1>0x03 传播手段</h1>
 
@@ -77,35 +77,35 @@
 
 <p>在手上有大量的Webshell之后，后门菜刀的幕后操刀手可以很方便的利用这些Webshell将自己的网站SEO到一个比较理想的位置。在某搜索引擎的第一页结果中，我们可以看到除了推广链接排名在第一位，第二位和第三位都是SEO上去的假官网。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260511132663687.jpg" alt="p8" /></p>
+<p><img src="../image/drops/20160226/201602260511132663687.jpg" alt="p8" /></p>
 
 <p>我们将仿冒的官网域名列举如下，基于360的大数据统计了2015年12月07日至16日共计十天的PVUV访问量，从数据来看SEO还是有些效果的。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260511151287796.jpg" alt="p9" /></p>
+<p><img src="../image/drops/20160226/201602260511151287796.jpg" alt="p9" /></p>
 
 <h3>2、购买搜索引擎关键词</h3>
 
 <p>大家是否还记得2012年年初，曾有人在某搜索引擎中购买putty、winscp、SSHSecure等ssh工具的关键词，使很多人通过该引擎搜索时点击了推广链接，跳转到所谓的中文网站并下载运行了包含后门的中文版工具，该后门会将用户连接过的服务器IP地址、端口号、用户名及密码上传至“l.ip-163.com”这个网站，事情曝光后有白帽子在第一时间通过技术手段发现该服务器已经使数千人中招，甚至包括某些国际大厂的员工。“中国菜刀”这么受欢迎的工具，如果SEO效果不好，购买搜索引擎关键词进行推广是一个比较理想的高效推广手段。经过简单的测试，发现这些带有后门的“中国菜刀”在某搜索引擎上，买了至少以下三个关键词“过狗菜刀”、“中国菜刀”和“XISE”进行推广。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605111665889106.jpg" alt="p10" /></p>
+<p><img src="../image/drops/20160226/2016022605111665889106.jpg" alt="p10" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/20160226051118850251112.jpg" alt="p11" /></p>
+<p><img src="../image/drops/20160226/20160226051118850251112.jpg" alt="p11" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605112047766126.jpg" alt="p12" /></p>
+<p><img src="../image/drops/20160226/2016022605112047766126.jpg" alt="p12" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605112210422135.jpg" alt="p13" /></p>
+<p><img src="../image/drops/20160226/2016022605112210422135.jpg" alt="p13" /></p>
 
 <h3>3、通过一些黑客论坛进行发布</h3>
 
 <p>在不少论坛或黑客组织中，都有收集整理黑客工具并打包发布的传统，这些都是脚本小子的最爱。针对这些带后门的中国菜刀进行追踪溯源，发现很多都是通过黑客工具包进行传播的，我们整理了一份不完全的名单——这些带有后门的中国菜刀被有意或者无意加入了这些工具集合中。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605112339776144.jpg" alt="p14" /></p>
+<p><img src="../image/drops/20160226/2016022605112339776144.jpg" alt="p14" /></p>
 
 <h3>4、通过QQ群、论坛等特定的圈子进行传播</h3>
 
 <p>很多黑客的成长，要么是自己观看他人的教程然后依样画葫芦学习，要么是有老司机带路甚至是手把手的教。在这个过程中，这群人总会在某个地方形成一个圈子，QQ群也好，论坛也罢，收费的也好，免费也罢。但这些圈子可能并不纯粹，老司机有可能也是个半桶水，或者在教的过程中故意留一手——因为我们发现有不少教程中所附带的工具包也是带有后门的。以下是几个例子：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605112528114154.jpg" alt="p15" /></p>
+<p><img src="../image/drops/20160226/2016022605112528114154.jpg" alt="p15" /></p>
 
 <h1>0x04 中国菜刀的背后</h1>
 
@@ -115,7 +115,7 @@
 
 <p>透过传播手段，我们可以看到“中国菜刀”在中国的流行程度。而中国菜刀的流行也同国内网站的安全性相关。让我们先看看《2015年中国网站安全报告》<sup>【4】</sup>中的一段数据：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605112678932164.jpg" alt="p16" /></p>
+<p><img src="../image/drops/20160226/2016022605112678932164.jpg" alt="p16" /></p>
 
 <p>正因为有大量的网站存在漏洞，所以有大量的自动漏洞扫描及入侵工具。使用中国菜刀来对这些Webshell进行批量管理，小黑们可以非常愉快地执行恶意SEO、挂黑链、挂黑页等活动。</p>
 
@@ -125,11 +125,11 @@
 <li>挂黑页 挂黑页是指通过篡改原网站的页面或增加页面，在这个页面实现钓鱼的行为。如下图就是通过在正规网站中，植入伪装成“网游交易门户”的欺诈页面。</li>
 </ul>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605112736444174.jpg" alt="p17" /></p>
+<p><img src="../image/drops/20160226/2016022605112736444174.jpg" alt="p17" /></p>
 
 <p>通过对中国菜刀后门的逆向分析，从样本中提取了几个典型的后门箱子链接，由此获取这些箱子是个挺简单的事，统计发现数据还是很惊人的。数据如下表：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605113046728183.jpg" alt="p18" /></p>
+<p><img src="../image/drops/20160226/2016022605113046728183.jpg" alt="p18" /></p>
 
 <p>以“c.qsmyy.com”后门地址为例，一共下载回来639个后门箱子，里面共有67864条Webshell，对这些Webshell进行消重后仍有24111条结果，平均每个箱子中有38条Webshell，其中，箱子日期越新的Webshell，访问成功的概率越高。</p>
 
@@ -143,85 +143,85 @@
 
 <p><code>http://www.maicaidao.co</code>是仿造菜刀官网（www.maicaidao.com）的网站之一，其所提供的菜刀下载链接（<code>http://www.maicaidao.co/FileRecv/20141018.zip</code>）是带有db.tmp后门的，为了提高逆向分析难度，还使用了VMProtect加壳软件加壳保护。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605113258824192.jpg" alt="p19" /></p>
+<p><img src="../image/drops/20160226/2016022605113258824192.jpg" alt="p19" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605113379360201.jpg" alt="p20" /></p>
+<p><img src="../image/drops/20160226/2016022605113379360201.jpg" alt="p20" /></p>
 
 <p>从公开的whois信息显示，<a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="37df9892d2a8a8d2a7bad1849fd2b1bbdeb599d09986d38f8d455858430e0744525477505a565e5b1954585a">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script>，同时，该邮箱同时还有注册“maicaidao.me”这个域名。安全圈的朋友们一看这个邮箱，应该并不陌生，没错这个邮箱的主人正是某sec组织的成员之一，接下来的我们就不多说了，有兴趣的可以自己去挖挖。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605113628610211.jpg" alt="p21" /></p>
+<p><img src="../image/drops/20160226/2016022605113628610211.jpg" alt="p21" /></p>
 
 <p><strong>www.maicaidao.cc钓鱼站溯源</strong></p>
 
 <p><code>www.maicaidao.cc</code>这个钓鱼站因为域名过期已经打不开，但在过去的一年没少传播，通过whois查询可以知道站长的邮箱为 <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="b682868284868787868ff6c7c798d5d9db553634">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605113753579221.jpg" alt="p22" /></p>
+<p><img src="../image/drops/20160226/2016022605113753579221.jpg" alt="p22" /></p>
 
 <p>通过QQ群关系社工库，我们可以看到如下信息。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605113966305231.jpg" alt="p23" /></p>
+<p><img src="../image/drops/20160226/2016022605113966305231.jpg" alt="p23" /></p>
 
 <p>而在这个QQ号的空间相册中，还能看到其炫耀的入侵网站截图。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605114119384241.jpg" alt="p24" /></p>
+<p><img src="../image/drops/20160226/2016022605114119384241.jpg" alt="p24" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605114234490251.jpg" alt="p25" /></p>
+<p><img src="../image/drops/20160226/2016022605114234490251.jpg" alt="p25" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605114481851261.jpg" alt="p26" /></p>
+<p><img src="../image/drops/20160226/2016022605114481851261.jpg" alt="p26" /></p>
 
 <p>当然，其QQ空间还有个人生活、学习的照片。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605114587938271.jpg" alt="p27" /></p>
+<p><img src="../image/drops/20160226/2016022605114587938271.jpg" alt="p27" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605114718070281.jpg" alt="p28" /></p>
+<p><img src="../image/drops/20160226/2016022605114718070281.jpg" alt="p28" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605115076858291.jpg" alt="p29" /></p>
+<p><img src="../image/drops/20160226/2016022605115076858291.jpg" alt="p29" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260511527089530.jpg" alt="p30" /></p>
+<p><img src="../image/drops/20160226/201602260511527089530.jpg" alt="p30" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605115319558311.jpg" alt="p31" /></p>
+<p><img src="../image/drops/20160226/2016022605115319558311.jpg" alt="p31" /></p>
 
 <p>这些照片显示，其在广州的传智播客学习过。通过QQ号查找，发现其有使用微信，基本可以确认此QQ号为主账号。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605115578848321.jpg" alt="p32" /></p>
+<p><img src="../image/drops/20160226/2016022605115578848321.jpg" alt="p32" /></p>
 
 <p>更多社工就此打住，贴个天眼的可视化关联平台里的关系图来总结一下www.maicaidao.cc这个钓鱼站。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605115695457331.jpg" alt="p33" /></p>
+<p><img src="../image/drops/20160226/2016022605115695457331.jpg" alt="p33" /></p>
 
 <p><strong>guogoucaidao.com钓鱼站溯源</strong></p>
 
 <p><code>http://www.guogoucaidao.com</code>这个钓鱼站的主打是“最新专版过狗菜刀，过目前最新版V3.4.09060安全狗！”，在该钓鱼站的第二篇文章（http://www.guogoucaidao.com/?post=2）有所谓的过狗菜刀下载链接（http://www.guogoucaidao.com/content/uploadfile/201509/1cae1442556699.rar），但这个链接的中国菜刀是含有后门的，经分析后门地址为s.anylm.com。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605115897605341.jpg" alt="p34" /></p>
+<p><img src="../image/drops/20160226/2016022605115897605341.jpg" alt="p34" /></p>
 
 <p>whois信息，<a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="20c5afb1c7ae90c78bb9c9b59fc7baa4c9a28ec78e91c4989a111219161414141811136051510e434f4d">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script>，1296444813这个QQ号在搜索引擎中有不少记录，包括为暗影联盟站长的身份，后门地址s.anylm.com也正好是暗影联盟的拼音。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605120145287351.jpg" alt="p35" /></p>
+<p><img src="../image/drops/20160226/2016022605120145287351.jpg" alt="p35" /></p>
 
 <p>通过百度贴吧，可见其“出售刷钻平台ok”的ID，在该ID下有不少关注的贴吧，其中几个都是独立创建的，还曾做过卡盟供货商，在搜索引擎中还能找到暗影卡盟的相关信息。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605120257377361.jpg" alt="p36" /></p>
+<p><img src="../image/drops/20160226/2016022605120257377361.jpg" alt="p36" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605120617555371.jpg" alt="p37" /></p>
+<p><img src="../image/drops/20160226/2016022605120617555371.jpg" alt="p37" /></p>
 
 <p>在某个社工库里，我们找到了这个QQ号背后的邮箱<code><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="38090b0a121212120d00010978090e0b165b5755">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script></code>及密码。顺着这条线索，找到了更多身份信息。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605120837924381.jpg" alt="p38" /></p>
+<p><img src="../image/drops/20160226/2016022605120837924381.jpg" alt="p38" /></p>
 
 <p>在某商城发现了其购买“黑客攻防入门与进阶（附赠DVD-ROM光盘1张）”的订单记录。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605121073277391.jpg" alt="p39" /></p>
+<p><img src="../image/drops/20160226/2016022605121073277391.jpg" alt="p39" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260512117907040.jpg" alt="p40" /></p>
+<p><img src="../image/drops/20160226/201602260512117907040.jpg" alt="p40" /></p>
 
 <p>通过<code>132****5891</code>这个手机号能够找到通过实名验证的支付宝账号。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605121338366411.jpg" alt="p41" /></p>
+<p><img src="../image/drops/20160226/2016022605121338366411.jpg" alt="p41" /></p>
 
 <p>好了，更多的东西就不再深入了，感兴趣的同学们可以继续深挖。用一张天眼的可视化关联平台里的关系图来结束此次追溯之旅。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605121491731421.jpg" alt="p42" /></p>
+<p><img src="../image/drops/20160226/2016022605121491731421.jpg" alt="p42" /></p>
 
 <p><strong>tophack.net钓鱼站追踪及溯源</strong></p>
 
@@ -235,95 +235,95 @@
 
 <p>其中tophack.net的whois信息显示站长的QQ号为595845736，其信息如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605121675817431.jpg" alt="p43" /></p>
+<p><img src="../image/drops/20160226/2016022605121675817431.jpg" alt="p43" /></p>
 
 <p>比较高调的一个小黑客，在QQ空间中还有留有入侵网站的截图。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605121742773441.jpg" alt="p44" /></p>
+<p><img src="../image/drops/20160226/2016022605121742773441.jpg" alt="p44" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605121930076451.jpg" alt="p45" /></p>
+<p><img src="../image/drops/20160226/2016022605121930076451.jpg" alt="p45" /></p>
 
 <p>通过搜索引擎，能找到好多关于这个QQ号的负面评价。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605122095356461.jpg" alt="p46" /></p>
+<p><img src="../image/drops/20160226/2016022605122095356461.jpg" alt="p46" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605122225394471.jpg" alt="p47" /></p>
+<p><img src="../image/drops/20160226/2016022605122225394471.jpg" alt="p47" /></p>
 
 <p>这些信息表明，该QQ号主人在2011年就已经从事黑产相关的违法交易，行事高调且声誉不好。另外，QQ签名显示，目前正在做“鸿發棋牌”在线赌博平台。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605122358144481.jpg" alt="p48" /></p>
+<p><img src="../image/drops/20160226/2016022605122358144481.jpg" alt="p48" /></p>
 
 <p>棋牌游戏的推广，也是离不开SEO的，从某搜索引擎结果来看，“鸿發棋牌”的排名还是比较靠前的。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605122493277491.jpg" alt="p49" /></p>
+<p><img src="../image/drops/20160226/2016022605122493277491.jpg" alt="p49" /></p>
 
 <p>通过websiteinformer.com可以查到早在2012年7月就冒充菜刀官网。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260512266613150.jpg" alt="p50" /></p>
+<p><img src="../image/drops/20160226/201602260512266613150.jpg" alt="p50" /></p>
 
 <p>通过WHOIS域名查询得知该QQ邮箱对应的其他域名如下图。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605122794836511.jpg" alt="p51" /></p>
+<p><img src="../image/drops/20160226/2016022605122794836511.jpg" alt="p51" /></p>
 
 <p>对域名注册者进行反查结果如下图域名。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605122952361521.jpg" alt="p52" /></p>
+<p><img src="../image/drops/20160226/2016022605122952361521.jpg" alt="p52" /></p>
 
 <p>通过域名来看，基本上都和黑产、黑客相关。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605123011471531.jpg" alt="p53" /></p>
+<p><img src="../image/drops/20160226/2016022605123011471531.jpg" alt="p53" /></p>
 
 <p><strong>www.caidaomei.com钓鱼站追踪及溯源</strong></p>
 
 <p>www.caidaomei.com这个站的主打有“最新xise菜刀寄生虫破解版vip版(过狗)”、“红色版中国菜刀(20141213)正式发布 过狗红色菜刀”、“最新提权免杀asp木马,不死复活僵尸木马”和“最新过狗菜刀下载”，但经分析，该站所有的Webshell管理工具都存在后门。比如“xise菜刀寄生虫破解版”，就存在“jsc.dat”后门——因为“xise菜刀”的默认数据库文件名为“jsc.mdb”，和中国菜刀的“db.tmp”后门异曲同工。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605123111883541.jpg" alt="p54" /></p>
+<p><img src="../image/drops/20160226/2016022605123111883541.jpg" alt="p54" /></p>
 
 <p>文件MD5: 5bb4f15f29c613eff7d8f86b7bcc94c1</p>
 
 <p>不仅如此，该站菜刀后门的箱子数量也十分可观，我们从后门地址共提取了194个后门箱子共计75166条Webshell，消重后仍有18613条Webshell，平均每个后门箱子中有96条Webshell。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605123313757551.jpg" alt="p55" /></p>
+<p><img src="../image/drops/20160226/2016022605123313757551.jpg" alt="p55" /></p>
 
 <p>在分析样本时，发现一个特殊的样本（fe2a29ac3cae173916be42db7f2f91ef），疑似做测试的。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605123519499561.jpg" alt="p56" /></p>
+<p><img src="../image/drops/20160226/2016022605123519499561.jpg" alt="p56" /></p>
 
 <p>通过Whois查询，demo.heimaoboke.com的站长QQ为408888540。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605123798740571.jpg" alt="p57" /></p>
+<p><img src="../image/drops/20160226/2016022605123798740571.jpg" alt="p57" /></p>
 
 <p>通过搜索引擎，可以找到QQ408888540的在网易lofter上面的blog空间，在该空间中，存在大量的xise菜刀及黑帽SEO的介绍。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605123830275581.jpg" alt="p58" /></p>
+<p><img src="../image/drops/20160226/2016022605123830275581.jpg" alt="p58" /></p>
 
 <p>文章就是介绍Webshell箱子（菜刀后门）的，可以按需订制，并提供相应的售后技术支持，就是不知道这个所谓的后门还会不会有个后门。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605124052627591.jpg" alt="p59" /></p>
+<p><img src="../image/drops/20160226/2016022605124052627591.jpg" alt="p59" /></p>
 
 <p>QQ号信息如下图。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/201602260512417291560.jpg" alt="p60" /></p>
+<p><img src="../image/drops/20160226/201602260512417291560.jpg" alt="p60" /></p>
 
 <p>进入其QQ空间，可见黑帽SEO案例的操作结果截图。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605124380234611.jpg" alt="p61" /></p>
+<p><img src="../image/drops/20160226/2016022605124380234611.jpg" alt="p61" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605124438622621.jpg" alt="p62" /></p>
+<p><img src="../image/drops/20160226/2016022605124438622621.jpg" alt="p62" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605124681948631.jpg" alt="p63" /></p>
+<p><img src="../image/drops/20160226/2016022605124681948631.jpg" alt="p63" /></p>
 
 <p>通过搜索引擎，能够找到其在百度网盘的分享信息。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605124737774641.jpg" alt="p64" /></p>
+<p><img src="../image/drops/20160226/2016022605124737774641.jpg" alt="p64" /></p>
 
 <p>还有私密分享，但没有提取密码，不知道共享的是什么文件。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605124956030651.jpg" alt="p65" /></p>
+<p><img src="../image/drops/20160226/2016022605124956030651.jpg" alt="p65" /></p>
 
 <p>由于这个QQ号是个小号，未能有更多的社工信息，就此打住，用张天眼的可视化关联平台里的关系图来结束此次溯源。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160226/2016022605125170778661.jpg" alt="p66" /></p>
+<p><img src="../image/drops/20160226/2016022605125170778661.jpg" alt="p66" /></p>
 
 <h1>0x05 写在最后</h1>
 

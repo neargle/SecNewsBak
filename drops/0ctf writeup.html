@@ -132,21 +132,21 @@ setTimeout("getdata()",100000);
 
 <p>代码审计题，flag在config.php文件。class.php文件里，有过滤函数：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513484536696130.png" alt="p1" /></p>
+<p><img src="../image/drops/20160315/2016031513484536696130.png" alt="p1" /></p>
 
 <p>profile.php中有读取文件的代码：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513484767273224.png" alt="p2" /></p>
+<p><img src="../image/drops/20160315/2016031513484767273224.png" alt="p2" /></p>
 
 <p>这里如果我们能控制<code>$profile[‘photo’]</code>的值，那么就可以读取config.php文件，从而获取flag。</p>
 
 <p><code>$profile</code>写入数据库时的代码如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513485057874324.png" alt="p3" /></p>
+<p><img src="../image/drops/20160315/2016031513485057874324.png" alt="p3" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513485211060411.png" alt="p4" /></p>
+<p><img src="../image/drops/20160315/2016031513485211060411.png" alt="p4" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603151348542560759.png" alt="p5" /></p>
+<p><img src="../image/drops/20160315/201603151348542560759.png" alt="p5" /></p>
 
 <p>可以看出对<code>$_POST[‘nickname’]</code>的过滤是可以绕过的</p>
 
@@ -162,9 +162,9 @@ if(preg_match('/[^a-zA-Z0-9_]/', $_POST['nickname']) || strlen($_POST['nickname'
 
 <p>队友把相关函数抠出来写了一个脚本来测试：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603151348563741969.png" alt="p6" /></p>
+<p><img src="../image/drops/20160315/201603151348563741969.png" alt="p6" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603151348582588879.png" alt="p7" /></p>
+<p><img src="../image/drops/20160315/201603151348582588879.png" alt="p7" /></p>
 
 <p>为了构造photo字段，需要填充：<code>";}s:5: "photo";s:10: "config.php</code></p>
 
@@ -186,7 +186,7 @@ nickname[]=wherewherewherewherewherewherewherewherewherewherewherewherewherewher
 
 <p>首先我们随便提交一个message，看了下输出的HTML：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603151349001461288.png" alt="p8" /></p>
+<p><img src="../image/drops/20160315/201603151349001461288.png" alt="p8" /></p>
 
 <p>username写在div的id属性中，message写在JavaScript的data变量中，测试了几次后发现message里的<code>\\</code>会变成<code>\</code>，可以构造成任意字符。secret在URL的GET参数里。</p>
 
@@ -211,13 +211,13 @@ Accept-Language: zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4
 secret=1z1zfqwq%3Cscript%3Evar+debug%3Dfalse%3B%3C%2Fscript%3E&amp;username=debug&amp;message=\\x3cimg+src%3d%23+id%3dxssyou+style%3ddisplay%3anone+onerror%3deval(unescape(/alert%25281%2529/.source))%3b//\\x3e&amp;action=submit
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160315/201603151349032455899.png" alt="p9" /></p>
+<p><img src="../image/drops/20160315/201603151349032455899.png" alt="p9" /></p>
 
 <p>写了几行JS来读取当前页面HTML，</p>
 
 <p>得到：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513490541529109.png" alt="p10" /></p>
+<p><img src="../image/drops/20160315/2016031513490541529109.png" alt="p10" /></p>
 
 <p>读取/admin/server_info.php：</p>
 
@@ -227,7 +227,7 @@ xmlhttp=new XMLHttpRequest();xmlhttp.open("GET","/admin/server_info.php ",false)
 
 <p>发现是一个PHP探针，带了一个phpinfo，phpinfo中会回显出整个<code>$_COOKIE</code>数组，得到flag</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/20160315134906529281114.png" alt="p11" /></p>
+<p><img src="../image/drops/20160315/20160315134906529281114.png" alt="p11" /></p>
 
 <h1>0x04 Guestbook(2) (web)</h1>
 
@@ -235,7 +235,7 @@ xmlhttp=new XMLHttpRequest();xmlhttp.open("GET","/admin/server_info.php ",false)
 
 <p>在guestbook(1)的phpinfo中，发现：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/20160315134908609711211.png" alt="p12" /></p>
+<p><img src="../image/drops/20160315/20160315134908609711211.png" alt="p12" /></p>
 
 <p>感觉是redis未授权访问，bind 127.0.0.1:6379，结合/admin/show.php中注释里提示的uploads目录，写webshell。</p>
 
@@ -247,7 +247,7 @@ xmlhttp=new XMLHttpRequest();xmlhttp.open("GET","http://127.0.0.1:6379",false);x
 
 <p>本地Redis测试成功，但在远程服务器上死活写不了shell，后来用nc看了一下:</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513491037776139.png" alt="p13" /></p>
+<p><img src="../image/drops/20160315/2016031513491037776139.png" alt="p13" /></p>
 
 <p>发现会先发一个OPTIONS请求，目测是这个请求失败以后POST包根本没有发出去。</p>
 
@@ -261,7 +261,7 @@ f=document.createElement('form');['CONFIG SET dir /usr/share/nginx/html/uploads/
 
 <p>然后先利用open_basedir的bypass列出来了/目录：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513491126516148.png" alt="p14" /></p>
+<p><img src="../image/drops/20160315/2016031513491126516148.png" alt="p14" /></p>
 
 <p>发现有个flag&#95;reader，应该是只能通过执行flag&#95;reader来读<code>/flag</code>文件。</p>
 
@@ -284,7 +284,7 @@ f=document.createElement('form');['CONFIG SET dir /usr/share/nginx/html/uploads/
 ?&gt;
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513491323638157.png" alt="p15" /></p>
+<p><img src="../image/drops/20160315/2016031513491323638157.png" alt="p15" /></p>
 
 <h1>0x05 OPM(Misc)</h1>
 
@@ -292,11 +292,11 @@ f=document.createElement('form');['CONFIG SET dir /usr/share/nginx/html/uploads/
 
 <p>访问http://dl.0ops.net/opm，将文件下载回来，并载入winhex，通过头可以看出是个压缩文件，解压得到一个png图片，使用神器stegsolve分析，可以看到rgb的最低有效位存在数据，应该使用lsb算法隐藏信息</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513491428569166.png" alt="p16" /></p>
+<p><img src="../image/drops/20160315/2016031513491428569166.png" alt="p16" /></p>
 
 <p>观察最低位数据,根据头看出是一个压缩文件</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513491656491176.png" alt="p17" /></p>
+<p><img src="../image/drops/20160315/2016031513491656491176.png" alt="p17" /></p>
 
 <p>“save bin“保存成压缩文件，打开得到一个文件名为arm汇编指令的文本文件，qwq，安卓不懂，交给安卓牛分分钟秒掉。</p>
 
@@ -589,7 +589,7 @@ print r.recv(1024)
 
 <p>当realpath的的第一个参数这个文件不存在的时候返回NULL。将文件地址写成“/proc/self/tasks/7777/../../../../home/sandbox/flag”，然后不断连接生成进程，当warmup的pid为7777时，sandbox的realpath调用返回NULL，同时warmp成功open了flag，就可以读取flag了。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513491831249184.png" alt="p18" /></p>
+<p><img src="../image/drops/20160315/2016031513491831249184.png" alt="p18" /></p>
 
 <h1>0x0A Trace(Reverse)</h1>
 
@@ -657,9 +657,9 @@ print table
 
 <p>在IDA中进程初步分析，发现程序代码中只包含了mov和jz两种指令，程序经过变形。程序中使用了多张表，来进行加法、减法、异或和或运算等操作。最后通过查表的方式来完成运行，并通过mov指令来实现，并以此来迷惑大家。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513492026778194.png" alt="p19" /></p>
+<p><img src="../image/drops/20160315/2016031513492026778194.png" alt="p19" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513492116683204.png" alt="p20" /></p>
+<p><img src="../image/drops/20160315/2016031513492116683204.png" alt="p20" /></p>
 
 <p>经过分析，程序取输入lag取其中的28个字节来进行运算，因此输入Flag总共28个字节。在计算是，总共有两个长度为28个字节的参与固定运算的表，其中一个表依次与Flag中的每个字节进行加或者减运算操作，而另外一个则上一步得到的运算结果中的每个字节进行异或操作，最后将异或后结果依次进行或运算操作。如果最后结果为0，则提示成功，否则失败。</p>
 
@@ -679,25 +679,25 @@ Table2{39,61,6D,75,74,66,39,5A,6D,41,48,65,75,56,75,30,57,39,68,5A,39,4E,30,4F,6
 
 <p>拿到apk先反编译，主Activity的java代码如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/20160315134923477322112.png" alt="p21" /></p>
+<p><img src="../image/drops/20160315/20160315134923477322112.png" alt="p21" /></p>
 
 <p>可以看到功能不多，主要使用a类和启动coco2d，分析a类，如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513492465759225.png" alt="p22" /></p>
+<p><img src="../image/drops/20160315/2016031513492465759225.png" alt="p22" /></p>
 
 <p>a类功能是进行sharedpreferences存储，结合主Activity的调用得到可知创建了两个sharedpreferences文件，分别是flag.xml和CocosdxPrefsfile.xml，然后写入了数据，试玩一把，查看这两个文件</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513492660149234.png" alt="p23" /></p>
+<p><img src="../image/drops/20160315/2016031513492660149234.png" alt="p23" /></p>
 
 <p>flag中的内容看起来就像base64编码，解码可得bazingaaaa。不是flag。尝试用base64解码另一个。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513492763387244.png" alt="p24" /></p>
+<p><img src="../image/drops/20160315/2016031513492763387244.png" alt="p24" /></p>
 
 <p>额，结果？提交果然不对，在主Activity里可以看到MGN0是固定输入 每次启动程序会输入，是0tcf的编码。</p>
 
 <p>又玩了一把更新最高分，CocosdxPrefsfile.xml中的内容变成</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513492916017254.png" alt="p25" /></p>
+<p><img src="../image/drops/20160315/2016031513492916017254.png" alt="p25" /></p>
 
 <pre><code>MGN0ZntDMGNvUzJkX0FuRHJvdz99ZntDMGNvUzJkX0FuRHJvMWRfRzdz99
 </code></pre>
@@ -712,31 +712,31 @@ ZntDMGNvUzJkX0FuRHJvMWRfRz dz99
 
 <p>于是分析a类调用，发现java层和so都没有找到。后来想是不是直接访问了文件，在smali中查找CocosdxPrefsfile，果然发现，在cocos2dxhelper中也有对这个文件的操作。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513493066750264.png" alt="p26" /></p>
+<p><img src="../image/drops/20160315/2016031513493066750264.png" alt="p26" /></p>
 
 <p>然后分析这个类的调用，找到在so中的调用。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513493224767274.png" alt="p27" /></p>
+<p><img src="../image/drops/20160315/2016031513493224767274.png" alt="p27" /></p>
 
 <p>查找字符串，分析地址调用。</p>
 
 <p>根据调用找到关键函数，在<code>_Z18setStringForKeyJNIPKcS0_</code>中用Cocos2dxHelper进行string写入</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513493329157284.png" alt="p28" /></p>
+<p><img src="../image/drops/20160315/2016031513493329157284.png" alt="p28" /></p>
 
 <p>然后再分析setstringforkey的调用。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513493613691294.png" alt="p29" /></p>
+<p><img src="../image/drops/20160315/2016031513493613691294.png" alt="p29" /></p>
 
 <p>写入的地方较多，查看了一下调用位置</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/2016031513493719810304.png" alt="p30" /></p>
+<p><img src="../image/drops/20160315/2016031513493719810304.png" alt="p30" /></p>
 
 <p>可以看到写入的内容，每次写入两个字符，对比一下Cocos2dxPrefsFile文件中的字符串，发现差不多了。</p>
 
 <p>再分析发现下图绿框中写入的内容是初始化时写入的，每次都有所以就不分析了，而红框中的写入内容与得分相关。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160315/20160315134939427633112.png" alt="p31" /></p>
+<p><img src="../image/drops/20160315/20160315134939427633112.png" alt="p31" /></p>
 
 <p>所以分析updatescore函数逻辑，获得写入顺序，构造字符串，成功</p>
 

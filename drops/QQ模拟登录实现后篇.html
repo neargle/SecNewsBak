@@ -62,7 +62,7 @@
 
 <p><strong>加密总流程图</strong></p>
 
-<p><img src="http://static.wooyun.org//drops/20160328/2016032805064384659pic1.jpg" alt="p1" /></p>
+<p><img src="../image/drops/20160328/2016032805064384659pic1.jpg" alt="p1" /></p>
 
 <p>基本上看懂这个流程图，就明白QQ密码的加密流程了。</p>
 
@@ -153,7 +153,7 @@ def tx_pwd_encode(self, pwd, salt, verifycode):
 
 <p>客户端快速登录方式是用户在PC端已经登录了QQ客户端软件，如果用户再打开Web页面进行登陆，不用再输入用户名和密码，只需要选择已经登录的帐号，点击确认登录即可。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160328/2016032805064549963pic2.jpg" alt="p2" /></p>
+<p><img src="../image/drops/20160328/2016032805064549963pic2.jpg" alt="p2" /></p>
 
 <p>快速登录的本质上是使用clientkey置换token。</p>
 
@@ -175,7 +175,7 @@ def tx_pwd_encode(self, pwd, salt, verifycode):
 
 <p>另外一种是费插件模式，或者clientkey出现一些异常情况，通过请求server把clientkey设置到cookie，然后再置换token登陆。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160328/2016032805064683835pic3.jpg" alt="p3" /></p>
+<p><img src="../image/drops/20160328/2016032805064683835pic3.jpg" alt="p3" /></p>
 
 <h3>流程分析</h3>
 
@@ -263,7 +263,7 @@ ptui_qlogin_CB('0', 'http://www.qq.com/qq2012/loginSuccess.htm', '');
 <li>置换token</li>
 </ul>
 
-<p><img src="http://static.wooyun.org//drops/20160328/2016032805064718764pic4.jpg" alt="p4" /></p>
+<p><img src="../image/drops/20160328/2016032805064718764pic4.jpg" alt="p4" /></p>
 
 <p>这里有两个安全点需要注意：</p>
 

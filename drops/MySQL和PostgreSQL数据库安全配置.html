@@ -139,7 +139,7 @@
 
 <p>为了保护数据安全，当用户对某个数据库对象进行操作之前，必须检查用户在对象上的操作权限。访问控制列表（ACL）是对象权限管理和权限检查的基础，在PostgreSQL通过操作ACL实现对象的访问控制管理。所有表的基本定义保存在系统表pg_class中，除了包括表，视图、序列和索引(与其他许多系统不同，PG的索引也被视作一个类，事实上索引项无论在逻辑组成还是物理结构上都类似一个表的元组。)等对象的基本定义外，它的relacl属性中为每个对象维护一个ACL<sup>[5]</sup>。Relacl是PostgreSQL支持的数组属性，该数组成员是抽象的数据类型aclitem。这些aclitem作为对象访问控制权限的ACE（ACL是存储控制箱（Access Control Entruy，ACE）的集合，每个ACL实际上是一个由多个aclitem构成的链表，ACE由数据库对象和权限列表构成，记录着可访问兑现的用户或者执行单元（进程、存储过程等））共同组成对象的ACL。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/2016052416231930540pic11.jpg" alt="p1" /></p>
+<p><img src="../image/drops/20160524/2016052416231930540pic11.jpg" alt="p1" /></p>
 
 <p>图1：ACL权限信息。</p>
 
@@ -196,7 +196,7 @@ server_audit_file_path  = /usr/local/mysql/mysql_logs/auditlog/server_audit.log
 mysql&gt; SHOW global VARIABLES LIKE '%audit%';
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160524/2016052416232193467pic21.jpg" alt="p2" /></p>
+<p><img src="../image/drops/20160524/2016052416232193467pic21.jpg" alt="p2" /></p>
 
 <p>图1：审计配置参数</p>
 

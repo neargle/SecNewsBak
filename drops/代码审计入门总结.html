@@ -52,9 +52,9 @@
 <li>包括函数：<code>include()/include_once()</code>，<code>require()/require_once()</code>寻找可控变量 </li>
 </ul>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021404355849818115.jpg" alt="p1" /></p>
+<p><img src="../image/drops/20160214/2016021404355849818115.jpg" alt="p1" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/201602140436007223726.jpg" alt="p2" /></p>
+<p><img src="../image/drops/20160214/201602140436007223726.jpg" alt="p2" /></p>
 
 <p>(2) 远程文件包含：</p>
 
@@ -92,7 +92,7 @@
 <li>扩展名可绕过：</li>
 </ul>
 
-<p><img src="http://static.wooyun.org//drops/20160214/201602140436029887235.jpg" alt="p3" /></p>
+<p><img src="../image/drops/20160214/201602140436029887235.jpg" alt="p3" /></p>
 
 <p>不被允许的文件格式<code>.php</code>，但是我们可以上传文件名为<code>1.php</code>(注意后面有一个空格)</p>
 
@@ -121,7 +121,7 @@
 
 <p><strong>Metinfo的任意文件删除漏洞：</strong></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/201602140436037462245.jpg" alt="p4" /></p>
+<p><img src="../image/drops/20160214/201602140436037462245.jpg" alt="p4" /></p>
 
 <p><code>$action = delete</code>即可删除<code>.sql</code>的文件，如果文件不是<code>sql</code>直接删除提交的文件名</p>
 
@@ -143,9 +143,9 @@
 
 <p><strong>第一个参数为回调函数，第二个参数是回调函数的参数</strong></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/201602140436051465155.jpg" alt="p5" /></p>
+<p><img src="../image/drops/20160214/201602140436051465155.jpg" alt="p5" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/201602140436067304765.jpg" alt="p6" /></p>
+<p><img src="../image/drops/20160214/201602140436067304765.jpg" alt="p6" /></p>
 
 <p>(3)<code>eval()</code>和<code>assert()</code>：</p>
 
@@ -167,7 +167,7 @@ $_GET['a']($_GET['b']);
 ?&gt;
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160214/201602140436088386974.jpg" alt="p7" /></p>
+<p><img src="../image/drops/20160214/201602140436088386974.jpg" alt="p7" /></p>
 
 <h4>3.命令执行函数：</h4>
 
@@ -210,9 +210,9 @@ echo ' $a '    output：$a
 
 <h4>2.$$变量覆盖：</h4>
 
-<p><img src="http://static.wooyun.org//drops/20160214/201602140436094880083.jpg" alt="p8" /></p>
+<p><img src="../image/drops/20160214/201602140436094880083.jpg" alt="p8" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/201602140436105542792.jpg" alt="p9" /></p>
+<p><img src="../image/drops/20160214/201602140436105542792.jpg" alt="p9" /></p>
 
 <h3>d.逻辑漏洞</h3>
 
@@ -229,9 +229,9 @@ echo ' $a '    output：$a
 
 <p>(1) <code>in_array()</code>: <strong>比较之前会自动转换类型</strong></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021404361241005102.jpg" alt="p10" /></p>
+<p><img src="../image/drops/20160214/2016021404361241005102.jpg" alt="p10" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021404361353028116.jpg" alt="p11" /></p>
+<p><img src="../image/drops/20160214/2016021404361353028116.jpg" alt="p11" /></p>
 
 <p>(2)<code>is_numeric()</code>:<strong>当传入参数为hex时 直接通过并返回true 并且MYSQL可以直接使用hex编码代替字符串明文 可以二次注入 并且可能造成XSS漏洞</strong></p>
 
@@ -284,7 +284,7 @@ if (check_money($price)){
 
 <p><strong>可能导致漏洞函数：</strong> <code>str_replace()</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021404361420677122.jpg" alt="p12" /></p>
+<p><img src="../image/drops/20160214/2016021404361420677122.jpg" alt="p12" /></p>
 
 <pre><code>#!php
 &lt;?php
@@ -296,7 +296,7 @@ echo trim($c);
 ?&gt;
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021404361627831132.jpg" alt="p13" /></p>
+<p><img src="../image/drops/20160214/2016021404361627831132.jpg" alt="p13" /></p>
 
 <h3>e.会话认证漏洞</h3>
 
@@ -321,9 +321,9 @@ echo trim($c);
 <li>购物车 / 订单 / 引用数据 / 文章编辑 / 草稿 <code>==&gt;</code> SQL注入 / XSS</li>
 </ul>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021404361759596141.jpg" alt="p14" /></p>
+<p><img src="../image/drops/20160214/2016021404361759596141.jpg" alt="p14" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021404361981541151.jpg" alt="p15" /></p>
+<p><img src="../image/drops/20160214/2016021404361981541151.jpg" alt="p15" /></p>
 
 <h4>2.技巧：</h4>
 
@@ -397,9 +397,9 @@ echo iconv("UTF-8", "GBK", $a);   //1
 </ol></li>
 <li><p>报错注入：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021404362023392161.jpg" alt="p16" /></p>
+<p><img src="../image/drops/20160214/2016021404362023392161.jpg" alt="p16" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021404362284187171.jpg" alt="p17" /></p></li>
+<p><img src="../image/drops/20160214/2016021404362284187171.jpg" alt="p17" /></p></li>
 <li><p><code>windows findfirstfile</code> 利用：<strong>若要搜索12345.txt文件，可使用<code>1&lt;&lt;</code>来代替或者<code>12&lt;&lt;</code>，不可以单独使用一个<code>"&lt;"</code>或<code>"&gt;"</code>，因为单独一个只是代表了一个字符，两个代表多个字符。</strong></p></li>
 </ul>
 

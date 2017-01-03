@@ -19,13 +19,13 @@
 
 <p>Content Provider组件是Android应用的重要组件之一，管理对数据的访问，主要用于不同的应用程序之间实现数据共享的功能。Content Provider的数据源不止包括SQLite数据库，还可以是文件数据。通过将数据储存层和应用层分离，Content Provider为各种数据源提供了一个通用的接口。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010720478267011.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010720478267011.png" alt="" /></p>
 
 <!--more-->
 
 <p>创建一个自己的Content Provider需要继承自ContentProvider抽象类，需要重写其中的<code>onCreate()</code>、<code>query()</code>、<code>insert()</code>、<code>update()</code>、<code>delete()</code>、<code>getType()</code>六个抽象方法，这些方法实现对底层数据源的增删改查等操作。还需在AndroidManifest文件注册Content Provider，注册时指定访问权限、exported属性、authority属性值等。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/20160601072051918472.png" alt="" /></p>
+<p><img src="../image/drops/20160601/20160601072051918472.png" alt="" /></p>
 
 <p>其它APP使用ContentResolver对象来查询和操作Content Provider，此对象具有Content Provider中同名的方法名。这样其他APP接就可以访问Content Provider对应的数据源的底层数据，而无须知道数据的结构或实现。 </p>
 
@@ -62,15 +62,15 @@
 
 <p>在网盘客户端的AndroidManifest中注册Provider时，声明了访问时需要的读写权限，并且权限为客户端自定义的私有权限：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/20160601072056586143.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/20160601072056586143.jpeg" alt="" /></p>
 
 <p>但是在AndroidManifest中却没有见到私有权限“<code>com.huawei.dbank.v7.provider.DBank.READ_DATABASE</code>”和“<code>com.huawei.dbank.v7.provider.DBank.WRITE_DATABASE</code>”的定义：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/20160601072058565874.png" alt="" /></p>
+<p><img src="../image/drops/20160601/20160601072058565874.png" alt="" /></p>
 
 <p>反编译客户端后查看到的URI，根据这些可以构造访问到Provider的URI：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/20160601072101904585.png" alt="" /></p>
+<p><img src="../image/drops/20160601/20160601072101904585.png" alt="" /></p>
 
 <p><strong>编写POC</strong></p>
 
@@ -78,19 +78,19 @@
 
 <p>在POC的AndroidManifest中声明私有权限，权限的保护级别定义为最低级“<code>normal</code>”：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/20160601072103142396.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/20160601072103142396.jpeg" alt="" /></p>
 
 <p>主要代码为：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/20160601072105446467.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/20160601072105446467.jpeg" alt="" /></p>
 
 <p>拿到数据库中保存的下载列表数据：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/20160601072108624008.png" alt="" /></p>
+<p><img src="../image/drops/20160601/20160601072108624008.png" alt="" /></p>
 
 <p>对应的数据库：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/20160601072110321799.png" alt="" /></p>
+<p><img src="../image/drops/20160601/20160601072110321799.png" alt="" /></p>
 
 <p>这样任意的恶意应用程序就可以访问到用户网盘的上传、下载记录，网盘里面存的文件列表等隐私信息。</p>
 
@@ -100,29 +100,29 @@
 
 <p>Provider为：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721122900910.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721122900910.jpeg" alt="" /></p>
 
 <p>私有权限“<code>com.renren.mobile.android.permission.PERMISSION_ADD_ACCOUNT</code>”的定义为：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/2016060107211455076111.png" alt="" /></p>
+<p><img src="../image/drops/20160601/2016060107211455076111.png" alt="" /></p>
 
 <p>反编译客户端，看到<code>AcountProvider</code>对应的实现：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721177460512.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721177460512.png" alt="" /></p>
 
 <p>编写POC： </p>
 
 <p>在<code>AndroidManifest</code>中定义和声明权限：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721197127913.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721197127913.jpeg" alt="" /></p>
 
 <p>主要代码为：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721219500114.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721219500114.jpeg" alt="" /></p>
 
 <p>可看到用户的账户信息，包括uid，手机号，加密后的密码等：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721232686515.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721232686515.png" alt="" /></p>
 
 <h2>1.2 本地SQL注入</h2>
 
@@ -130,7 +130,7 @@
 
 <p><code>Content Provider的query( )</code>的方法定义为：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721247357216.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721247357216.jpeg" alt="" /></p>
 
 <p>其中参数：</p>
 
@@ -143,7 +143,7 @@
 
 <p><code>query()</code> 与 SQL 查询对比如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721261770717.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721261770717.png" alt="" /></p>
 
 <p>如果<code>query( )</code>中使用的是拼接字符串组成SQL语句的形式去查询底层的SQLite数据库时，容易发生SQL注入。</p>
 
@@ -151,15 +151,15 @@
 
 <p>客户端的<code>com.sohu.sohuvideo.provider.PlayHistoryProvider</code>的<code>exported</code>属性为“true”：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721284747418.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721284747418.png" alt="" /></p>
 
 <p>反编译客户端，追踪<code>PlayHistoryProvider</code>的实现，发现是用拼接字符串形式构造原始的SQL查询语句：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721306881419.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721306881419.png" alt="" /></p>
 
 <p>使用drozer工具，证明漏洞：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721327080220.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721327080220.png" alt="" /></p>
 
 <p>对外暴露的Content Provider实现了<code>openFile()</code>接口，因此其他有相应调用该Content Provider权限的应用即可调用Content Provider的<code>openFile()</code>接口进行文件数据访问。但是如果没有进行Content Provider访问权限控制和对访问的目标文件的Uri进行有效判断，攻击者利用文件目录遍历可访问任意可读文件，更有甚者可以往手机设备可写目录中写入任意数据。</p>
 
@@ -169,11 +169,11 @@
 
 <p>此APP实现中定义了一个可以访问本地文件的Content Provider组件，为<code>com.ganji.android.jobs.html5.LocalFileContentProvider</code>，因为使用了<code>minSdkServison=“8”</code>，<code>targetSdkVersion=”13”</code>，即此Content Provider采用默认的导出配置，即<code>android:exported=”true”</code>：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721371117421.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721371117421.png" alt="" /></p>
 
 <p>该Provider实现了<code>openFile()</code>接口：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721406879022.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721406879022.png" alt="" /></p>
 
 <p>通过此接口可以访问内部存储app_webview目录下的数据，由于后台未能对目标文件地址进行有效判断，可以通过”<code>../</code>”实现目录遍历，实现对任意私有数据的访问。</p>
 
@@ -181,25 +181,25 @@
 
 <p>某社交应用客户端，使用了的<code>minSDKVersion</code>为8，定义了私有权限，并且<code>android:protectionLevel</code>设为了<code>signature</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721423199023.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721423199023.png" alt="" /></p>
 
 <p>有一个对外暴露的Content Provider，即<code>com.facebook.lite.photo.MediaContentProvider</code>，此Provider没有设置访问权限，而另外一个Provider是设置了访问权限的：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721441521824.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721441521824.png" alt="" /></p>
 
 <p>在<code>MediaContentProvider</code>中实现了<code>openFile()</code>接口，没有对传入的URI进行限制和过滤：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721472031725.png" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721472031725.png" alt="" /></p>
 
 <p>此接口本来只想让用户访问照片信息的，但是却可以突破限制，读取其他文件： </p>
 
 <p>POC：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721497714326.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721497714326.jpeg" alt="" /></p>
 
 <p>读取到其他文件的内容为：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721512583627.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721512583627.jpeg" alt="" /></p>
 
 <p>另外看到<code>Openfile()</code>接口的实现中，如果要访问的文件不存在，就会创建此文件，还有可能的风险就是在应用的目录中写入任意文件。</p>
 
@@ -225,7 +225,7 @@
 
 <p>在AndroidManifest中定义私有权限的语法为：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721539643728.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721539643728.jpeg" alt="" /></p>
 
 <p>其中<code>android:protectionLevel</code>的可选值分别表示：</p>
 
@@ -246,7 +246,7 @@
 
 <p>如下的选择子句：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721552576629.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721552576629.jpeg" alt="" /></p>
 
 <p>如果执行此操作，则会允许用户将恶意 SQL 串连到 SQL 语句上。 </p>
 
@@ -286,7 +286,7 @@ selectionArgs[0] = mUserInput;
 
 <p>还可调用SQLiteDatabase类中的参数化查询query()方法：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010721581035530.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010721581035530.jpeg" alt="" /></p>
 
 <h2>3.3 防止目录遍历</h2>
 
@@ -296,7 +296,7 @@ selectionArgs[0] = mUserInput;
 
 <p>使用<code>Uri.decode()</code>先对<code>Content Query Uri</code>进行解码后，再过滤如可通过“<code>../</code>”实现任意可读文件的访问的Uri字符串，如：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/201606010722002263531.jpeg" alt="" /></p>
+<p><img src="../image/drops/20160601/201606010722002263531.jpeg" alt="" /></p>
 
 <h2>2.4 通过检测签名来授权合作方应用访问</h2>
 

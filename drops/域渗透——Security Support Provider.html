@@ -17,7 +17,7 @@
 
 <p>在之前的文章中介绍了一些域环境中的渗透方法和技巧，所以这次接着介绍一个用来维持域控权限的方法——SSP.</p>
 
-<p><img src="http://static.wooyun.org//drops/20160129/201601290102543632111.gif" alt="Alt text" /></p>
+<p><img src="../image/drops/20160129/201601290102543632111.gif" alt="Alt text" /></p>
 
 <!--more-->
 
@@ -54,13 +54,13 @@ Credential (CredSSP)
 
 <p>这相当于我们可以自定义一个dll，在系统启动的时候被加载到进程lsass.exe！</p>
 
-<p><img src="http://static.wooyun.org//drops/20160129/2016012901025596273267.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160129/2016012901025596273267.png" alt="Alt text" /></p>
 
 <p>此图片来自于https://dl.mandiant.com/EE/library/MIRcon2014/MIRcon_2014_IR_Track_Analysis_of_Malicious_SSP.pdf</p>
 
 <p>如图，这是正常的SSPI结构图，Client APP是我们自定义的dll，通过Secur32.dll可以调用 "<code>credential capture API</code>"来获取LSA的信息</p>
 
-<p><img src="http://static.wooyun.org//drops/20160129/2016012901025648219340.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160129/2016012901025648219340.png" alt="Alt text" /></p>
 
 <p>此图片来自于https://dl.mandiant.com/EE/library/MIRcon2014/MIRcon_2014_IR_Track_Analysis_of_Malicious_SSP.pdf</p>
 
@@ -72,7 +72,7 @@ Credential (CredSSP)
 
 <p>mimikatz早已支持这个功能，而这个文件就是我们使用的时候常常忽略的mimilib.dll</p>
 
-<p><img src="http://static.wooyun.org//drops/20160129/2016012901025873965438.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160129/2016012901025873965438.png" alt="Alt text" /></p>
 
 <p>下面就实际测试一下如何通过mimilib伪造SSP记录明文密码.</p>
 
@@ -110,23 +110,23 @@ Credential (CredSSP)
 HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\Security Packages\
 </code></pre>
 
-<p>如图 <img src="http://static.wooyun.org//drops/20160129/2016012901025974109533.png" alt="Alt text" /></p>
+<p>如图 <img src="../image/drops/20160129/2016012901025974109533.png" alt="Alt text" /></p>
 
 <p>在Security Packages下添加mimilib.dll</p>
 
-<p>如图 <img src="http://static.wooyun.org//drops/20160129/2016012901030189305628.png" alt="Alt text" /></p>
+<p>如图 <img src="../image/drops/20160129/2016012901030189305628.png" alt="Alt text" /></p>
 
 <p>点击确认，Security Packages已被添加mimilib.dll</p>
 
-<p>如图 <img src="http://static.wooyun.org//drops/20160129/2016012901030323628727.png" alt="Alt text" /></p>
+<p>如图 <img src="../image/drops/20160129/2016012901030323628727.png" alt="Alt text" /></p>
 
 <h3>3、重启系统</h3>
 
 <p>域控重启后在<code>c:\windows\system32</code>可看到新生成的文件kiwissp.log</p>
 
-<p>如图 <img src="http://static.wooyun.org//drops/20160129/2016012901030452332824.png" alt="Alt text" /></p>
+<p>如图 <img src="../image/drops/20160129/2016012901030452332824.png" alt="Alt text" /></p>
 
-<p>kiwissp.log记录了登录账户和密码，如图 <img src="http://static.wooyun.org//drops/20160129/2016012901030613731925.png" alt="Alt text" /></p>
+<p>kiwissp.log记录了登录账户和密码，如图 <img src="../image/drops/20160129/2016012901030613731925.png" alt="Alt text" /></p>
 
 <blockquote>
   <p><strong>Tips：</strong></p>
@@ -153,9 +153,9 @@ misc::memssp
 
 <p><strong>1、</strong>64系统需要64位的mimikatz，如图</p>
 
-<p>32位mimikatz失败 <img src="http://static.wooyun.org//drops/20160129/20160129010307492621026.png" alt="Alt text" /></p>
+<p>32位mimikatz失败 <img src="../image/drops/20160129/20160129010307492621026.png" alt="Alt text" /></p>
 
-<p>64位mimikatz成功 <img src="http://static.wooyun.org//drops/20160129/20160129010309812621129.png" alt="Alt text" /></p>
+<p>64位mimikatz成功 <img src="../image/drops/20160129/20160129010309812621129.png" alt="Alt text" /></p>
 
 <p><strong>2、</strong>内存更新的方法在重启后会失效.</p>
 
@@ -179,7 +179,7 @@ HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\Security Packages\
 
 <p>使用工具Autoruns检测LSA</p>
 
-<p>如图，可以发现添加dll的位置 <img src="http://static.wooyun.org//drops/20160129/20160129010310883721223.png" alt="Alt text" /></p>
+<p>如图，可以发现添加dll的位置 <img src="../image/drops/20160129/20160129010310883721223.png" alt="Alt text" /></p>
 
 <h1>0x06 小结</h1>
 

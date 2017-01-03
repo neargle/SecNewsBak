@@ -43,17 +43,17 @@
 
 <p>我需要了解的第一件事就是 MSSQL query 流量。为了让这次测试更有意思一点，我用 sa 账户登录 MSSQL。sa 是 MSSQL 的 system admin 账户，可以做任何你想要做的奇奇怪怪的事情。如果我的实验成功了，那么我可以利用 sa 的权限做一些有趣的事情。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406121761541sqlhack1.png" alt="p1" /></p>
+<p><img src="../image/drops/20160214/2016021406121761541sqlhack1.png" alt="p1" /></p>
 
 <p>登陆后，我在 MSSQL 服务器上打开 Wireshark 2.0，开始抓包。我用 “tds.query” 的 filter 在 Wireshark 上过滤，这样就可以隐藏其他乱七八糟的流量，仅现实 TDS 查询包了。（顺便一提啊，我发现“tds.query” filter 在老版本的 Wireshark 上不受支持）</p>
 
 <p>抓流量的同时，接着我切回到工作站然后在我建立的测试数据库上执行了一条 MSSQL 查询语句。这个数据库叫做 testdb，只有一个叫做 Products 的表。Products 表有两个字段：ProductID 和 ProductName。虽然里面没有任何数据，但是这次测试并不需要数据。这条查询语句的意思是从指定的数据库的表里获取所有的数据。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406121966929sqlhack2.png" alt="p2" /></p>
+<p><img src="../image/drops/20160214/2016021406121966929sqlhack2.png" alt="p2" /></p>
 
 <p>查询成功执行了，然后返回了空的表。你可以看见字段在截图的右下方列出来了。切回到 Wireshark，我停止抓包然后看了下抓到的数据。我注意到一个 TDS 查询包，然后点击这个数据包，让它里面所有的数据在我面前显示出来。MSSQL Server 2014 Express 默认没有任何加密，所我我可以分分钟看到它的数据。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406122075717sqlhack3.png" alt="p3" /></p>
+<p><img src="../image/drops/20160214/2016021406122075717sqlhack3.png" alt="p3" /></p>
 
 <p>看在中心窗格底下被解码的数据，很容易的辨识出这个查询。它甚至包含回车和换行符。注意到的比较有意思的是，在两个字节之间会有一个空字节（0x00）。这在下面窗格的 raw data 种是很明显的。Wireshark 显示了这些字节的周期特征，但是真的，这都是空字节。这意味着我并不能直接寻找 “select”，我不得不在稍后的搜索中考虑这些空字节，而且在最终我要替换的数据中也要插入这些空字节。</p>
 
@@ -69,11 +69,11 @@
 
 <p><strong>译者注：真特喵的啰嗦..</strong></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406122260763sqlhack4.png" alt="p4" /></p>
+<p><img src="../image/drops/20160214/2016021406122260763sqlhack4.png" alt="p4" /></p>
 
 <p>我写了一个 filter，用来测试我们想要的数据。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406122386550sqlhack5.png" alt="p5" /></p>
+<p><img src="../image/drops/20160214/2016021406122386550sqlhack5.png" alt="p5" /></p>
 
 <p>第一行确保 filter 只会在 1433 端口的 TCP 流量上工作，如果条件满足了，filter 会输出 debug 信息，这样我们就知道它找到了 MSSQL 流量。这仅仅是为了让我内心平静，因为我知道这个 filter 部分的可用了。嘛，下一个 if 语句搜索 hex 数据，这些数据翻译过来就是带有空字节的“select”。如果 filter 定位到了这个字符串，也会输出 debug 信息。</p>
 
@@ -81,7 +81,7 @@
 
 <p>写完 filter 之后，需要编译。这也很简单的通过 etterfilter 命令完成。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406122585590sqlhack6.png" alt="p6" /></p>
+<p><img src="../image/drops/20160214/2016021406122585590sqlhack6.png" alt="p6" /></p>
 
 <p>没有报错，filter 可以进行测试了。我启动了 Ettercap 图形界面，启动 ARP 欺骗，去攻击 MSSQL 服务器和客户端工作站。我运行 Wireshark 验证了两个被攻击者之间的流量。接着在 Ettercap 中，我点击“Filters -> Load a filter”，选择了我的 filter。Ettercap console 里面显示了“Content filters loaded”的信息。几乎同时我看到了“SQL Traffic Discovered”。一切都在计划之中。</p>
 
@@ -101,19 +101,19 @@ CREATE LOGIN anitian WITH PASSWORD=’YouGotHacked1#’;
 
 <p>这样会在 MSSQL 上添加一个用户名为“anitian”，密码为“YouGotHacked1#”的账户。将它转化为 hex 之后，我修改了 mssql.filter 文件。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406122733979sqlhack8.png" alt="p7" /></p>
+<p><img src="../image/drops/20160214/2016021406122733979sqlhack8.png" alt="p7" /></p>
 
 <p>这个 filter 会搜索 “<code>select ProductID, ProductName from Products where ProductID=1;</code>” 并把它替换为 “<code>CREATE LOGIN anitian with PASSWORD=’YouGotHacked1#’</code>”。我之前说过两个字符串的长度要一样长，所以我怎么去控制我的语句呢？因为我的语句比原语句短，所以我仅仅在语句后添加了几个空格，空格并不会影响语句执行结果的。我编译好这个 filter，然后用之前的方法加载进 Ettercap。接着我在工作站提交查询。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406122957932sqlhack9.png" alt="p8" /></p>
+<p><img src="../image/drops/20160214/2016021406122957932sqlhack9.png" alt="p8" /></p>
 
 <p>注意到这此返回的内容和我用 Ettercap 之前返回的内容的不同了吗？原来是返回了一个空表，但这一次，没有返回表，而是返回了“Command(s) completed successfully.”。如果 DBA 看到了这个，他们会把这个当做奇怪的错误而忽视。不幸的是，太晚了。我已经在数据库上添加了自己的用户，现在，真正的 hack 才刚刚开始。</p>
 
 <p>我从之前用 sa 账户登录的 Windows 10 工作站上用我刚创建的新用户“anitian”登陆。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406123087219sqlhack10.png" alt="p9" /></p>
+<p><img src="../image/drops/20160214/2016021406123087219sqlhack10.png" alt="p9" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406123187256sqlhack11.png" alt="p10" /></p>
+<p><img src="../image/drops/20160214/2016021406123187256sqlhack11.png" alt="p10" /></p>
 
 <p>成功啦！我成功登陆了自己的账户。不过不幸的是这个账户权限比较低，所以我不能干太多的事。然而，这个很好解决。下一步就是利用 Ettercap filter 修改我的权限。</p>
 
@@ -154,7 +154,7 @@ ALTER SERVER ROLE sysadmin ADD MEMBER anitian;
 
 <p>我运行了这个脚本，然后切换到工作站。当我运行相同的 select 查询的时候，我注意到我再次得到了“Command(s) completed successfully”的信息。这是一个好象征。我注销 sa 账户然后通过 anitian 登陆。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160214/2016021406123329343sqlhack12.png" alt="p11" /></p>
+<p><img src="../image/drops/20160214/2016021406123329343sqlhack12.png" alt="p11" /></p>
 
 <p>233333333！你看截图，anitian 已经是 sysadmin 权限了。我可以通过这个权限访问整个系统。它给了我一饿过很好的中枢点来攻击网络上的其他的系统。当然，假定这个数据库不包含我想要的付款卡号或者个人身份信息。</p>
 

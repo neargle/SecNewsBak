@@ -26,7 +26,7 @@
 
 <!--more-->
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010322839181.png" alt="Tom_&amp;_Jerry" /></p>
+<p><img src="../image/drops/20160520/2016052010322839181.png" alt="Tom_&amp;_Jerry" /></p>
 
 <p>同样的，在信息安全中，隐写术也是举足轻重的一块领域，从我们最早接触到的图种（copy /b 1.jpg+1.torrent 1.jpg），到最近有事没事就上个头条的locky，看个图片就中招的<a href="http://stegosploit.info/">stegosploit</a>，图片木马Stegoloader，还有就是最近三大高危CVE之一CVE-2016-3714（ImageMagick的，linux下用于处理图像的一个应用），然后也有CHM打造后门，等等。总的来说，就和藏东西似的，能藏就藏，而我们就是要去寻找这种蛛丝马迹。</p>
 
@@ -37,14 +37,14 @@
 <p>在CTF中，老司机们可能更偏向于用UE/Winhex一类的16进制的编辑器去打开待分析文件，然后通过拼写文件头（嗯。常用的文件头有几类？）然后blah blah的解决了，也有一言不合就用脚本来解决的。然而，新手们尤其是像我这样的菜鸟们，就比较喜欢用工具先分析一下有什么样的发现，这时候，为什么不考虑使用binwalk呢？早年在freebuf上也有binwalk的身影。寒假刷XCTF的OJ的时候，binwalk用起来很方便，但是也有不方便的时候。<br />
 我要想藏个字符啥的，这个也是binwalk看不出来的。记得最近的某CTF曾经出过这道题：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010304825117.png" alt="misc200" /></p>
+<p><img src="../image/drops/20160520/2016052010304825117.png" alt="misc200" /></p>
 
 <p>你用binwalk也没用，人家提示的是stegdetect，和表情包里的链接还有压缩包都没关系。后来大概是因为这张图的缘故，还有了这篇文章：<a href="http://drops.wooyun.org/tips/15661">深入理解JPEG图像格式Jphide隐写</a><br />
 关于图片和流量分析的隐写可以参考开头的安利，这儿主要讨论关于mp4等其他格式的。</p>
 
 <p>mp4的情况可以考虑使用ffmpeg，ffmpeg可以把一帧帧的视频分割为一张张的图片。具体怎么使用可以在linux下man ffmpeg。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010305075894.png" alt="mp4" /></p>
+<p><img src="../image/drops/20160520/2016052010305075894.png" alt="mp4" /></p>
 
 <h1>0x03 几道可以分辨恶趣味的题目</h1>
 
@@ -52,19 +52,19 @@
 
 <p>今年被吊打过的CTF里，我们可以发现隐写术不那么单调了，体现了隐写术的特点之“物所能及不能藏”。不光是常见的jpg、tiff、png，</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010305269431.png" alt="exif" /></p>
+<p><img src="../image/drops/20160520/2016052010305269431.png" alt="exif" /></p>
 
 <p>你真的舍得分开它吗？出题点不在这儿，在乎Exif也。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010305418852.png" alt="exif-1" /></p>
+<p><img src="../image/drops/20160520/2016052010305418852.png" alt="exif-1" /></p>
 
 <p>还有这道：先看左边（用pngcheck来分析的）</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010305758324.png" alt="odrrere" /></p>
+<p><img src="../image/drops/20160520/2016052010305758324.png" alt="odrrere" /></p>
 
 <p>这货处理处理就变了：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010305815843.png" alt="odrrere_1" /></p>
+<p><img src="../image/drops/20160520/2016052010305815843.png" alt="odrrere_1" /></p>
 
 <p>然后就耐心重排IDAT部分的模块即可。</p>
 
@@ -73,7 +73,7 @@
 <ul>
 <li><p>word</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010305910494.png" alt="word" /></p>
+<p><img src="../image/drops/20160520/2016052010305910494.png" alt="word" /></p>
 
 <p>感觉是会出现在宏或者说是隐藏字符这些小细节上，果然细节决定成败啊……</p></li>
 <li><p>pdf</p>
@@ -86,7 +86,7 @@
 
 <p>估计有很多人会记得这张图吧？还给了一首《渡口》</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010310023864.jpg" alt="misc3-346e2a33" /></p>
+<p><img src="../image/drops/20160520/2016052010310023864.jpg" alt="misc3-346e2a33" /></p>
 
 <p>说到wav，之前看别人的WP囤了这么几张图：</p>
 
@@ -99,7 +99,7 @@
 <p>看来脑洞还是蛮大的</p></li>
 <li><p>midi</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010310533107.png" alt="mid" /></p></li>
+<p><img src="../image/drops/20160520/2016052010310533107.png" alt="mid" /></p></li>
 <li><p>avi</p>
 
 <p>avi的编码标准不同导致的文件体积太大，比赛中应该不会放那么大的视频文件供CTFer下载吧？但谁又能说的准呢？给大家安利一个MSU VideoStego，是用于分析avi文件的小工具。</p></li>
@@ -108,12 +108,12 @@
 <p>exe里藏东西其实还涉及到病毒行为分析，有可能是藏在壳内，也有可能是其他地方，具体情况可以使用IDA或者OD还有C32Asm来进行跟进分析。</p></li>
 <li><p>mp4</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010305075894.png" alt="catvideo" /></p></li>
+<p><img src="../image/drops/20160520/2016052010305075894.png" alt="catvideo" /></p></li>
 </ul>
 
 <p>在刚刚结束的风云杯2016上，比较有意思的一道misc04是关于加密与解密，同时还涉及到stego，先是zip伪加密破解，然后得到一张图片。尔等菜鸟们用binwalk分辨出了文件头分出来四张图片，嗯？然后？其实在赛后处理这张图发现了一个诡异的地方：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160520/2016052010310855394.png" alt="xianjian" /></p>
+<p><img src="../image/drops/20160520/2016052010310855394.png" alt="xianjian" /></p>
 
 <p>然后就没然后了……</p>
 

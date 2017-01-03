@@ -68,7 +68,7 @@ typedef struct {
 
 <p>其中Tag对应着每个节区。比如<code>JMPREL</code>对应着<code>.rel.plt</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615082885114118.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615082885114118.png" alt="Alt text" /></p>
 
 <p>节区中包含目标文件的所有信息。节的结构如图。</p>
 
@@ -89,7 +89,7 @@ typedef struct{
 
 <p>如图，列出了该文件的28个节区。其中类型为REL的节区包含重定位表项。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615083112382215.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615083112382215.png" alt="Alt text" /></p>
 
 <p>（1） 其中<code>.rel.plt</code>节是用于函数重定位，<code>.rel.dyn</code>节是用于变量重定位</p>
 
@@ -105,11 +105,11 @@ typedef struct {
 
 <p>如图，在<code>.rel.plt</code>中列出了链接的C库函数，以下均已<code>write</code>函数为例，<code>write</code>函数的<code>r_offset=0x804a010</code>,<code>r_info=0x507</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615083234564313.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615083234564313.png" alt="Alt text" /></p>
 
 <p>（2） 其中<code>.got</code>节保存全局变量偏移表，<code>.got.plt</code>节存储着全局函数偏离表。<code>.got.plt</code>对应着<code>Elf32_Rel</code>结构中<code>r_offset</code>的值。如图，<code>write</code>函数在GOT表中位于<code>0x804a010</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615083441593413.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615083441593413.png" alt="Alt text" /></p>
 
 <p>（3）其中<code>.dynsym</code>节区包含了动态链接符号表。其中，<code>Elf32_Sym[num]</code>中的<code>num</code>对应着<code>ELF32_R_SYM(Elf32_Rel-&gt;r_info)</code>。根据定义，<code>ELF32_R_SYM(Elf32_Rel-&gt;r_info) = (Elf32_Rel-&gt;r_info)&gt;&gt;8</code>。</p>
 
@@ -127,15 +127,15 @@ typedef struct
 
 <p>如图，<code>write</code>的索引值为<code>ELF32_R_SYM(0x507) = 0x507 &gt;&gt; 8 = 5</code>。而<code>Elf32_Sym[5]</code>即保存着<code>write</code>的符号表信息。并且<code>ELF32_R_TYPE(0x507) = 7</code>,对应<code>R_386_JUMP_SLOT</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/201604061508364388856.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/201604061508364388856.png" alt="Alt text" /></p>
 
 <p>（4）其中<code>.dynstr</code>节包含了动态链接的字符串。这个节区以<code>\x00</code>作为开始和结尾，中间每个字符串也以<code>\x00</code>间隔。如图，<code>Elf32_Sym[5]-&gt;st_name = 0x54</code>,所以<code>.dynstr</code>加上<code>0x54</code>的偏移量，就是字符串<code>write</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/201604061508375984666.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/201604061508375984666.png" alt="Alt text" /></p>
 
 <p>（5）其中<code>.plt</code>节是过程链接表。过程链接表把位置独立的函数调用重定向到绝对位置。如图，当程序执行<code>call <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="4e393c273a2b0e3e223a">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script></code>时，实际会跳到<code>0x80483c0</code>去执行。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/201604061508391772976.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/201604061508391772976.png" alt="Alt text" /></p>
 
 <h3>延迟绑定</h3>
 
@@ -143,19 +143,19 @@ typedef struct
 
 <p>具体来说，在前一部分我们已经知道，当程序执行<code>call <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="4730352e332207372b33">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script></code>时，实际会跳到<code>0x80483c0</code>去执行。而<code>0x80483c0</code>处的汇编代码仅仅三行。我们来看一下这三行代码做了什么。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/201604061508391772976.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/201604061508391772976.png" alt="Alt text" /></p>
 
 <p>第一行，上一部分也提到了<code>0x804a010</code>是<code>write</code>的GOT表位置，当我们第一次调用<code>write</code>时，其对应的GOT表里并没有存放<code>write</code>的真实地址，而是下一条指令的地址。第二、三行，把<code>reloc_arg=0x20</code>作为参数推入栈中，跳到<code>0x8048370</code>继续执行。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/201604061508409576685.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/201604061508409576685.png" alt="Alt text" /></p>
 
 <p><code>0x8048370</code>再把<code>link_map = *(GOT+4)</code>作为参数推入栈中，而<code>*(GOT+8)</code>中保存的是<code>_dl_runtime_resolve</code>函数的地址。因此以上指令相当于执行了<code>_dl_runtime_resolve(link_map, reloc_arg)</code>，该函数会完成符号的解析，即将真实的<code>write</code>函数地址写入其<code>GOT</code>条目中，随后把控制权交给<code>write</code>函数。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/201604061508426297796.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/201604061508426297796.png" alt="Alt text" /></p>
 
 <p>其中<code>_dl_runtime_resolve</code>是在<code>glibc-2.22/sysdeps/i386/dl-trampoline.S</code>中用汇编实现的。<code>0xf7ff04fb</code>处即调用<code>_dl_fixup</code>，并且通过寄存器传参。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615084353181105.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615084353181105.png" alt="Alt text" /></p>
 
 <p>其中<code>_dl_fixup</code>是在<code>glibc-2.22/elf/dl-runtime.c</code>实现的，我们只关注一些主要函数。</p>
 
@@ -213,11 +213,11 @@ return elf_machine_fixup_plt (l, result, reloc, rel_addr, value);
 
 <p>首先确认一下进程当前开了哪些保护</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615084572034119.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615084572034119.png" alt="Alt text" /></p>
 
 <p>由于程序存在栈缓冲区漏洞，我们可以用PEDA很快定位覆写EIP的位置。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615084617720125.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615084617720125.png" alt="Alt text" /></p>
 
 <p><strong>stage1</strong></p>
 
@@ -274,7 +274,7 @@ io.interact()
 
 <p>最后会把我们输入的<code>cmd</code>打印出来</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615084827708134.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615084827708134.png" alt="Alt text" /></p>
 
 <p><strong>stage2</strong></p>
 
@@ -302,7 +302,7 @@ io.interact()
 
 <p>同样会把我们输入的<code>cmd</code>打印出来</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615085022098144.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615085022098144.png" alt="Alt text" /></p>
 
 <p><strong>stage3</strong></p>
 
@@ -335,7 +335,7 @@ io.interact()
 
 <p>同样会把我们输入的<code>cmd</code>打印出来</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615085184497153.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615085184497153.png" alt="Alt text" /></p>
 
 <p><strong>stage4</strong></p>
 
@@ -377,7 +377,7 @@ io.interact()
 
 <p>同样会把我们输入的<code>cmd</code>打印出来</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615085329779163.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615085329779163.png" alt="Alt text" /></p>
 
 <p><strong>stage5</strong></p>
 
@@ -421,7 +421,7 @@ io.interact()
 
 <p>同样会把我们输入的<code>cmd</code>打印出来</p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615085489448173.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615085489448173.png" alt="Alt text" /></p>
 
 <p><strong>stage6</strong></p>
 
@@ -465,7 +465,7 @@ io.interact()
 
 <p>得到一个<code>shell</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160406/2016040615085531871183.png" alt="Alt text" /></p>
+<p><img src="../image/drops/20160406/2016040615085531871183.png" alt="Alt text" /></p>
 
 <h3>WTF</h3>
 

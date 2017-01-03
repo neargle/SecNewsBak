@@ -200,7 +200,7 @@ super(URL, self).__init__(regex, re.IGNORECASE, message)
 
 <p>输入以上url，提交后点击链接即可触发：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160224/2016022407260459912.jpg" alt="p1" /></p>
+<p><img src="../image/drops/20160224/2016022407260459912.jpg" alt="p1" /></p>
 
 <p>这个漏洞很典型，任何开发者都不会想到如此平凡的一段代码竟然隐藏着深层次的威胁。<br />
 有些人可能会觉得我这个demo并不能说明实际问题，我简单翻了一下github，不到5分钟就找到了一个存在同样问题的项目： https://github.com/1jingdian/1jingdian 。（虽然其站点已经关闭，但代码可以浏览）</p>
@@ -279,18 +279,18 @@ https://github.com/1jingdian/1jingdian/blob/master/application/templates/macros/
 
 <p>举几个例子，这个漏洞：  <a target="_blank" href="http://www.wooyun.org/bugs/wooyun-2015-0101728">WooYun: ThinkPHP某处设计缺陷可导致getshell</a>  。首先满足第一个条件，正常使用S函数。当然文档中也对安全进行了说明：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160224/2016022407260496211.jpg" alt="p2" /></p>
+<p><img src="../image/drops/20160224/2016022407260496211.jpg" alt="p2" /></p>
 
 <p>但这个说明，我觉得是不够的。你『可以』设置..参数，避免缓存文件名『被猜测到』。文档并没有说明缓存文件名被猜测到有什么危害，也没有强制要求设置这个参数。所以这个锅，官方至少背一半。<br />
 再举个例子：  <a target="_blank" href="http://www.wooyun.org/bugs/wooyun-2015-0156208">WooYun: 国际php框架slim架构上存在XXE漏洞（XXE的典型存在形式）</a>  ，很明显的一个框架锅，开发者在正常接收POST参数的时候就可以造成XXE漏洞，这个漏洞和开发者是没有任何关系的。<br />
 另一个例子：  <a target="_blank" href="http://www.wooyun.org/bugs/wooyun-2014-086742">WooYun: ThinkPHP架构设计不合理极易导致SQL注入</a>  ，我们通过修改逻辑运算符改变开发者正常的判断流程，造成安全问题。我们对比一下ThinkPHP和Codeigniter，CI中对于逻辑运算符的位置就和TP不相同，它在『key』的位置：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160224/2016022407260428910.jpg" alt="p3" /></p>
+<p><img src="../image/drops/20160224/2016022407260428910.jpg" alt="p3" /></p>
 
 <p>正常情况下key位置是不会被用户控制的。所以，同样的开发方式在CI里不存在问题，而在TP里就存在问题，这样的地方我认为也是ThinkPHP的锅。<br />
 我们看本文提出的WTForm的问题，这个锅其实WTForm可以不用独自背。我们在文档中，可以看到它有模模糊糊地提到过validater不严谨的问题：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160224/2016022407260496806.jpg" alt="p4" /></p>
+<p><img src="../image/drops/20160224/2016022407260496806.jpg" alt="p4" /></p>
 
 <p>当然，这个模糊的提示对于很多没有安全基础的人来说，很难起到作用。</p>
 

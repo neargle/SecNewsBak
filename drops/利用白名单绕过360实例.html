@@ -53,7 +53,7 @@
 
 <p>毫无疑问，被查杀，如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043730336.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043730336.png" alt="enter image description here" /></p>
 
 <h3>2、利用InstallUtil.exe执行程序</h3>
 
@@ -69,29 +69,29 @@ C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogTo
 
 <p>如图，生成<code>PELoader.exe</code>，然后通过<code>InstallUtil.exe</code>执行<code>PELoader.exe</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043727092.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043727092.png" alt="enter image description here" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043751669.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043751669.png" alt="enter image description here" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043721554.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043721554.png" alt="enter image description here" /></p>
 
 <p>成功加载运行<code>mimikatz</code></p>
 
 <p>进程显示为<code>InstallUtil.exe</code>，如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043848387.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043848387.png" alt="enter image description here" /></p>
 
 <p><strong>（3）</strong>测试生成的<code>PELoader.exe</code>查杀情况</p>
 
 <p>如图，360成功检测威胁</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043874239.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043874239.png" alt="enter image description here" /></p>
 
 <p><strong>（4）</strong>尝试修改<code>PELoader.cs</code></p>
 
 <p>阅读代码发现<code>Line853-856</code>存储了<code>base64</code>加密后的mimikatz</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043882790.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043882790.png" alt="enter image description here" /></p>
 
 <p>那么参照作者给出的修改方法修改</p>
 
@@ -108,21 +108,21 @@ byte[] AsBytes = File.ReadAllBytes(@"C:\Tools\Mimikatz.exe"); String AsBase64Str
 
 <p>如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043834365.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043834365.png" alt="enter image description here" /></p>
 
 <p>执行<code>Powershell</code>代码</p>
 
 <p>执行后生成<code>Mimikatz.b64</code>，如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043945847.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043945847.png" alt="enter image description here" /></p>
 
 <p>打开将内容复制到<code>PELoader.cs</code>中的变量<code>KatzCompressed</code>的定义中，如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043941945.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043941945.png" alt="enter image description here" /></p>
 
 <p>按照步骤（2）执行测试，发现错误，如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043959995.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043959995.png" alt="enter image description here" /></p>
 
 <h1>0x04 分析</h1>
 
@@ -169,7 +169,7 @@ namespace test1
 
 <p>我使用的环境是<code>vs2012</code>，新建<code>c#</code>工程，填写以上代码，编译后运行，生成新的<code>mimikatz.b64</code>，如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511043928105.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511043928105.png" alt="enter image description here" /></p>
 
 <p>细心的同学可以发现和之前使用<code>Powershell</code>生成的<code>mimikatz.b64</code>有所区别</p>
 
@@ -177,7 +177,7 @@ namespace test1
 
 <p>如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511044097150.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511044097150.png" alt="enter image description here" /></p>
 
 <p><strong>（3）</strong>修改解密过程</p>
 
@@ -188,7 +188,7 @@ namespace test1
 
 <p>在前面添加“//”即可，如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511044090952.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511044090952.png" alt="enter image description here" /></p>
 
 <p><strong>（4）</strong>再次编译并利用<code>InstallUtil.exe</code>执行</p>
 
@@ -198,7 +198,7 @@ C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogTo
 
 <p>如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511044062702.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511044062702.png" alt="enter image description here" /></p>
 
 <p>证明修改成功，能够顺利执行我们修改的代码</p>
 
@@ -212,7 +212,7 @@ C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogTo
 
 <p>如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511044029173.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511044029173.png" alt="enter image description here" /></p>
 
 <p>也可以成功加载<code>mimikatz</code></p>
 
@@ -220,17 +220,17 @@ C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogTo
 
 <p>如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511044090622.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511044090622.png" alt="enter image description here" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511044115036.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511044115036.png" alt="enter image description here" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511044161207.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511044161207.png" alt="enter image description here" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511044139994.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511044139994.png" alt="enter image description here" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511044182045.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511044182045.png" alt="enter image description here" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20150915/2015091511044261842.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150915/2015091511044261842.png" alt="enter image description here" /></p>
 
 <p><strong>注：</strong>测试全过程开启360，主动防御未触发</p>
 

@@ -41,11 +41,11 @@ admin admin
 admin 123456
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440190493.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440190493.png" alt="enter image description here" /></p>
 
 <p>然后来看一下<code>Tomcat</code>安装版默认的<code>tomacat-users.xml</code>配置文件</p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440294106.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440294106.png" alt="enter image description here" /></p>
 
 <p>注：<code>Linux</code>平台及<code>Windows</code>平台免安装版本不受该漏洞影响。</p>
 
@@ -53,27 +53,27 @@ admin 123456
 
 <p>在<code>Tomcat</code>的后台有个<code>WAR file to deploy</code>模块，通过其可以上传<code>WAR</code>文件。<code>Tomcat</code>可以解析<code>WAR</code>文件，能够将其解压并生成<code>web</code>文件。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440250032.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440250032.png" alt="enter image description here" /></p>
 
 <p>我们将一个<code>jsp</code>格式的<code>webshell</code>用<code>WinRar</code>打包然后将其后缀改名为<code>WAR</code>(本例为<code>no.war</code>)，这样;一个<code>WAR</code>包就生成了。最后将其上传到服务器，可以看到在<code>Tomcat</code>的后台中多了一个名为<code>/no</code>的目录。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440248016.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440248016.png" alt="enter image description here" /></p>
 
 <p>点击该目录打开该目录<code>jsp</code>木马就运行了，这样就获得了一个<code>Webshell</code>。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440279290.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440279290.png" alt="enter image description here" /></p>
 
 <h3>三.获取服务器权限</h3>
 
 <p><code>Tomcat</code>服务默认是以<code>system</code>权限运行的，因此该<code>jsp</code>木马就继承了其权限，几乎可以对<code>Web</code>服务器进行所有的操作。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440219147.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440219147.png" alt="enter image description here" /></p>
 
 <p>然后创建用户: <code>net user Boom shellcode /add</code></p>
 
 <p>添加到管理员用户组: <code>net localgroup administrators Boom /add</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440298603.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440298603.png" alt="enter image description here" /></p>
 
 <p>然后可以干什么事我就不说了</p>
 
@@ -85,7 +85,7 @@ admin 123456
 
 <p>修改<code>\conf\tomacat-users.xml</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440273000.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440273000.png" alt="enter image description here" /></p>
 
 <p>删除<code>Tomcat</code>后台 <code>\webapps</code>全部删除就好。</p>
 
@@ -101,7 +101,7 @@ admin 123456
 
 <p>确认是<code>false</code>而不是<code>true</code>。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440329796.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440329796.png" alt="enter image description here" /></p>
 
 <h3>三.服务降权</h3>
 
@@ -109,11 +109,11 @@ admin 123456
 
 <p>首先创建一个普通用户，为其设置密码，将其密码策略设置为“密码永不过期”，比如我们创建的用户为<code>tomcat</code>。然后修改<code>tomcat</code>安装文件夹的访问权限，为<code>tomcat</code>赋予<code>Tomcat</code>文件夹的读、写、执行的访问权限，赋予<code>Tomcat</code>对<code>WebApps</code>文件夹的只读访问权限，如果某些<code>Web</code>应用程序需要写访问权限，单独为其授予对那个文件夹的写访问权限。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440328686.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440328686.png" alt="enter image description here" /></p>
 
 <p>“开始→运行”，输入<code>services.msc</code>打开服务管理器，找到<code>Apache Tomcat</code>服务，双击打开该服务的属性，在其实属性窗口中点击“登录”选项卡，在登录身份下选中“以此帐户”，然后在文本框中输入<code>tomcat</code>和密码，最后“确定”并重启服务器。这样<code>tomcat</code>就以<code>tomcat</code>这个普通用户的权限运行。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440373699.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150909/2015090908440373699.png" alt="enter image description here" /></p>
 
 <p>然后重启服务,就生效了。这样普通用户<code>tomcat</code>运行的<code>Tomcat</code>其权限就大大地降低了，就算是攻击者获得了<code>Webshell</code>也不能进一步深入，从而威胁web服务器的安全。</p>
 
@@ -123,7 +123,7 @@ admin 123456
 
 <p>应用程序部署与<code>tomcat</code>启动,不能使用同一个用户。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150909/2015090908440348885.png" alt="enter image description here" /></p>      </p>
+<p><img src="../image/drops/20150909/2015090908440348885.png" alt="enter image description here" /></p>      </p>
     
 			</body>
 		</html>

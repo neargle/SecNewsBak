@@ -25,19 +25,19 @@
 
 <!--more-->
 
-<p><img src="http://static.wooyun.org//drops/20160601/2016060103495182066190.png" alt="" /></p>
+<p><img src="../image/drops/20160601/2016060103495182066190.png" alt="" /></p>
 
 <p>找到的每处所在的函数都按F2设置一个断点：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/2016060103495386691248.png" alt="" /></p>
+<p><img src="../image/drops/20160601/2016060103495386691248.png" alt="" /></p>
 
 <p>选择local win32 debugger，然后点击开始按钮进行调试：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/2016060103495586348327.png" alt="" /></p>
+<p><img src="../image/drops/20160601/2016060103495586348327.png" alt="" /></p>
 
 <p>这时候程序中断在我们设置的断点处：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/2016060103495788915423.png" alt="" /></p>
+<p><img src="../image/drops/20160601/2016060103495788915423.png" alt="" /></p>
 
 <p>上图中，如果界面显示的是汇编代码，直接按一下F5就切换到了伪C代码里了。</p>
 
@@ -80,9 +80,9 @@ int __cdecl sub_431970(int a1, int a2)
 
 <p>通过查看内存值，便一目了然：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/2016060103495867693519.png" alt="" /></p>
+<p><img src="../image/drops/20160601/2016060103495867693519.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/2016060103500029999618.png" alt="" /></p>
+<p><img src="../image/drops/20160601/2016060103500029999618.png" alt="" /></p>
 
 <p>通过分析算法发现他的HASH加密算法如下：</p>
 
@@ -101,13 +101,13 @@ Hash= v7&lt;&lt;6+k //k是a1[i]在字符串secret[0]里的下标。
 
 <p>这里随便输入的认证码，本次HASH运算完，得到的12字节数据如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/2016060103500277335718.png" alt="" /></p>
+<p><img src="../image/drops/20160601/2016060103500277335718.png" alt="" /></p>
 
 <p>然后第一次HASH结束。</p>
 
 <p>在函数尾部下断点，F9 一次，再F8后来到了 程序最开始的函数中，也就是第一次我们断下的函数里：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/2016060103500443487814.png" alt="" /></p>
+<p><img src="../image/drops/20160601/2016060103500443487814.png" alt="" /></p>
 
 <p>继续按F8，进入了下面的函数：</p>
 
@@ -441,13 +441,13 @@ void main()
 
 <p>破解代码运行后结果如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/2016060103500624950915.png" alt="" /></p>
+<p><img src="../image/drops/20160601/2016060103500624950915.png" alt="" /></p>
 
 <p>得到了两个结果：</p>
 
 <p>分别输入两个结果，显示如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160601/20160601035008312301014.png" alt="" /></p>
+<p><img src="../image/drops/20160601/20160601035008312301014.png" alt="" /></p>
 
 <p>第一个结果，输入后没任何反应，也不提示错误。第二个输入后成功得到flag。</p>
 

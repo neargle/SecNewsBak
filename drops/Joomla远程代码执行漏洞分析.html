@@ -53,7 +53,7 @@ protected function _validate($restart = false)
 
 <p>最终跟随他们俩进入数据库，session表：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151215/2015121512202868031.jpg" alt="" /></p>
+<p><img src="../image/drops/20151215/2015121512202868031.jpg" alt="" /></p>
 
 <p>正常情况下，不存在任何问题。因为我们控制的只是反序列化对象中的一个字符串，不会触发反序列相关的漏洞。 但是，因为一个小姿势，导致后面我们可以控制整个反序列化对象。</p>
 
@@ -67,7 +67,7 @@ protected function _validate($restart = false)
 <p>其存储格式为『键名 ＋ 竖线 ＋ 经过 serialize() 函数反序列处理的值』，未正确处理多个竖线的情况。<br />
 那么，我们这里就可以通过注入一个"|"符号，将它前面的部分全部认为是name，而|后面我就可以插入任意serialize字符串，构造反序列化漏洞了。</p>
 
-<p><img src="http://static.wooyun.org//drops/20151215/2015121512205022510.jpg" alt="" /></p>
+<p><img src="../image/drops/20151215/2015121512205022510.jpg" alt="" /></p>
 
 <p>但还有一个问题，在我们构造好的反序列化字符串后面，还有它原本的内容，必须要截断。而此处并不像SQL注入，还有注释符可用。 不知各位是否还记得当年wordpress出过的一个<a href="http://www.leavesongs.com/HTML/wordpress-4-1-stored-xss.html">XSS</a>，当时就是在插入数据库的时候利用"%F0%9D%8C%86"字符将mysql中utf-8的字段截断了。</p>
 
@@ -184,7 +184,7 @@ $a = new JDatabaseDriverMysqli();
 echo serialize($a);
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20151215/2015121512205192407.jpg" alt="" /></p>
+<p><img src="../image/drops/20151215/2015121512205192407.jpg" alt="" /></p>
 
 <p>将这个代码生成的exp，以前面提到的注入<code>『|』</code>的变换方式，带入前面提到的user-agent中，即可触发代码执行。 其中，我们需要将<code>char(0)*char(0)</code>替换成<code>\0\0\0</code>，因为在序列化的时候，protected类型变量会被转换成<code>\0*\0name</code>的样式，这个替换在源代码中也可以看到：</p>
 
@@ -194,7 +194,7 @@ $result = str_replace('\0\0\0', chr(0) . '*' . chr(0), $result);
 
 <p>构造的时候遇到一点小麻烦，那就是默认情况下SimplePie是没有定义的，这也是为什么我在调用SimplePie之前先new了一个JSimplepieFactory的原因，因为JSimplepieFactory对象在加载时会调用import函数将SimplePie导入到当前工作环境：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151215/2015121512205361071.jpg" alt="" /></p>
+<p><img src="../image/drops/20151215/2015121512205361071.jpg" alt="" /></p>
 
 <p>而JSimplepieFactory有autoload，所以不再需要其他include来对其进行加载。 给出我最终构造的POC（既是上诉php代码生成的POC）：</p>
 
@@ -204,7 +204,7 @@ User-Agent: 123}__test|O:21:"JDatabaseDriverMysqli":3:{s:4:"\0\0\0a";O:17:"JSimp
 
 <p>给一张代码成功执行的POC：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151215/201512151250568219614501837463659.jpg" alt="" /></p>
+<p><img src="../image/drops/20151215/201512151250568219614501837463659.jpg" alt="" /></p>
 
 <h1>0x03 影响版本 &amp; 修复方案</h1>
 

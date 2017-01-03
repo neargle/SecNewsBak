@@ -61,19 +61,19 @@
 
 <p>而 serviceWorker 需要 Promise 支撑，目前支持的浏览器如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002225494696promise.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002225494696promise.png" alt="" /></p>
 
 <p>支持 serviceWorker 的浏览器：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002225012134serviceWorker.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002225012134serviceWorker.png" alt="" /></p>
 
 <p>firefox 默认关闭 serviceWorker，可以通过 about:config 打开开关：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002221882185firefox.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002221882185firefox.png" alt="" /></p>
 
 <p>支持 fetch 方法（抓包）的浏览器：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002224889637fetch.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002224889637fetch.png" alt="" /></p>
 
 <hr />
 
@@ -102,11 +102,11 @@ var url = '//victim.com/evil.js'
 
 <p>Google it !</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002220552592taobao1.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002220552592taobao1.png" alt="" /></p>
 
 <p>点击第一个链接：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002220284370taobao2.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002220284370taobao2.png" alt="" /></p>
 
 <p>可以看到，以 taobao.com 为例，第一个 jsonp 接口就存在这样的弱点：callback 可以写入任意代码。</p>
 
@@ -139,33 +139,33 @@ onfetch = function(e) {
 
 <p>首先打开网站：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002222087646138.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002222087646138.png" alt="" /></p>
 
 <p>打开正常页面：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002221550058230.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002221550058230.png" alt="" /></p>
 
 <p>这时候点击被攻击页面，此页面事先被注入了 XSS 脚本：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002221379624327.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002221379624327.png" alt="" /></p>
 
 <p>可以看到，这时候 serviceWorker 已经成功注册了</p>
 
 <p>刷新页面，此时返回内容以及被修改了：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002224641169424.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002224641169424.png" alt="" /></p>
 
 <p>这时候再看正常页面，也被攻击了：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002224337064516.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002224337064516.png" alt="" /></p>
 
 <p>首页也是相同的情况：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002224072972613.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002224072972613.png" alt="" /></p>
 
 <p>关闭浏览器，再打开，依旧如此：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002223822188712.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002223822188712.png" alt="" /></p>
 
 <h3>0x03 优势、局限性</h3>
 
@@ -199,17 +199,17 @@ onfetch = function(e) {
 
 <p>作为一个普通用户，首先尝试打开 chrome://inspect/#service-workers 查看存活：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002223545970810.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002223545970810.png" alt="" /></p>
 
 <p>的确可以看到被用作攻击的 Worker，点击 terminate 尝试中止：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/201511300222304015598.png" alt="" /></p>
+<p><img src="../image/drops/20151130/201511300222304015598.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002223280124107.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002223280124107.png" alt="" /></p>
 
 <p>可以看到以及被清理了，但是打开页面，攻击仍然存在！</p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/20151130022210608211113.png" alt="" /></p>
+<p><img src="../image/drops/20151130/20151130022210608211113.png" alt="" /></p>
 
 <p>浏览器中打开<code>F12</code>，在<code>console</code>中输入：<code>navigator.serviceWorker.</code>，
 可以看到有 getRegistration 和 getRegistrations 这两种属性。</p>
@@ -225,9 +225,9 @@ navigator.serviceWorker.getRegistration()
 });
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20151130/20151130022226965761211.png" alt="" /></p>
+<p><img src="../image/drops/20151130/20151130022226965761211.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20151130/2015113002222463926139.png" alt="" /></p>
+<p><img src="../image/drops/20151130/2015113002222463926139.png" alt="" /></p>
 
 <p>这一次终于清除了。</p>
 

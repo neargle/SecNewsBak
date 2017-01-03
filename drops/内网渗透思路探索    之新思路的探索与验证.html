@@ -19,7 +19,7 @@
 
 <p>同时在渗透过程中经常遇到一种内网结构，由数台mac，linux和windows个人机组成的混合内网，一种扁平化结构。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514041234084148.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514041234084148.png" alt="" /></p>
 
 <!--more-->
 
@@ -43,25 +43,25 @@
 
 <p>目标是一个学校，渗透的过程比较平常，注入，上shell，反弹不成功，正向反弹，控制服务器，没有太多的亮点。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514041393983229.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514041393983229.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160526/20160526111331479181111.jpg" alt="" /></p>
+<p><img src="../image/drops/20160526/20160526111331479181111.jpg" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514042019984415.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514042019984415.png" alt="" /></p>
 
 <p>然后开始针对网络设备进行攻击。利用正向反弹工具，将我的kali接入了内网，定向攻击网关设备。利用snmp的弱口令，直接获取了三层交换的控制权限。</p>
 
 <p>ipconfig ／all结果截图：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514042154947514.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514042154947514.png" alt="" /></p>
 
 <p>执行snmpwalk读取密码：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514042332080613.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514042332080613.png" alt="" /></p>
 
 <p>成功读取到密码</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514042563778713.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514042563778713.png" alt="" /></p>
 
 <p>注：kali的snmpwalk 不能利用proxychains走socks5代理，攻击内网机器，暂不清楚原因。</p>
 
@@ -73,23 +73,23 @@
 
 <p>通过正向代理访问网关，成功telnet连接到设备：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/201605251404267879889.png" alt="" /></p>
+<p><img src="../image/drops/20160525/201605251404267879889.png" alt="" /></p>
 
 <p>然后立即查看所有配置：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514042828255910.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514042828255910.png" alt="" /></p>
 
 <p>查看版本信息：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514043050806109.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514043050806109.png" alt="" /></p>
 
 <p>查看设备的IP地址：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/20160525140432414831114.png" alt="" /></p>
+<p><img src="../image/drops/20160525/20160525140432414831114.png" alt="" /></p>
 
 <p>查看活动主机：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/20160525140434332091211.png" alt="" /></p>
+<p><img src="../image/drops/20160525/20160525140434332091211.png" alt="" /></p>
 
 <p>获取完基本信息之后，进行简单分析，华为的9306，三层交换机，查看到的下辖的用户不多，只有160多个，可能不准确，因为该时间段为非办公生活时间段。然后梳理流量线路，朝着外网方向，继续探索，又获取一台ruijie ES2000GS的控制权限，之后的机器不允许访问，无法继续往下拓展，总结如下</p>
 
@@ -142,23 +142,23 @@
 
 <p>准备配置L2TP隧道，在本地的模拟环境上进行了部署，都能连通。但是到了设备上，报错说不支持命令，并且virtual－ppp接口无法添加配置，至今未找到原因。最后直接图形化配置完成，锐捷提供了L2TP VPN的图形化配置界面，很简单。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/20160525140436547171310.png" alt="" /></p>
+<p><img src="../image/drops/20160525/20160525140436547171310.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514043713674149.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514043713674149.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514043962693158.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514043962693158.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514044182787167.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514044182787167.png" alt="" /></p>
 
 <p>在想分析流量的时候，出现一个问题，原计划是使用ip flow，但是该协议是cisco私有协议，锐捷与华为都不支持，并且笔者对华为的IP STEAM不熟悉，没有很好的解决方案，在准备进行完整引导流量的准备时，发现锐捷的网关设备，可以生成流量报表。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514044375532178.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514044375532178.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514044529920187.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514044529920187.png" alt="" /></p>
 
 <p>对统计好的流量大概分析后，对内网的流量有了一个大概的认识，HTTPS流量占了日常网页流量的很大部分，并且发现了内网有较大规模部署360安全大礼包。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514044762404196.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514044762404196.png" alt="" /></p>
 
 <p>然后定向劫持一些腾讯的http网页，利用小工具，将beef代码插入到网页中，进行基本信息的获取。由于较多网页为HTTPS，并没有完善方案，所以收集到的信息很少。<br />
 这里需要多说一句，我劫持流量的方式是利用MQC或者添加路由，进行抓取，引导流量。没有使用Switch端口镜像配置获取流量，像（http://drops.wooyun.org/tips/649）该文章说的方式。并且在这里最大程度的反对大家使用这种方案！因为在cisco，juniper和huawei设备上，端口镜像将会导致DST端口或者VLAN失去承载正常业务数据的功能。简单说就是，进行端口镜像配置，流量被镜像到的端口将不再具有正常通信功能。如果不是经过严密讨论设计之后得出的方案，还是劝大家别去考虑该方法。</p>
@@ -168,7 +168,7 @@
 
 <p>之后我试图进行内网控制扩展，即尝试渗透本园区之外的机器。结果两台设备上没有运行任何路由协议，路由配置就一条默认路由指向出口，其他的路由都是本地直连路由。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160525/2016052514044860773206.png" alt="" /></p>
+<p><img src="../image/drops/20160525/2016052514044860773206.png" alt="" /></p>
 
 <p>之前准备的方案是进行路由协议的劫持，或者称为路由表的优化更为确切，就是利用协议特性，将我变成必经之路，获取内网其他区域的流量。该设计方案并不关心路由协议，不论是OSPF，EIGRP，RIPv2或者是混合网络，只要他和其他机器之间运行着某种路由协议，就能完成路由的劫持。很遗憾，这个环境中不能实地测试了。</p>
 

@@ -34,7 +34,7 @@
 
 <p>登入主机后，找到可疑进程PID</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/201603110053333582517.jpg" alt="p1" /></p>
+<p><img src="../image/drops/20160311/201603110053333582517.jpg" alt="p1" /></p>
 
 <p>进入proc/进程目录找到对应文件绝对路径在/usr/bin目录下，stat信息如下：</p>
 
@@ -62,11 +62,11 @@ Change: 2015-01-14 10:29:26.000000000 +0800
 
 <p>通过strings查看文件内容发现远程ip及其他信息</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/201603110053343434924.jpg" alt="p2" /></p>
+<p><img src="../image/drops/20160311/201603110053343434924.jpg" alt="p2" /></p>
 
 <p>搜索ip发现为香港主机，并且在微博上发现如下信息</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/201603110053361075734.jpg" alt="p3" /></p>
+<p><img src="../image/drops/20160311/201603110053361075734.jpg" alt="p3" /></p>
 
 <p>结合strings其他信息，确定该文件为恶意程序，目前首先要判断攻击者通过什么途径入侵进来，此处绕了一些弯路，原因如下几点：</p>
 
@@ -79,7 +79,7 @@ Change: 2015-01-14 10:29:26.000000000 +0800
 
 <p>后来有同事在网上查到该ddos后门通过ssh暴力破解方式传播，才重新把目光放到ssh。与相关人员确认得知，服务器由于特殊原因对外开放了22端口，并且机器为弱口令，结合此信息，推测服务器为暴力破解ssh入侵，故排查secure日志</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/201603110053376596344.jpg" alt="p4" /></p>
+<p><img src="../image/drops/20160311/201603110053376596344.jpg" alt="p4" /></p>
 
 <p>6台外网主机有ssh验证成功记录，时间在13号21：12至23：59分之间，其中ip118.193.199.132与ip104.149.220.27在secure日志中无密码错误记录，推测为使用其它主机暴力破解，成功后返回密码使用其余主机登录</p>
 
@@ -91,21 +91,21 @@ Change: 2015-01-14 10:29:26.000000000 +0800
 
 <p>cron.sh文件内容如下</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/201603110053385869754.jpg" alt="p5" /></p>
+<p><img src="../image/drops/20160311/201603110053385869754.jpg" alt="p5" /></p>
 
 <p>其中/lib/libgcc.so通过文件大小及strings部分内容基本确定与/usr/bin下的恶意程序ohzxttdhqk相同</p>
 
 <p>udev.sh文件内容如下</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/201603110053404995763.jpg" alt="p6" /></p>
+<p><img src="../image/drops/20160311/201603110053404995763.jpg" alt="p6" /></p>
 
 <p>其中/lib/libgcc4.so通过文件大小及strings部分内容基本确定与/usr/bin下的恶意程序faksiubbri相同</p>
 
 <p>分别查看第一次执行计划任务时间如下</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/201603110053417583973.jpg" alt="p7" /></p>
+<p><img src="../image/drops/20160311/201603110053417583973.jpg" alt="p7" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/201603110053435857382.jpg" alt="p8" /></p>
+<p><img src="../image/drops/20160311/201603110053435857382.jpg" alt="p8" /></p>
 
 <p>时间上与暴力破解成功时间吻合，基本可判断后门程序通过ssh途径被植入</p>
 
@@ -113,26 +113,26 @@ Change: 2015-01-14 10:29:26.000000000 +0800
 
 <p>221.235.189.229</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/201603110053449334292.jpg" alt="p9" /></p>
+<p><img src="../image/drops/20160311/201603110053449334292.jpg" alt="p9" /></p>
 
 <p>62.210.180.180</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/2016031100534579384102.jpg" alt="p10" /></p>
+<p><img src="../image/drops/20160311/2016031100534579384102.jpg" alt="p10" /></p>
 
 <p>103.41.124.48</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/2016031100534747628113.jpg" alt="p11" /></p>
+<p><img src="../image/drops/20160311/2016031100534747628113.jpg" alt="p11" /></p>
 
 <p>118.193.199.132</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/2016031100534883883123.jpg" alt="p12" /></p>
+<p><img src="../image/drops/20160311/2016031100534883883123.jpg" alt="p12" /></p>
 
 <p>175.126.82.235<br />
 Jan 13 23:22:23成功认证后无断开信息</p>
 
 <p>104.149.220.27</p>
 
-<p><img src="http://static.wooyun.org//drops/20160311/2016031100534961583132.jpg" alt="p13" /></p>
+<p><img src="../image/drops/20160311/2016031100534961583132.jpg" alt="p13" /></p>
 
 <p>通过成功验证ssh至断开连接时间差可看到221.235.189.229、62.210.180.180、103.41.124.48时间差为0，推测暴力破解成功后无其他举动，那么结合计划任务运行时间与时间差信息可判断种植后门的两个ip应该为118.193.199.132与175.126.82.235</p>
 

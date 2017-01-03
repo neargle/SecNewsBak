@@ -17,7 +17,7 @@
 
 <p>前两篇分别介绍了<code>WMI Attacks &amp; WMI Backdoor</code>，侧重于攻击，所以这篇介绍一下<code>WMI Defense</code>，攻防结合，便于大家更清楚认识<code>WMI</code>.</p>
 
-<p><img src="http://static.wooyun.org//drops/20150907/2015090702205111169.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150907/2015090702205111169.png" alt="enter image description here" /></p>
 
 <!--more-->
 
@@ -65,9 +65,9 @@
 
 <p>如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150907/2015090702205123314.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150907/2015090702205123314.png" alt="enter image description here" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20150907/2015090702205225988.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150907/2015090702205225988.png" alt="enter image description here" /></p>
 
 <h3>2、监视进程结束</h3>
 
@@ -92,7 +92,7 @@ Set-WmiInstance -Class __FilterToConsumerBinding -Namespace "root\subscription" 
 
 <p>如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150907/2015090702205213838.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150907/2015090702205213838.png" alt="enter image description here" /></p>
 
 <h3>3、监视注册表</h3>
 
@@ -121,7 +121,7 @@ Set-WmiInstance -Class __FilterToConsumerBinding -Namespace "root\subscription" 
 
 <p>如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150907/2015090702205273574.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150907/2015090702205273574.png" alt="enter image description here" /></p>
 
 <p>(2)监视某一键值及其子键</p>
 
@@ -174,7 +174,7 @@ $WMIEventFilter;Consumer=$WMIEventConsumer}
 
 <p>如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20150907/2015090702205225185.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150907/2015090702205225185.png" alt="enter image description here" /></p>
 
 <p><code>Sysinternals Autoruns</code>只能检测到<code>ActiveScriptEventConsumer</code>和<code>CommandLineEventConsumer</code>的操作，可以理解为上述对进程和注册表监视的操作无法识别</p>
 

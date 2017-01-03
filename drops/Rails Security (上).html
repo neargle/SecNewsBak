@@ -49,12 +49,12 @@
 <li>ActiveRecord在新增物件时可传入Hash直接设定多项属性</li>
 <li><p>若没有限制可传入的参数会造成物件属性可被任意修改</p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808395315347130.png" alt="p1" /></p></li>
+<p><img src="../image/drops/20160308/2016030808395315347130.png" alt="p1" /></p></li>
 <li><p>透过新增/修改送出的属性，可以变更任意物件属性</p></li>
 <li><p><a href="https://github.com/blog/1068-public-key-security-vulnerability-and-mitigation">Case</a></p></li>
 <li><p>Rails 3.2.3后，config.active&#95;record.whitelist&#95;attributes = true</p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808395465248226.png" alt="p2" /></p></li>
+<p><img src="../image/drops/20160308/2016030808395465248226.png" alt="p2" /></p></li>
 <li><p>Rails 4后，Rails Core内建strong_parameters</p></li>
 <li><p>更适当地将处理的过程锁定在Controller layer</p></li>
 <li><p>更有弹性地针对属性作过滤</p></li>
@@ -69,25 +69,25 @@
 <ul>
 <li><p>Rake在处理params时，有时候会产生Unsafe的query</p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808395631900317.png" alt="p3" /></p></li>
+<p><img src="../image/drops/20160308/2016030808395631900317.png" alt="p3" /></p></li>
 <li><p>透过伪造params[:token]成[], [nil], [nil, nil, ...]或['foo', nil]，都能够通过.nil?的检查，使得SQL语句被安插IS NULL or IN ('foo', NULL)造成非预期的结果</p></li>
 <li><p>在Rails 3.2.8增加deep_munge方法来消除掉Hash里的nil</p></li>
 <li><p>commit中可看到类似的检查</p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808395818246412.png" alt="p4" /></p></li>
+<p><img src="../image/drops/20160308/2016030808395818246412.png" alt="p4" /></p></li>
 </ul>
 
 <h3>Code for Testing</h3>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808400062614512.png" alt="p5" /></p>
+<p><img src="../image/drops/20160308/2016030808400062614512.png" alt="p5" /></p>
 
 <p><strong>Rails 3.1.0: 成功绕过nil?的检查</strong></p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808400355743612.png" alt="p6" /></p>
+<p><img src="../image/drops/20160308/2016030808400355743612.png" alt="p6" /></p>
 
 <p><strong>Rails 4.2.5: 被拦截，直接替换成nil</strong></p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/201603080840063427579.png" alt="p7" /></p>
+<p><img src="../image/drops/20160308/201603080840063427579.png" alt="p7" /></p>
 
 <p><a id="content_tag"></a></p>
 
@@ -101,13 +101,13 @@
 <li>尽管方便，产生出的HTML是safe的吗？很显然的并不是！</li>
 <li><p>Ref: <a href="https://github.com/presidentbeef/brakeman/blob/master/lib/brakeman/checks/check_content_tag.rb">brakeman</a></p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/201603080840091720289.png" alt="p8" /></p></li>
+<p><img src="../image/drops/20160308/201603080840091720289.png" alt="p8" /></p></li>
 <li><p>In latest rails 4.2.5, attr still can be injected with any html data.</p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/201603080840111592697.png" alt="p9" /></p></li>
+<p><img src="../image/drops/20160308/201603080840111592697.png" alt="p9" /></p></li>
 <li><p>尽管attr values​​有escape，但跟button_to一起作用时却……</p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808401228254107.png" alt="p10" /></p></li>
+<p><img src="../image/drops/20160308/2016030808401228254107.png" alt="p10" /></p></li>
 </ul>
 
 <h3>Why？</h3>
@@ -131,15 +131,15 @@
 <li>CVE-2013-0156发生在可透过YAML解析时指定tag的方式覆盖已经载入的instance</li>
 <li><p>在rails3后已从<code>DEFAULT_PARSERS</code>移除</p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/20160308084015644111112.png" alt="p11" /></p></li>
+<p><img src="../image/drops/20160308/20160308084015644111112.png" alt="p11" /></p></li>
 <li><p>此次问题发生在XML解析</p></li>
 <li><p>在解析时会经过Hash.from&#95;xml(request.raw&#95;post)，底处是到typecast&#95;xml&#95;value进行xml的处理，<a href="http://drops.wooyun.org/papers/61">这篇</a>前辈的文章解释得很清楚，因为typecast&#95;xml&#95;value里针对xml node type可以进行YAML的解析调用(允许的type定义在<code>ActiveSupport::XmlMini::PARSING</code>)，因此造成RCE问题</p></li>
 <li><p>透过patch可以更明显看到修补后的不同</p></li>
 </ul>
 
-<p><img src="http://static.wooyun.org//drops/20160308/20160308084017953231210.png" alt="p12" /></p>
+<p><img src="../image/drops/20160308/20160308084017953231210.png" alt="p12" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808401918014137.png" alt="p13" /></p>
+<p><img src="../image/drops/20160308/2016030808401918014137.png" alt="p13" /></p>
 
 <p>Ref: <a href="https://github.com/rails/rails/commit/43109ecb986470ef023a7e91beb9812718f000fe">Rails 3.2</a></p>
 
@@ -147,7 +147,7 @@
 
 <p><strong>Rails 3.1: 成功执行指令</strong></p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808402128629145.png" alt="p14" /></p>
+<p><img src="../image/drops/20160308/2016030808402128629145.png" alt="p14" /></p>
 
 <h3>难得一见的RCE漏洞(CVE-2013-0333)</h3>
 
@@ -159,7 +159,7 @@
 <li>Patch for CVE-2013-0333</li>
 </ul>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808402228342154.png" alt="p15" /></p>
+<p><img src="../image/drops/20160308/2016030808402228342154.png" alt="p15" /></p>
 
 <p><a href="https://github.com/rails/rails/commit/5375dce1ac29141821a48fdc683e6b797f61f113">Rails 3.0.20</a></p>
 
@@ -176,9 +176,9 @@
 <li>rails目前最新版本4.2.5预设也是用ERB去做样板处理，但在rails5开发过程中已经加入此次<a href="https://github.com/rails/rails/commit/4be859f0fdf7b3059a28d03c279f03f5938efc80">commit</a></li>
 <li><p>动态样板间接变成LFI问题，搭配上面所述的<code>default_template_handler</code>为ERB，只要找到有调用ruby code的样板或是可自行写入的档案，就能够造成RCE</p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808402482697163.png" alt="p16" /></p>
+<p><img src="../image/drops/20160308/2016030808402482697163.png" alt="p16" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160308/2016030808402681434174.png" alt="p17" /></p></li>
+<p><img src="../image/drops/20160308/2016030808402681434174.png" alt="p17" /></p></li>
 <li><p>真实环境下发生的问题可以前往<a href="http://devco.re/blog/2015/07/24/the-vulnerability-of-dynamic-render-paths-in-rails/">DEVCORE</a>查看</p></li>
 <li><p>如果有类似开发环境应立即处理，<code>default_template_handler</code>要到rails5才转换成RAW</p></li>
 <li><p>改以白名单的方式限制template名称或是根据commit的内容手动Patch</p></li>

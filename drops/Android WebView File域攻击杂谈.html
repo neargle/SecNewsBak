@@ -68,9 +68,9 @@
 
 <p>A、某app修复的时候，在某个过程中判断url是否以<code>file:///</code>开头，如果是的话就返回，不是的话，再loadUrl</p>
 
-<p><img src="http://static.wooyun.org//drops/20151211/2015121108354531693130.png" alt="p1" /></p>
+<p><img src="../image/drops/20151211/2015121108354531693130.png" alt="p1" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20151211/2015121108354745051213.png" alt="p2" /></p>
+<p><img src="../image/drops/20151211/2015121108354745051213.png" alt="p2" /></p>
 
 <p>乍看这个修复，认为已经能够防止file域攻击问题了。但是，忽略了一个问题，如果我们在<code>file:///</code>前面添加空格，是否还仍然能够正常loadUrl。尝试后发现会修正下协议头，也就是说file域前面添加空格，是能够正常访问的。于是我们构造了如下POC就能够绕过这个限制：</p>
 
@@ -82,7 +82,7 @@ startActivity(i);
 
 <p>B、很自然，有些开发者就想trim去空格就可以修复了，于是我们又看到下面这个例子</p>
 
-<p><img src="http://static.wooyun.org//drops/20151211/201512110835492602734.jpg" alt="p3" /></p>
+<p><img src="../image/drops/20151211/201512110835492602734.jpg" alt="p3" /></p>
 
 <p>这种修复方式，一般认为已经解决了前面说明的问题了。但是，这里头存在一个技巧，即协议头不包括<code>///</code>，还是仍然能够正常loadUrl。看下我们构造了如下POC就能够绕过这个限制：</p>
 

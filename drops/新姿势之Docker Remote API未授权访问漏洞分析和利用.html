@@ -158,7 +158,7 @@
 <p>为了找到答案，特意看了下docker swarm的文档，<a href="https://docs.docker.com/swarm/plan-for-production/#cluster-ownership">Plan for Swarm in production</a> 这篇文章提到了两种方案</p>
 
 <ul>
-<li>第一种方法是使用TLS认证：<a href="https://docs.docker.com/swarm/secure-swarm-tls/">Overview Swarm with TLS</a> 和 <a href="https://docs.docker.com/swarm/configure-tls/">Configure Docker Swarm for TLS</a>这两篇文档，说的是配置好TLS后，Docker CLI 在发送命令到docker daemon之前，会首先发送它的证书，如果证书是由daemon信任的CA所签名的，才可以继续执行，官网图如下： <a href="http://drops.wooyun.org/wp-content/uploads/2016/05/trust-diagram.jpg"><img src="http://static.wooyun.org//drops/20160517/2016051703300142934.jpg" alt="" title="trust-diagram" class="alignnone size-full wp-image-15893" /></a></li>
+<li>第一种方法是使用TLS认证：<a href="https://docs.docker.com/swarm/secure-swarm-tls/">Overview Swarm with TLS</a> 和 <a href="https://docs.docker.com/swarm/configure-tls/">Configure Docker Swarm for TLS</a>这两篇文档，说的是配置好TLS后，Docker CLI 在发送命令到docker daemon之前，会首先发送它的证书，如果证书是由daemon信任的CA所签名的，才可以继续执行，官网图如下： <a href="http://drops.wooyun.org/wp-content/uploads/2016/05/trust-diagram.jpg"><img src="../image/drops/20160517/2016051703300142934.jpg" alt="" title="trust-diagram" class="alignnone size-full wp-image-15893" /></a></li>
 </ul>
 
 <p>​然而在我对公网中使用TLS的docker remote api（使用2376端口）测试中发现，即使没有证书，Docker CLI仍然可以正常访问，这里我也拿docker python api写了脚本，<a href="http://docker-py.readthedocs.io/en/stable/tls/#TLSConfig">设置不验证证书有效性</a>，也同样可以访问。</p>

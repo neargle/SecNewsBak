@@ -81,7 +81,7 @@ tcpkill: listening on br-lan [port 6112]
 192.168.1.143:59892 &gt; 192.168.1.163:6112: R 2875503830:2875503830(0) win 0
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010265840612.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010265840612.png" alt="" /></p>
 
 <p>这里演示的是全局切断，在实际应用场景中也可以使用包过滤表达式切断特定IP的连接</p>
 
@@ -96,11 +96,11 @@ tcpkill: listening on br-lan [port 6112]
 <pre><code>tc qdisc add dev wlan0 root netem delay 1s
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010270080515.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010270080515.png" alt="" /></p>
 
 <p>由于网络延迟，玩家控制的英雄在延时时间内无法响应玩家的操作</p>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010270337589.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010270337589.png" alt="" /></p>
 
 <p>当然，您也可以用包过滤表达式指定任意ip的延时规则，包括随机浮动的延时时间</p>
 
@@ -116,7 +116,7 @@ tcpkill: listening on br-lan [port 6112]
 
 <p>首先，我们在11对战平台上新建一个房间，然后打开wireshark，抓取war3的服务器端口（11对战平台使用的是服务器建主策略，并不是玩家建立主机，而是在服务器上有一个proxy专门用来与各个客户端通信）</p>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010270543793.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010270543793.png" alt="" /></p>
 
 <p>我们可以看到建主服务器ip为119.188.39.137，端口为2012，而聊天数据以及最开始交换用户名的数据都是明文的，而且后来测试发现也没有数据完整性验证</p>
 
@@ -151,7 +151,7 @@ netsed 1.2 by Julien VdG &lt;<a class="__cf_email__" href="/cdn-cgi/l/email-prot
 
 <p>于是整局游戏里lxj616都在其他用户眼里变成了wooyun，包括聊天和玩家列表</p>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010270543081.png" alt="" /> <img src="http://static.wooyun.org//drops/20160430/2016043010270785293.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010270543081.png" alt="" /> <img src="../image/drops/20160430/2016043010270785293.png" alt="" /></p>
 
 <p>当然，netsed只有简单的替换功能，下面介绍一些更灵活的解决方案（不再以war3为例）</p>
 
@@ -162,7 +162,7 @@ netsed 1.2 by Julien VdG &lt;<a class="__cf_email__" href="/cdn-cgi/l/email-prot
 
 <p>下面使用Woobuntu系统上的mitmproxy工具为例进行测试：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010270914344.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010270914344.png" alt="" /></p>
 
 <p>bettercap的官方示例介绍了如何修改TCP数据：</p>
 
@@ -173,7 +173,7 @@ netsed 1.2 by Julien VdG &lt;<a class="__cf_email__" href="/cdn-cgi/l/email-prot
 
 <p>注：tcp-proxy刚开始时显示未启动，后面在输出信息中后续启动的tcp-proxy</p>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010270938647.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010270938647.png" alt="" /></p>
 
 <h1>0x04 TCP连接的重放与交互式测试</h1>
 
@@ -186,7 +186,7 @@ netsed 1.2 by Julien VdG &lt;<a class="__cf_email__" href="/cdn-cgi/l/email-prot
 <pre><code>tcpreplay -i enp0s3 test.pcap
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010270975391.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010270975391.png" alt="" /></p>
 
 <p>然而仅仅重放抓取的数据包并不能建立有效的tcp连接，因此也不会被服务端正确的响应，这样就起不到FUZZ服务端应用的作用了，我们如果想要和服务端模拟一次真正的TCP会话，就必须在建立新连接后重新填写数据包对应的TCP序列号。形象的比喻一下就是你在重放HTTP请求时要修改你自己cookie里面的session-id</p>
 
@@ -206,7 +206,7 @@ netsed 1.2 by Julien VdG &lt;<a class="__cf_email__" href="/cdn-cgi/l/email-prot
 
 <p>之后我们抓取我们想要重放的tcp数据包，这里我们用wireshark进行抓取，抓取的是玩家lxj616加入房间然后在聊天栏里面说了两句话整个过程</p>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010271069553.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010271069553.png" alt="" /></p>
 
 <p>您也可以在WooyunWifi路由器上通过tcpdump工具进行抓包</p>
 
@@ -252,11 +252,11 @@ Warning : some extracted files are incomplete!
 <pre><code>cat a2b_contents.dat | nc 192.168.1.163 6112
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010271082539.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010271082539.png" alt="" /></p>
 
 <p>而对于游戏主机来说，确实看起来有玩家跑进来说了两句话</p>
 
-<p><img src="http://static.wooyun.org//drops/20160430/2016043010271055710.png" alt="" /></p>
+<p><img src="../image/drops/20160430/2016043010271055710.png" alt="" /></p>
 
 <h1>0x05 总结</h1>
 

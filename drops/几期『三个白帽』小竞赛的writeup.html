@@ -151,23 +151,23 @@ Oldname和newname，有几个特点：</p>
 
 <p>1.选择文件上传</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/20151118125956501151.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/20151118125956501151.jpg" alt="" /></p>
 
 <p>2.rename造成注入：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/201511181259585601421.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/201511181259585601421.jpg" alt="" /></p>
 
 <p>3.上传真正包含webshell的文件x.jpg</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/201511181300048593531.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/201511181300048593531.jpg" alt="" /></p>
 
 <p>4.重命名进行getshell：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/20151118130007565184.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/20151118130007565184.jpg" alt="" /></p>
 
 <p>5.成功</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/20151118130011396315.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/20151118130011396315.jpg" alt="" /></p>
 
 <h1>0x01 反序列化+auto_register导致的代码执行</h1>
 
@@ -182,7 +182,7 @@ Oldname和newname，有几个特点：</p>
 用lijiejie的工具无法还原，但用某些工具还是可以办到的，详见我之前的文章：<a href="https://www.leavesongs.com/PENETRATION/XDCTF-2015-WEB2-WRITEUP.html">https://www.leavesongs.com/PENETRATION/XDCTF-2015-WEB2-WRITEUP.html</a><br />
 就不再赘述，用某工具直接还原源码：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/20151118130014520586.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/20151118130014520586.jpg" alt="" /></p>
 
 <h2>getshell</h2>
 
@@ -202,19 +202,19 @@ Oldname和newname，有几个特点：</p>
 
 <p>1.上传webshell，后缀为.inc，被重命名为xxxx.inc</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/20151118130017213927.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/20151118130017213927.jpg" alt="" /></p>
 
 <p>2.序列化一个类名为xxxx的类对象</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/20151118130019932888.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/20151118130019932888.jpg" alt="" /></p>
 
 <p>3.将序列化以后的字符串作为cookie，发送到服务器上</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/20151118130021635989.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/20151118130021635989.jpg" alt="" /></p>
 
 <p>4.服务器反序列化这个字符串后，将会自动加载xxxx类，由于之前spl&#95;autoload&#95;register函数注册的方法，会自动加载xxxx.inc，从而造成文件包含漏洞，getshell成功</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/2015111813002779271101.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/2015111813002779271101.jpg" alt="" /></p>
 
 <p>在网站根目录的flag-1.php中获得第一个flag。</p>
 
@@ -223,7 +223,7 @@ Oldname和newname，有几个特点：</p>
 <p>拿到webshell以后，查看一下服务器的一些敏感信息。<br />
 比如在phpinfo里看到了，session的处理方式用的redis，并且save_path里暴露了redis的端口和密码：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/201511181300292817111.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/201511181300292817111.jpg" alt="" /></p>
 
 <p>于是可以利用这段时间比较火的redis写公钥文件进行提权。<br />
 直接编写一个redis.php，用php来连接redis，执行redis写公钥的POC：</p>
@@ -337,7 +337,7 @@ if($n1 &amp;&amp; $n2) {
 <p>这是 @玉林嘎 提出来的解决方案。<br />
 我来说一下原理。首先在电脑上测试下面的php代码：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/201511181300336917312.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/201511181300336917312.jpg" alt="" /></p>
 
 <p>可见，在小数小于某个值（<code>10^-16</code>）以后，再比较的时候就分不清大小了，这与php内部储存浮点数的机制有关。<br />
 在计算机里，是不能精确表示某个浮点数的。比如1.0，通常情况下储存在计算机里的数值是1.000000000000xxx，是一个十分接近1.0的数。<br />
@@ -352,7 +352,7 @@ if($n1 &amp;&amp; $n2) {
 <p>这个特性涉及到php『数字类』函数的一个特性。什么函数？包括is_numeric和intval等包含数字判断及转换的函数。<br />
 is_numeric为例，我们先来看他的源代码：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/201511181300351034413.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/201511181300351034413.jpg" alt="" /></p>
 
 <p>可见我画框的部分，is_numeric函数在开始判断前，会先跳过所有空白字符。这是一个特性。<br />
 也就是说，<code>is_numeirc(" \r\n \t 1.2")</code>是会返回true的。<br />
@@ -360,14 +360,14 @@ is_numeric为例，我们先来看他的源代码：</p>
 这就完成了一半。但有的同学又问了，题目获取$req['number']的时候明明使用trim过滤了空白字符的呀？<br />
 我们再看到trim的源码：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/201511181300368267914.jpg" alt="" /></p>
+<p><img src="../image/drops/20151118/201511181300368267914.jpg" alt="" /></p>
 
 <p>掰指头算一下，这里过滤的空白字符和之前跳过的空白字符有什么区别？<br />
 少了一个"\f"，嘿嘿。<br />
 于是我们可以引入\f（也就是%0c）在数字前面，来绕过最后那个is&#95;palindrome&#95;number函数，而对于前面的数字判断，因为intval和is_numeric都会忽略这个字符，所以不会影响。<br />
 最后通过payload: <code>http://f2ed13418097d206c.jie.sangebaimao.com/?number=%0c121</code> 拿到第二个flag：</p>
 
-<p><img src="http://static.wooyun.org//drops/20151118/201511181300386969215.jpg" alt="" /></p>      </p>
+<p><img src="../image/drops/20151118/201511181300386969215.jpg" alt="" /></p>      </p>
     
 			</body>
 		</html>

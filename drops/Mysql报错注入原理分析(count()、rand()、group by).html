@@ -17,11 +17,11 @@
 
 <p>一直在用mysql数据库报错注入方法，但为何会报错？</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313203562611.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313203562611.png" alt="" /></p>
 
 <p>百度谷歌知乎了一番，发现大家都是把官网的结论发一下截图，然后执行sql语句证明一下结论，但是没有人去深入研究为什么rand不能和order by一起使用，也没彻底说明三者同时使用报错的原理。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/20160401031322312932.jpg" alt="" /></p>
+<p><img src="../image/drops/20160401/20160401031322312932.jpg" alt="" /></p>
 
 <!--more-->
 
@@ -31,7 +31,7 @@
 
 <p><code>select count(*),(floor(rand(0)*2))x from information_schema.tables group by x;</code> 这是网上最常见的语句,目前位置看到的网上sql注入教程,<code>floor</code> 都是直接放<code>count(*)</code> 后面，为了排除干扰，我们直接对比了两个报错语句，如下图</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313235867131.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313235867131.png" alt="" /></p>
 
 <p>由上面的图片，可以知道报错跟位置无关。</p>
 
@@ -41,31 +41,31 @@
 
 <p>是不是报错语句有了<code>floor(rand(0)*2)</code>以及其他几个条件就一定报错？其实并不是如此，我们先建建个表，新增一条记录看看，如下图：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313262943641.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313262943641.png" alt="" /></p>
 
 <p>确认表中只有一条记录后，再执行报错语句看看，如下图：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313286882151.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313286882151.png" alt="" /></p>
 
 <p>多次执行均未发现报错。</p>
 
 <p>然后我们新增一条记录。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313294358961.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313294358961.png" alt="" /></p>
 
 <p>然后再测试下报错语句</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313312086271.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313312086271.png" alt="" /></p>
 
 <p>多次执行并没有报错</p>
 
 <p>OK 那我们再增加一条</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/20160401031332507668.png" alt="" /></p>
+<p><img src="../image/drops/20160401/20160401031332507668.png" alt="" /></p>
 
 <p>执行报错语句</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/20160401031334892539.png" alt="" /></p>
+<p><img src="../image/drops/20160401/20160401031334892539.png" alt="" /></p>
 
 <p>ok 成功报错</p>
 
@@ -77,7 +77,7 @@
 
 <p>为了更彻底的说明报错原因，直接把随机因子去掉，再来一遍看看，先看一条记录的时候，如下图:</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313352546010.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313352546010.png" alt="" /></p>
 
 <p>一条记录的话 无论执行多少次也不报错</p>
 
@@ -85,11 +85,11 @@
 
 <p>两条记录的话 结果就变成不确定性了</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/2016040103133754156111.png" alt="" /></p>
+<p><img src="../image/drops/20160401/2016040103133754156111.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313385345112.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313385345112.png" alt="" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313407986413.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313407986413.png" alt="" /></p>
 
 <p>随机出现报错。</p>
 
@@ -107,11 +107,11 @@
 
 <p>为了证明我们猜想，分别对<code>floor(rand()*2)</code>和<code>floor(rand(0)*2)</code>在多记录表中执行多次(记录选择10条以上)，在有12条记录表中执行结果如下图：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313421058814.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313421058814.png" alt="" /></p>
 
 <p>连续3次查询，毫无规则，接下来看看<code>select floor(rand(0)*2) from &amp;#96;T-Safe&amp;#96;;</code>，如下图：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313447135015.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313447135015.png" alt="" /></p>
 
 <p>可以看到<code>floor(rand(0)*2)</code>是有规律的，而且是固定的，这个就是上面提到的由于是确定性才导致的报错，那为何会报错呢，我们接着往下看。</p>
 
@@ -121,7 +121,7 @@
 
 <p>使用<code>select count(*) from &amp;#96;T-Safe&amp;#96; group by x;</code>这种语句的时候我们经常可以看到下面类似的结果：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313461806616.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313461806616.png" alt="" /></p>
 
 <p>可以看出 test12的记录有5条</p>
 
@@ -131,11 +131,11 @@
 <li>先建立虚拟表，如下图(其中key是主键，不可重复):</li>
 </ol>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313484670117.jpg" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313484670117.jpg" alt="" /></p>
 
 <p>2.开始查询数据，取数据库数据，然后查看虚拟表存在不，不存在则插入新记录，存在则<code>count(*)</code>字段直接加1，如下图:</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313496921718.png" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313496921718.png" alt="" /></p>
 
 <p>由此看到 如果key存在的话就+1， 不存在的话就新建一个key。</p>
 
@@ -149,15 +149,15 @@
 
 <p>1.查询前默认会建立空虚拟表如下图:</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313525860419.jpg" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313525860419.jpg" alt="" /></p>
 
 <p>2.取第一条记录，执行<code>floor(rand(0)*2)</code>，发现结果为0(第一次计算),查询虚拟表，发现0的键值不存在，则<code>floor(rand(0)*2)</code>会被再计算一次，结果为1(第二次计算)，插入虚表，这时第一条记录查询完毕，如下图:</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313536740320.jpg" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313536740320.jpg" alt="" /></p>
 
 <p>3.查询第二条记录，再次计算<code>floor(rand(0)*2)</code>，发现结果为1(第三次计算)，查询虚表，发现1的键值存在，所以<code>floor(rand(0)*2)</code>不会被计算第二次，直接<code>count(*)</code>加1，第二条记录查询完毕，结果如下:</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313556242721.jpg" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313556242721.jpg" alt="" /></p>
 
 <p>4.查询第三条记录，再次计算<code>floor(rand(0)*2)</code>，发现结果为0(第4次计算)，查询虚表，发现键值没有0，则数据库尝试插入一条新的数据，在插入数据时<code>floor(rand(0)*2)</code>被再次计算，作为虚表的主键，其值为1(第5次计算)，然而1这个主键已经存在于虚拟表中，而新计算的值也为1(主键键值必须唯一)，所以插入的时候就直接报错了。</p>
 
@@ -169,15 +169,15 @@
 
 <p>由0x05我们可以同样推理出不加入随机因子的情况，由于没加入随机因子，所以<code>floor(rand()*2)</code>是不可测的，因此在两条数据的时候，只要出现下面情况，即可报错，如下图:</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313561318822.jpg" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313561318822.jpg" alt="" /></p>
 
 <p>最重要的是前面几条记录查询后不能让虚表存在0,1键值，如果存在了，那无论多少条记录，也都没办法报错，因为<code>floor(rand()*2)</code>不会再被计算做为虚表的键值，这也就是为什么不加随机因子有时候会报错，有时候不会报错的原因。如图：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313587308923.jpg" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313587308923.jpg" alt="" /></p>
 
 <p>当前面记录让虚表长成这样子后，由于不管查询多少条记录，<code>floor(rand()*2)</code>的值在虚表中都能找到，所以不会被再次计算，只是简单的增加<code>count(*)</code>字段的数量，所以不会报错，比如<code>floor(rand(1)*2)</code>，如图：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160401/201604010313592487224.jpg" alt="" /></p>
+<p><img src="../image/drops/20160401/201604010313592487224.jpg" alt="" /></p>
 
 <p>在前两条记录查询后，虚拟表已经存在0和1两个键值了，所以后面再怎么弄还是不会报错。</p>
 

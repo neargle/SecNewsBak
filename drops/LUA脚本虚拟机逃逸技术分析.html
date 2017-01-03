@@ -279,7 +279,7 @@ k = cl-&gt;p-&gt;k;
 
 <p>先看下字符串对象和Closure对象的内存布局。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160202/20160202065729158801.jpg" alt="p1" /></p>
+<p><img src="../image/drops/20160202/20160202065729158801.jpg" alt="p1" /></p>
 
 <p>cl->p对应TString第9个字符串开始的内容，magic在inner函数被初始化为"01234567"，将前8字节填充，并拼接两个内存指针，【..为LUA字符串连接符】如下：</p>
 
@@ -356,7 +356,7 @@ co = coroutine.wrap(function() end)
 
 <p>CClosure数据结构内存布局如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20160202/20160202065727705982.jpg" alt="p2" /></p>
+<p><img src="../image/drops/20160202/20160202065727705982.jpg" alt="p2" /></p>
 
 <p>其object偏移位置32为函数指针f，通过前面的内存写技术可以将f替换为指定的函数地址即可实现任意代码执行。</p>
 

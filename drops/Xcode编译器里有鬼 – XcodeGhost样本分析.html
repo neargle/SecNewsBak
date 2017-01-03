@@ -19,7 +19,7 @@
 
 <p><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="e0045a6b066365077a64085557057b4006784fa0057470055747">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script>_boy在微博上发了一条微博说到：一个朋友告诉我他们通过在非官方渠道下载的 Xcode 编译出来的 app 被注入了第三方的代码，会向一个网站上传数据，目前已知两个知名的 App 被注入。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150917/2015091709411353341.jpg" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150917/2015091709411353341.jpg" alt="enter image description here" /></p>
 
 <p>随后很多留言的小伙伴们纷纷表示中招，@谁敢乱说话表示：”还是不能相信迅雷，我是把官网上的下载URL复制到迅雷里下载的，还是中招了。我说一下：有问题的Xcode6.4.dmg的sha1是：<code>a836d8fa0fce198e061b7b38b826178b44c053a8</code>，官方正确的是：<code>672e3dcb7727fc6db071e5a8528b70aa03900bb0</code>，大家一定要校验。”另外还有一位小伙伴表示他是在百度网盘上下载的，也中招了。</p>
 
@@ -46,15 +46,15 @@ CoreService (for architecture arm64):   Mach-O 64-bit object
 
 <p>用ida打开，发现样本非常简单，只有少量函数。主要的功能就是先收集一些iPhone和app的基本信息，包括：时间，bundle id(包名)，应用名称，系统版本，语言，国家等。如图所示：</p>
 
-<p><img src="http://static.wooyun.org//drops/20150917/2015091709411390450.jpg" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150917/2015091709411390450.jpg" alt="enter image description here" /></p>
 
 <p>随后会把这些信息上传到 init.icloud-analysis.com。如图所示：</p>
 
-<p><img src="http://static.wooyun.org//drops/20150917/2015091709411338910.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150917/2015091709411338910.png" alt="enter image description here" /></p>
 
 <p><code>http://init.icloud-analysis.com</code>并不是apple 的官方网站，而是病毒作者所申请的仿冒网站，用来收集数据信息的。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150917/2015091709411489731.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150917/2015091709411489731.png" alt="enter image description here" /></p>
 
 <p>目前该网站的服务器已经关闭，用whois查询服务器信息也没有太多可以挖掘的地方。这说明病毒作者是个老手，并且非常小心，在代码和服务器上都没有留下什么痕迹，所以不排除以后还会继续做作案的可能。</p>
 
@@ -64,11 +64,11 @@ CoreService (for architecture arm64):   Mach-O 64-bit object
 
 <p>为了防止app被插入恶意库文件，开发者除了检测”<code>/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs</code>” 目录下是否有可疑的<code>framework</code>文件之外，还应该检测一下<code>Target-&gt;Build Setting-&gt;Search Paths-&gt;Framework Search Paths</code>中的设置。看看是否有可疑的<code>frameworks</code>混杂其中：</p>
 
-<p><img src="http://static.wooyun.org//drops/20150917/2015091709411423967.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150917/2015091709411423967.png" alt="enter image description here" /></p>
 
 <p>另外因为最近iOS dylib病毒也十分泛滥，为了防止开发者中招，支付宝的小伙伴还提供了一个防止被dylib hook的小技巧：在Build Settings中找到“<code>Other Linker Flags</code>”在其中加上”<code>-Wl,-sectcreate,__RESTRICT,__restrict,/dev/null</code>”即可。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150917/2015091709411432714.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150917/2015091709411432714.png" alt="enter image description here" /></p>
 
 <p>最后的建议是：以后下载XCode编译器尽可能使用官方渠道，以免app被打包进恶意的病毒库。如果非要用非官方渠道，一定要在下载后校验一下哈希值。</p>
 
@@ -89,13 +89,13 @@ $ shasum Xcode_7.dmg
 4afc067e5fc9266413c157167a123c8cdfdfb15e  Xcode_7.dmg
 </code></pre>
 
-<p><img src="http://static.wooyun.org//drops/20150917/2015091718053535661.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150917/2015091718053535661.png" alt="enter image description here" /></p>
 
 <p>所以如果在非App Store下载的各位开发者们可以用shasum校验一下自己下载的Xcode 7是否是原版。</p>
 
 <p>2 @FlowerCode同学通过分析流量发现病毒开发者的服务器是搭建在Amazon EC2的云上的。服务器已经关闭 。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150917/2015091718053546275.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150917/2015091718053546275.png" alt="enter image description here" /></p>
 
 <p>3 根据palo alto networks公司爆料，被感染的知名App Store应用为”网易云音乐”！该app应用在AppStore上的最新版本2.8.3已经确认被感染。并且该应用的Xcode编译版本为6.4（6E35b），也就是XcodeGhost病毒所感染的那个版本。网易云音乐在AppStore上目前的状态：</p>
 
@@ -105,17 +105,17 @@ $ shasum Xcode_7.dmg
 
 <p>"网易云音乐"逆向后的函数列表，可以找到XcodeGhost所插入的函数：</p>
 
-<p><img src="http://static.wooyun.org//drops/20150918/2015091802460165374.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150918/2015091802460165374.png" alt="enter image description here" /></p>
 
 <p>受感染的"网易云音乐"app会把手机隐私信息发送到病毒作者的服务器”init.icloud-analysis.com”上面：</p>
 
-<p><img src="http://static.wooyun.org//drops/20150918/2015091802460199903.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150918/2015091802460199903.png" alt="enter image description here" /></p>
 
 <p>4 根据热心网友举报，投毒者网名为”coderfun”。他在各种iOS开发者论坛或者weibo后留言引诱iOS开发者下载有毒版本的Xcode。并且中毒的版本不止Xcode 6.4，还有6.1，6.2和6.3等等。</p>
 
-<p><img src="http://static.wooyun.org//drops/20150918/2015091806281292667.jpg" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150918/2015091806281292667.jpg" alt="enter image description here" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20150918/2015091806281529651.jpg" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150918/2015091806281529651.jpg" alt="enter image description here" /></p>
 
 <p><img alt="enter image description here" src="http://static.wooyun.org//drops/20150918/2015091806282019630.jpg" height="200" width="300"></p>
 
@@ -127,7 +127,7 @@ $ shasum Xcode_7.dmg
 
 <p>被插入的部分恶意代码如下：</p>
 
-<p><img src="http://static.wooyun.org//drops/20150918/2015091806290736196.png" alt="enter image description here" /></p>
+<p><img src="../image/drops/20150918/2015091806290736196.png" alt="enter image description here" /></p>
 
 <p>6 在<code>@Saic</code>的提示下我们发现受感染的app还拥有接收黑客在云端的命令并按照黑客的指令发送URLScheme的能力：</p>
 

@@ -29,7 +29,7 @@ rm -rf /srv/apache-tomcat/webapps/*
 
 <p>如果不需要通过web部署应用，建议注释或删除tomcat-users.xml下用户权限相关配置</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/2016052416373714302117.jpg" alt="p1" /></p>
+<p><img src="../image/drops/20160524/2016052416373714302117.jpg" alt="p1" /></p>
 
 <h1>0x02 隐藏tomcat版本信息</h1>
 
@@ -39,9 +39,9 @@ rm -rf /srv/apache-tomcat/webapps/*
 
 <p>修改<code>$CATALINA_HOME/conf/server.xml</code>,在Connector节点添加server字段，示例如下</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/201605241637392245625.jpg" alt="p2" /></p>
+<p><img src="../image/drops/20160524/201605241637392245625.jpg" alt="p2" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/201605241637411365536.jpg" alt="p3" /></p>
+<p><img src="../image/drops/20160524/201605241637411365536.jpg" alt="p3" /></p>
 
 <p><strong>方法二</strong></p>
 
@@ -49,15 +49,15 @@ rm -rf /srv/apache-tomcat/webapps/*
 
 <p>默认情况下如图</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/201605241637426629645.jpg" alt="p4" /></p>
+<p><img src="../image/drops/20160524/201605241637426629645.jpg" alt="p4" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/201605241637448444455.jpg" alt="p5" /></p>
+<p><img src="../image/drops/20160524/201605241637448444455.jpg" alt="p5" /></p>
 
 <p>用户可自定义修改server.info字段和server.number字段，示例修改如下图所示。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/201605241637456906065.jpg" alt="p6" /></p>
+<p><img src="../image/drops/20160524/201605241637456906065.jpg" alt="p6" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/201605241637477579375.jpg" alt="p7" /></p>
+<p><img src="../image/drops/20160524/201605241637477579375.jpg" alt="p7" /></p>
 
 <h1>0x03 关闭自动部署</h1>
 
@@ -65,7 +65,7 @@ rm -rf /srv/apache-tomcat/webapps/*
 
 <p>如果不需要自动部署，建议关闭自动部署功能。在<code>$CATALINA_HOME/conf/server.xml</code>中的host字段，修改<code>unpackWARs="false" autoDeploy="false"</code>。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/201605241637481537685.jpg" alt="p8" /></p>
+<p><img src="../image/drops/20160524/201605241637481537685.jpg" alt="p8" /></p>
 
 <h1>0x03 自定义错误页面</h1>
 
@@ -73,7 +73,7 @@ rm -rf /srv/apache-tomcat/webapps/*
 
 <p>修改web.xml,自定义40x、50x等容错页面，防止信息泄露。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/201605241637504858695.jpg" alt="p9" /></p>
+<p><img src="../image/drops/20160524/201605241637504858695.jpg" alt="p9" /></p>
 
 <h1>0x05 禁止列目录（高版本默认已禁止）</h1>
 
@@ -81,7 +81,7 @@ rm -rf /srv/apache-tomcat/webapps/*
 
 <p>修改web.xml</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/2016052416375139392105.jpg" alt="p10" /></p>
+<p><img src="../image/drops/20160524/2016052416375139392105.jpg" alt="p10" /></p>
 
 <h1>0x06 AJP端口管理</h1>
 
@@ -89,7 +89,7 @@ rm -rf /srv/apache-tomcat/webapps/*
 
 <p>AJP是为 Tomcat 与 HTTP 服务器之间通信而定制的协议，能提供较高的通信速度和效率。如果tomcat前端放的是apache的时候，会使用到AJP这个连接器。前端如果是由nginx做的反向代理的话可以不使用此连接器，因此需要注销掉该连接器。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/2016052416375323093118.jpg" alt="p11" /></p>
+<p><img src="../image/drops/20160524/2016052416375323093118.jpg" alt="p11" /></p>
 
 <h1>0x07 服务权限控制</h1>
 
@@ -103,21 +103,21 @@ rm -rf /srv/apache-tomcat/webapps/*
 
 <p>修改<code>$CATALINA_HOME/conf/context.xml</code>，添加<code>&lt;Context useHttpOnly="true"&gt;</code>,如下图所示</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/2016052416375437308125.jpg" alt="p12" /></p>
+<p><img src="../image/drops/20160524/2016052416375437308125.jpg" alt="p12" /></p>
 
 <p>测试结果</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/2016052416375527932134.jpg" alt="p13" /></p>
+<p><img src="../image/drops/20160524/2016052416375527932134.jpg" alt="p13" /></p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/2016052416375763846144.jpg" alt="p14" /></p>
+<p><img src="../image/drops/20160524/2016052416375763846144.jpg" alt="p14" /></p>
 
 <p>配置cookie的secure属性，在web.xml中sesion-config节点配置cooker-config，此配置只允许cookie在加密方式下传输。</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/2016052416375941520153.jpg" alt="p15" /></p>
+<p><img src="../image/drops/20160524/2016052416375941520153.jpg" alt="p15" /></p>
 
 <p>测试结果</p>
 
-<p><img src="http://static.wooyun.org//drops/20160524/2016052416380093567163.jpg" alt="p16" /></p>      </p>
+<p><img src="../image/drops/20160524/2016052416380093567163.jpg" alt="p16" /></p>      </p>
     
 			</body>
 		</html>
